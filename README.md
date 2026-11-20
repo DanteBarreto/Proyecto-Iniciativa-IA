@@ -11,6 +11,7 @@ Indicadores de apetito de riesgo de las iniciativas de IA de Credicorp, para la 
 | `01_Analisis_Requerimientos/` | Análisis de la reunión: requerimientos, actividades y plan. |
 | `02_Analisis_Playbook/` | Comparación entre hojas, estadísticas descriptivas y propuesta de indicadores del playbook. |
 | `03_Analisis_Insumos_RNF/` | Revisión de los 4 insumos RNF y piloto de indicadores con 12 iniciativas (Excel calculadora). |
+| `04_Calculo_Indicadores/` | Primer ejercicio de los 6 KRI propuestos por Walter: valores, umbrales propuestos, semáforo y datos faltantes (Excel calculadora). |
 
 Cada entregable tiene un `.md` con la conclusión y un `.xlsx` con el detalle.
 Los archivos de `Inputs/` y `Grabaciones/` no se editan; los análisis se guardan en carpetas numeradas.
