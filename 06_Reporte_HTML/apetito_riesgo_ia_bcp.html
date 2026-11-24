@@ -1,0 +1,4421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apetito de riesgo IA · BCP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Paleta tomada de grupocredicorp.com (23/11/2026) */
+:root{
+  --ink:#202E44;        /* títulos */
+  --text:#333333;       /* texto base */
+  --slate:#4D5B70;      /* texto secundario */
+  --muted:#69727D;
+  --line:#D9D9D9;
+  --line-soft:#ECE7E0;
+  --cream:#FAF7F3;      /* fondo */
+  --white:#FFFFFF;
+  --magenta:#E93CAC;    /* acento principal (botones del sitio) */
+  --magenta-d:#CC3366;
+  --teal:#2AD2C9;       /* acento secundario */
+  --teal-d:#1E9C95;
+  /* semáforos de apetito (reservados, siempre con ícono y texto) */
+  --ok:#1E9E6A; --ok-bg:#E3F4EC;
+  --warn:#D99000; --warn-bg:#FBF0D9;
+  --bad:#D63A3A; --bad-bg:#FBE4E4;
+  --na:#9AA1AC; --na-bg:#EEF0F3;
+  --serif:"Libre Baskerville",Georgia,serif;
+  --sans:"Inter Tight","Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow-x:clip}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- barra superior ---------- */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;padding:10px 20px;background:var(--white);border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.brand b{font-weight:700;letter-spacing:.18em;color:var(--ink);font-size:14px}
+.brand span{color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--cream);padding:3px;border-radius:999px}
+.tabs button{white-space:nowrap;border:0;background:transparent;padding:6px 14px;border-radius:999px;cursor:pointer;font-weight:500;color:var(--slate);font-size:14px}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.sample{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--magenta-d);border:1.5px solid var(--magenta);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.view{display:none}.view.on{display:block}
+
+/* ---------- presentación ---------- */
+#v-deck{height:calc(100vh - 53px);position:relative;overflow:hidden;background:#E9E4DD}
+.stage-wrap{position:absolute;inset:0 0 54px 0;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
+.slide{position:absolute;inset:0;background:var(--cream);box-shadow:0 10px 40px rgba(32,46,68,.18);padding:56px 72px 64px;display:none;flex-direction:column;overflow:hidden}
+.slide.on{display:flex;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.slide .kicker{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--magenta-d);margin-bottom:10px}
+.slide h2{font-family:var(--serif);font-weight:400;color:var(--ink);font-size:34px;line-height:1.22;margin:0 0 26px;max-width:1040px;text-wrap:balance}
+.slide h2 em{font-style:normal;color:var(--magenta-d)}
+.slide .foot{position:absolute;left:72px;right:72px;bottom:22px;display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid var(--line-soft);padding-top:10px}
+.slide .foot .tag{color:var(--magenta-d);font-weight:700;letter-spacing:.06em}
+.deckbar{position:absolute;left:0;right:0;bottom:0;height:54px;display:flex;align-items:center;justify-content:center;gap:14px}
+.deckbar button{border:1px solid var(--line);background:var(--white);border-radius:999px;width:36px;height:36px;cursor:pointer;color:var(--ink);font-size:16px}
+.deckbar button:hover{border-color:var(--ink)}
+.dots{display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:50%;background:#C9C2B8;cursor:pointer}
+.dots i.on{background:var(--magenta);width:22px;border-radius:4px}
+.deckbar .hint{font-size:12px;color:var(--muted);margin-left:8px}
+
+/* portada */
+.cover{background:var(--ink)!important;color:#fff;justify-content:center}
+.cover .kicker{color:var(--teal)}
+.cover h1{font-family:var(--serif);font-weight:400;font-size:54px;line-height:1.15;margin:0 0 22px;max-width:900px}
+.cover h1 em{font-style:normal;color:var(--magenta)}
+.cover p{font-size:19px;color:#C9D1DC;margin:0;max-width:760px}
+.cover .meta{margin-top:48px;display:flex;gap:40px;font-size:14px;color:#AEB8C6}
+.cover .meta b{display:block;color:#fff;font-size:16px;font-weight:600;margin-top:2px}
+.cover .foot{border-color:rgba(255,255,255,.15);color:#8D99AA}
+.cover .foot .tag{color:var(--magenta)}
+.cover .arc{position:absolute;right:-180px;top:-120px;width:620px;height:620px;border-radius:50%;border:56px solid rgba(233,60,172,.16)}
+.cover .arc2{position:absolute;right:40px;bottom:-200px;width:380px;height:380px;border-radius:50%;border:36px solid rgba(42,210,201,.14)}
+
+/* semáforo */
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px;padding:3px 9px 3px 6px;border-radius:999px;white-space:nowrap}
+.st i{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;color:#fff;font-weight:700}
+.st.verde{background:var(--ok-bg);color:#14704B}.st.verde i{background:var(--ok)}
+.st.ambar{background:var(--warn-bg);color:#8A5B00}.st.ambar i{background:var(--warn)}
+.st.rojo{background:var(--bad-bg);color:#A82626}.st.rojo i{background:var(--bad)}
+.st.na{background:var(--na-bg);color:var(--slate)}.st.na i{background:var(--na)}
+
+/* slide 2: en una mirada */
+.glance{display:grid;grid-template-columns:330px 1fr;gap:48px;flex:1}
+.score{display:flex;flex-direction:column;gap:14px}
+.score .big{font-family:var(--serif);font-size:96px;line-height:1;color:var(--ink)}
+.score .big small{font-size:34px;color:var(--muted)}
+.score .lbl{font-size:17px;color:var(--slate)}
+.stack{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px;margin-top:6px}
+.stack div{height:100%}
+.legend-row{display:flex;gap:14px;font-size:13px;color:var(--slate);flex-wrap:wrap}
+.legend-row span{display:inline-flex;align-items:center;gap:6px}
+.legend-row span::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--c)}
+.chips{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:14px}.chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--slate);background:var(--white);border:1px solid var(--line-soft);border-radius:6px;padding:6px 8px}.chip i{width:14px;height:14px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;color:#fff;font-weight:700}
+.msgs{display:flex;flex-direction:column;gap:14px}
+.msg{display:grid;grid-template-columns:44px 1fr;gap:16px;background:var(--white);border-radius:10px;padding:18px 22px;border:1px solid var(--line-soft)}
+.msg .n{font-family:var(--serif);font-size:28px;color:var(--magenta-d);line-height:1}
+.msg b{display:block;color:var(--ink);font-size:18px;font-weight:600;margin-bottom:3px}
+.msg span{color:var(--slate);font-size:15px}
+
+/* slide 3: cobertura */
+.cov{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;flex:1}
+.funnel{display:flex;flex-direction:column;gap:16px;justify-content:center}
+.frow{display:grid;grid-template-columns:200px 1fr 70px;align-items:center;gap:14px}
+.frow .fl{font-size:15px;color:var(--slate);text-align:right}
+.frow .fl b{display:block;color:var(--ink);font-size:16px}
+.frow .fb{height:40px;background:var(--line-soft);border-radius:0 4px 4px 0;position:relative}
+.frow .fb div{height:100%;border-radius:0 4px 4px 0;background:var(--ink);transition:width .5s}
+.frow.hl .fb div{background:var(--magenta)}
+.frow .fv{font-size:22px;font-weight:600;color:var(--ink)}
+.kcis{display:flex;flex-direction:column;gap:14px;justify-content:center}
+.kci{background:var(--white);border:1px solid var(--line-soft);border-radius:10px;padding:16px 20px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+.kci .t{font-size:14px;color:var(--slate)}
+.kci .v{font-size:30px;font-weight:600;color:var(--ink);grid-row:span 2}
+.kci .d{font-size:12px;color:var(--muted)}
+
+/* slide 4: KRI cards */
+.kgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;flex:1;align-content:start}
+.kcard{background:var(--white);border:1px solid var(--line-soft);border-radius:12px;padding:18px 20px 16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.kcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sc)}
+.kcard .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kcard .dim{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kcard .val{font-size:40px;font-weight:600;color:var(--ink);line-height:1.05}
+.kcard .val small{font-size:15px;color:var(--muted);font-weight:500;margin-left:6px}
+.kcard .nm{font-size:14px;color:var(--slate);min-height:40px}
+.gauge{position:relative;height:8px;display:flex;gap:2px;margin:10px 0 18px}
+.gauge div{height:100%}
+.gauge div:first-child{border-radius:4px 0 0 4px}.gauge div:last-child{border-radius:0 4px 4px 0}
+.gauge .mk{position:absolute;top:-5px;width:3px;height:18px;background:var(--ink);border-radius:2px;box-shadow:0 0 0 2px var(--white)}
+.gauge .tk{position:absolute;top:12px;font-size:11px;color:var(--muted);transform:translateX(-50%)}
+
+/* slide 5: heatmap */
+.heatwrap{display:grid;grid-template-columns:1fr 290px;gap:40px;flex:1}
+table.heat{border-collapse:separate;border-spacing:2px;width:100%;font-size:13px}
+table.heat th{font-weight:600;color:var(--slate);padding:4px 8px;font-size:12px}
+table.heat th.rl{text-align:right;font-weight:500;color:var(--text);white-space:nowrap;font-size:13px}
+table.heat td{height:34px;text-align:center;border-radius:4px;font-weight:600;cursor:default;min-width:64px}
+.newtag{font-size:10px;font-weight:700;color:var(--teal-d);border:1px solid var(--teal);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:1px}
+.side-note{display:flex;flex-direction:column;gap:16px;justify-content:center}
+.side-note .big{font-size:44px;font-weight:600;color:var(--ink);line-height:1}
+.side-note p{margin:0;color:var(--slate);font-size:15px}
+.seqleg{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.seqleg .bar{flex:1;height:8px;border-radius:4px}
+
+/* slide 6: terceros */
+.tp{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;flex:1}
+.hbars{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.hb{display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center}
+.hb .l{text-align:right;font-size:15px;color:var(--text)}
+.hb .b{height:28px;position:relative}
+.hb .b div{height:100%;background:#9AA6B6;border-radius:0 4px 4px 0;transition:width .5s}
+.hb.top1 .b div{background:var(--magenta)}
+.hb .v{font-weight:600;color:var(--ink)}
+.hb .thr{position:absolute;top:-6px;bottom:-6px;width:0;border-left:1.5px dashed var(--slate)}
+
+/* slide 7: decisiones */
+.asks{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;flex:1;align-content:start}
+.steps{display:grid;grid-template-columns:120px repeat(4,1fr);gap:2px;margin-bottom:40px;font-size:13px;color:var(--slate)}.steps .sl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--magenta-d);align-self:center}.steps div{border-top:3px solid var(--teal);padding:10px 14px 0 0}.steps b{display:block;color:var(--ink);font-size:14px;margin-bottom:2px}
+.ask{background:var(--white);border-radius:12px;padding:22px 24px;border:1px solid var(--line-soft);display:grid;grid-template-columns:40px 1fr;gap:14px}
+.ask .ic{width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.ask b{display:block;color:var(--ink);font-size:18px;margin-bottom:4px}
+.ask span{color:var(--slate);font-size:15px}
+.ask .who{display:block;margin-top:8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+/* ---------- anexo ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px 60px}
+.ahead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.ahead h1{font-family:var(--serif);font-weight:400;color:var(--ink);font-size:28px;margin:0}
+.ahead p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--white);border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;margin-bottom:18px;position:sticky;top:53px;z-index:10}
+.filters label{display:flex;flex-direction:column;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;gap:3px}
+.filters select,.filters input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--white);font-size:14px;min-width:150px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--text)}
+.filters .count{margin-left:auto;font-size:13px;color:var(--slate)}
+.filters button.reset{border:1px solid var(--line);background:var(--cream);border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px;align-self:flex-end}
+.card{background:var(--white);border:1px solid var(--line-soft);border-radius:12px;padding:18px 20px;margin-bottom:18px}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--ink);font-weight:600}
+.card .sub{margin:0 0 14px;font-size:13px;color:var(--muted)}
+.kstrip{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.ktile{border:1px solid var(--line-soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;position:relative;background:var(--cream)}
+.ktile .id{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em}
+.ktile .n{font-size:13px;color:var(--slate);line-height:1.3;min-height:34px}
+.ktile .row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.ktile .v{font-size:24px;font-weight:600;color:var(--ink)}
+.ktile .f{font-size:11px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tblwrap{overflow:auto;max-height:560px;border:1px solid var(--line-soft);border-radius:8px}
+table.data{border-collapse:collapse;width:100%;font-size:13px}
+table.data th{position:sticky;top:0;background:var(--cream);text-align:left;font-weight:600;color:var(--slate);padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;user-select:none}
+table.data th[data-dir=asc]::after{content:" ▲";font-size:9px}
+table.data th[data-dir=desc]::after{content:" ▼";font-size:9px}
+table.data td{padding:7px 10px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+table.data tbody tr{cursor:pointer}
+table.data tbody tr:hover{background:#FDF2F9}
+table.data tbody tr.sel{background:#FBE3F3}
+.pill{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--cream);border:1px solid var(--line-soft);color:var(--slate)}
+.pill.mat{background:var(--ink);color:#fff;border-color:var(--ink)}
+.crit{font-weight:600}
+.crit.Crítico{color:#A82626}.crit.Alto{color:#C0392B}.crit.Relevante{color:#8A5B00}.crit.Moderado{color:var(--slate)}
+.detail{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--white);box-shadow:-10px 0 40px rgba(32,46,68,.18);z-index:40;transform:translateX(105%);transition:transform .25s;display:flex;flex-direction:column}
+.detail.on{transform:none}
+.detail header{padding:18px 20px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:10px}
+.detail header h4{margin:0;font-size:18px;color:var(--ink)}
+.detail header p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.detail header button{border:0;background:var(--cream);border-radius:50%;width:32px;height:32px;cursor:pointer;flex:none}
+.detail .body{padding:16px 20px;overflow:auto;display:flex;flex-direction:column;gap:14px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 10px;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;color:var(--text)}
+.rlist{display:flex;flex-direction:column;gap:6px}
+.rlist div{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:7px 10px;border-radius:6px;background:var(--cream)}
+.uinput{width:70px;border:1px solid var(--line);border-radius:5px;padding:4px 6px;text-align:right;background:#FFFBEA}
+.note{font-size:12px;color:var(--muted)}
+.hint-box{background:#FDF2F9;border:1px solid #F6C7E6;color:#7A1F5C;border-radius:8px;padding:10px 12px;font-size:13px}
+
+/* metodología */
+.meth h3{margin-top:0}
+.meth table{border-collapse:collapse;width:100%;font-size:13px}
+.meth th,.meth td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.meth th{color:var(--slate);background:var(--cream)}
+.meth code{background:var(--cream);padding:1px 5px;border-radius:4px;font-size:12px}
+.meth ol,.meth ul{margin:0;padding-left:20px}
+.meth li{margin:4px 0}
+
+/* tooltip */
+#tip{position:fixed;pointer-events:none;z-index:60;background:var(--ink);color:#fff;font-size:12px;padding:7px 10px;border-radius:6px;max-width:260px;opacity:0;transition:opacity .1s;line-height:1.35}
+#tip b{color:#fff}
+#tip.on{opacity:1}
+
+@media (max-width:820px){
+  .topbar{flex-wrap:wrap;padding:8px 16px}
+  .tabs{margin-left:0;order:3;width:100%;justify-content:center}
+  .brand span{display:none}
+  .grid2{grid-template-columns:1fr}
+  .wrap{padding:20px 16px 48px}
+  .filters{position:static}
+  .filters select,.filters input{min-width:0;width:100%}
+  .filters label{flex:1 1 140px}
+  .deckbar .hint{display:none}
+  #v-deck{height:calc(100vh - 92px)}
+}
+@media print{
+  .topbar,.deckbar{display:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ccpGrad" x1="233.076" y1="29.5098" x2="252.095" y2="10.3386" gradientUnits="userSpaceOnUse"><stop offset="0.15" stop-color="#2AD2C9"/><stop offset="0.22" stop-color="#32CAC7"/><stop offset="0.34" stop-color="#4BB7C3"/><stop offset="0.49" stop-color="#7398BD"/><stop offset="0.67" stop-color="#AA6DB5"/><stop offset="0.85" stop-color="#E93CAC"/></linearGradient></defs></svg>
+
+<header class="topbar">
+  <div class="brand"><svg class="logo" style="height:20px;width:auto;color:#000;display:block" viewBox="0 0 336 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Credicorp">
+<path d="M58.6353 23.0228C62.2753 21.1111 64.2682 17.8594 64.2682 13.8235C64.2682 7.79408 59.8376 4.19931 52.4094 4.19931H46.4471C44.9153 4.19931 43.68 5.4248 43.68 6.9444V36.5032C43.68 36.6013 43.7624 36.683 43.8612 36.683H48.0282C48.1271 36.683 48.2094 36.6013 48.2094 36.5032V10.2451C48.2094 9.28101 49 8.49669 49.9718 8.49669H52.4094C57.2353 8.49669 59.6894 10.3431 59.6894 14.0032C59.6894 17.6634 57.5976 19.8529 52.8871 21.3398L52.4094 21.4869L61.8635 36.5849C61.8635 36.5849 61.9459 36.6666 62.0118 36.6666H66.92C67.0518 36.6666 67.1506 36.5196 67.0682 36.4052L58.6188 23.0228H58.6353ZM100.174 4.19931H85.68C84.1482 4.19931 82.9129 5.4248 82.9129 6.9444V33.9379C82.9129 35.4575 84.1482 36.683 85.68 36.683H100.174C100.273 36.683 100.355 36.6013 100.355 36.5032V32.549C100.355 32.4509 100.273 32.3692 100.174 32.3692H90.1929C88.6612 32.3692 87.4259 31.1437 87.4259 29.6241V22.1405H98.4777C98.5765 22.1405 98.6588 22.0588 98.6588 21.9607V18.0065C98.6588 17.9085 98.5765 17.8268 98.4777 17.8268H87.4259V11.2254C87.4259 9.70584 88.6612 8.48035 90.1929 8.48035H100.174C100.273 8.48035 100.355 8.39865 100.355 8.30061V4.34636C100.355 4.24833 100.273 4.16663 100.174 4.16663V4.19931ZM129.673 4.19931H120.4C118.868 4.19931 117.633 5.4248 117.633 6.9444V33.9379C117.633 35.4575 118.868 36.683 120.4 36.683H129.673C140 36.683 146.671 30.2614 146.671 20.3268C146.671 10.3921 140 4.19931 129.673 4.19931ZM129.673 32.3856H124.913C123.381 32.3856 122.146 31.1601 122.146 29.6405V11.2418C122.146 9.72218 123.381 8.49669 124.913 8.49669H129.673C137.167 8.49669 142.009 13.1862 142.009 20.4575C142.009 27.7287 137.282 32.3692 129.673 32.3692V32.3856ZM168.066 4.19931H166.485C164.953 4.19931 163.718 5.4248 163.718 6.9444V36.5032C163.718 36.6013 163.8 36.683 163.899 36.683H168.066C168.165 36.683 168.247 36.6013 168.247 36.5032V4.37904C168.247 4.28101 168.165 4.19931 168.066 4.19931ZM324.141 4.19931H318.179C316.647 4.19931 315.412 5.4248 315.412 6.9444V36.683H319.941V10.2451C319.941 9.28101 320.732 8.49669 321.704 8.49669H324.141C328.967 8.49669 331.421 10.3431 331.421 14.0032C331.421 16.5522 330.351 18.4313 328.061 19.8366C327.122 20.4085 325.986 20.915 324.635 21.3398L324.158 21.4869L326.167 24.7058C328.522 24.4281 331.833 22.1078 331.833 22.1078C334.534 20.147 335.984 17.2712 335.984 13.8235C335.984 7.79408 331.553 4.19931 324.125 4.19931H324.141ZM17.0141 8.30061C18.4471 8.30061 22.2024 8.49669 26.0565 10.3921C26.1718 10.4411 26.3035 10.4575 26.4188 10.3921C26.5341 10.3431 26.6165 10.2287 26.6494 10.098L27.3906 6.97708C27.44 6.78101 27.3412 6.58493 27.16 6.48689C24.2941 5.0163 20.8682 4.281 16.9976 4.281C7 4.281 0 10.9313 0 20.4575C0 29.9836 7 36.6013 17.0141 36.6013C20.8847 36.6013 24.3106 35.8496 27.1765 34.3954C27.3576 34.3137 27.44 34.1013 27.4071 33.9052L26.6659 30.7843C26.6329 30.6536 26.5506 30.5555 26.4353 30.4902C26.32 30.4411 26.1882 30.4411 26.0729 30.4902C22.2188 32.3692 18.4635 32.5817 17.0306 32.5817C9.81647 32.5817 4.59529 27.4836 4.59529 20.4575C4.59529 13.4313 9.83294 8.28427 17.0306 8.28427L17.0141 8.30061ZM202.028 8.30061C203.461 8.30061 207.216 8.49669 211.071 10.3921C211.186 10.4411 211.318 10.4575 211.433 10.3921C211.548 10.3431 211.631 10.2287 211.664 10.098L212.405 6.97708C212.454 6.78101 212.355 6.58493 212.174 6.48689C209.308 5.0163 205.882 4.26467 202.012 4.26467C191.998 4.26467 184.998 10.915 184.998 20.4575C184.998 30 191.998 36.6013 202.012 36.6013C205.882 36.6013 209.308 35.8496 212.174 34.3954C212.355 34.3137 212.438 34.1013 212.405 33.9052L211.664 30.7843C211.631 30.6536 211.548 30.5555 211.433 30.4902C211.318 30.4411 211.186 30.4411 211.071 30.4902C207.216 32.3692 203.461 32.5817 202.028 32.5817C194.814 32.5817 189.576 27.4836 189.576 20.4575C189.576 13.4313 194.814 8.28427 202.028 8.28427V8.30061ZM291.002 23.0228C294.642 21.1111 296.635 17.8594 296.635 13.8235C296.635 7.79408 292.205 4.19931 284.776 4.19931H278.814C277.282 4.19931 276.047 5.4248 276.047 6.9444V36.5032C276.047 36.6013 276.129 36.683 276.228 36.683H280.395C280.494 36.683 280.576 36.6013 280.576 36.5032V10.2451C280.576 9.28101 281.367 8.49669 282.339 8.49669H284.776C289.602 8.49669 292.056 10.3431 292.056 14.0032C292.056 17.6634 289.965 19.8529 285.254 21.3398L284.776 21.4869L294.231 36.5849C294.231 36.5849 294.313 36.6666 294.379 36.6666H299.287C299.419 36.6666 299.518 36.5196 299.435 36.4052L290.986 23.0228H291.002Z" fill="currentColor"/>
+<path d="M233.323 17.2059C232.911 17.6144 232.351 17.8431 231.758 17.8431H226.076C225.911 17.8431 225.845 17.647 225.944 17.549L242.184 1.4379C242.447 1.17646 242.859 1.17646 243.123 1.4379L259.363 17.549C259.478 17.6634 259.396 17.8431 259.231 17.8431H253.549C252.956 17.8431 252.396 17.6144 251.984 17.2059L245.066 10.3431C243.732 9.0196 241.574 9.0196 240.24 10.3431L233.323 17.2059ZM233.323 22.7941C232.911 22.3856 232.351 22.1569 231.758 22.1569H226.076C225.911 22.1569 225.845 22.3529 225.944 22.451L242.184 38.5621C242.447 38.8235 242.859 38.8235 243.123 38.5621L259.363 22.451C259.478 22.3366 259.396 22.1569 259.231 22.1569H253.549C252.956 22.1569 252.396 22.3856 251.984 22.7941L245.066 29.6569C243.732 30.9804 241.574 30.9804 240.24 29.6569L233.323 22.7941Z" fill="url(#ccpGrad)"/>
+</svg><span>Apetito de riesgo IA · BCP</span></div>
+  <span class="sample" id="sampleTag">DATOS DE EJEMPLO</span>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-view="deck" aria-selected="true">Presentación</button>
+    <button role="tab" data-view="annex" aria-selected="false">Anexo interactivo</button>
+    <button role="tab" data-view="meth" aria-selected="false">Metodología</button>
+  </nav>
+</header>
+
+<!-- ================= PRESENTACIÓN ================= -->
+<section class="view on" id="v-deck">
+  <div class="stage-wrap"><div class="stage" id="stage">
+
+    <article class="slide cover on">
+      <div class="arc"></div><div class="arc2"></div>
+      <svg class="logo" style="position:absolute;left:72px;top:56px;height:26px;width:auto;color:#fff" viewBox="0 0 336 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Credicorp">
+<path d="M58.6353 23.0228C62.2753 21.1111 64.2682 17.8594 64.2682 13.8235C64.2682 7.79408 59.8376 4.19931 52.4094 4.19931H46.4471C44.9153 4.19931 43.68 5.4248 43.68 6.9444V36.5032C43.68 36.6013 43.7624 36.683 43.8612 36.683H48.0282C48.1271 36.683 48.2094 36.6013 48.2094 36.5032V10.2451C48.2094 9.28101 49 8.49669 49.9718 8.49669H52.4094C57.2353 8.49669 59.6894 10.3431 59.6894 14.0032C59.6894 17.6634 57.5976 19.8529 52.8871 21.3398L52.4094 21.4869L61.8635 36.5849C61.8635 36.5849 61.9459 36.6666 62.0118 36.6666H66.92C67.0518 36.6666 67.1506 36.5196 67.0682 36.4052L58.6188 23.0228H58.6353ZM100.174 4.19931H85.68C84.1482 4.19931 82.9129 5.4248 82.9129 6.9444V33.9379C82.9129 35.4575 84.1482 36.683 85.68 36.683H100.174C100.273 36.683 100.355 36.6013 100.355 36.5032V32.549C100.355 32.4509 100.273 32.3692 100.174 32.3692H90.1929C88.6612 32.3692 87.4259 31.1437 87.4259 29.6241V22.1405H98.4777C98.5765 22.1405 98.6588 22.0588 98.6588 21.9607V18.0065C98.6588 17.9085 98.5765 17.8268 98.4777 17.8268H87.4259V11.2254C87.4259 9.70584 88.6612 8.48035 90.1929 8.48035H100.174C100.273 8.48035 100.355 8.39865 100.355 8.30061V4.34636C100.355 4.24833 100.273 4.16663 100.174 4.16663V4.19931ZM129.673 4.19931H120.4C118.868 4.19931 117.633 5.4248 117.633 6.9444V33.9379C117.633 35.4575 118.868 36.683 120.4 36.683H129.673C140 36.683 146.671 30.2614 146.671 20.3268C146.671 10.3921 140 4.19931 129.673 4.19931ZM129.673 32.3856H124.913C123.381 32.3856 122.146 31.1601 122.146 29.6405V11.2418C122.146 9.72218 123.381 8.49669 124.913 8.49669H129.673C137.167 8.49669 142.009 13.1862 142.009 20.4575C142.009 27.7287 137.282 32.3692 129.673 32.3692V32.3856ZM168.066 4.19931H166.485C164.953 4.19931 163.718 5.4248 163.718 6.9444V36.5032C163.718 36.6013 163.8 36.683 163.899 36.683H168.066C168.165 36.683 168.247 36.6013 168.247 36.5032V4.37904C168.247 4.28101 168.165 4.19931 168.066 4.19931ZM324.141 4.19931H318.179C316.647 4.19931 315.412 5.4248 315.412 6.9444V36.683H319.941V10.2451C319.941 9.28101 320.732 8.49669 321.704 8.49669H324.141C328.967 8.49669 331.421 10.3431 331.421 14.0032C331.421 16.5522 330.351 18.4313 328.061 19.8366C327.122 20.4085 325.986 20.915 324.635 21.3398L324.158 21.4869L326.167 24.7058C328.522 24.4281 331.833 22.1078 331.833 22.1078C334.534 20.147 335.984 17.2712 335.984 13.8235C335.984 7.79408 331.553 4.19931 324.125 4.19931H324.141ZM17.0141 8.30061C18.4471 8.30061 22.2024 8.49669 26.0565 10.3921C26.1718 10.4411 26.3035 10.4575 26.4188 10.3921C26.5341 10.3431 26.6165 10.2287 26.6494 10.098L27.3906 6.97708C27.44 6.78101 27.3412 6.58493 27.16 6.48689C24.2941 5.0163 20.8682 4.281 16.9976 4.281C7 4.281 0 10.9313 0 20.4575C0 29.9836 7 36.6013 17.0141 36.6013C20.8847 36.6013 24.3106 35.8496 27.1765 34.3954C27.3576 34.3137 27.44 34.1013 27.4071 33.9052L26.6659 30.7843C26.6329 30.6536 26.5506 30.5555 26.4353 30.4902C26.32 30.4411 26.1882 30.4411 26.0729 30.4902C22.2188 32.3692 18.4635 32.5817 17.0306 32.5817C9.81647 32.5817 4.59529 27.4836 4.59529 20.4575C4.59529 13.4313 9.83294 8.28427 17.0306 8.28427L17.0141 8.30061ZM202.028 8.30061C203.461 8.30061 207.216 8.49669 211.071 10.3921C211.186 10.4411 211.318 10.4575 211.433 10.3921C211.548 10.3431 211.631 10.2287 211.664 10.098L212.405 6.97708C212.454 6.78101 212.355 6.58493 212.174 6.48689C209.308 5.0163 205.882 4.26467 202.012 4.26467C191.998 4.26467 184.998 10.915 184.998 20.4575C184.998 30 191.998 36.6013 202.012 36.6013C205.882 36.6013 209.308 35.8496 212.174 34.3954C212.355 34.3137 212.438 34.1013 212.405 33.9052L211.664 30.7843C211.631 30.6536 211.548 30.5555 211.433 30.4902C211.318 30.4411 211.186 30.4411 211.071 30.4902C207.216 32.3692 203.461 32.5817 202.028 32.5817C194.814 32.5817 189.576 27.4836 189.576 20.4575C189.576 13.4313 194.814 8.28427 202.028 8.28427V8.30061ZM291.002 23.0228C294.642 21.1111 296.635 17.8594 296.635 13.8235C296.635 7.79408 292.205 4.19931 284.776 4.19931H278.814C277.282 4.19931 276.047 5.4248 276.047 6.9444V36.5032C276.047 36.6013 276.129 36.683 276.228 36.683H280.395C280.494 36.683 280.576 36.6013 280.576 36.5032V10.2451C280.576 9.28101 281.367 8.49669 282.339 8.49669H284.776C289.602 8.49669 292.056 10.3431 292.056 14.0032C292.056 17.6634 289.965 19.8529 285.254 21.3398L284.776 21.4869L294.231 36.5849C294.231 36.5849 294.313 36.6666 294.379 36.6666H299.287C299.419 36.6666 299.518 36.5196 299.435 36.4052L290.986 23.0228H291.002Z" fill="currentColor"/>
+<path d="M233.323 17.2059C232.911 17.6144 232.351 17.8431 231.758 17.8431H226.076C225.911 17.8431 225.845 17.647 225.944 17.549L242.184 1.4379C242.447 1.17646 242.859 1.17646 243.123 1.4379L259.363 17.549C259.478 17.6634 259.396 17.8431 259.231 17.8431H253.549C252.956 17.8431 252.396 17.6144 251.984 17.2059L245.066 10.3431C243.732 9.0196 241.574 9.0196 240.24 10.3431L233.323 17.2059ZM233.323 22.7941C232.911 22.3856 232.351 22.1569 231.758 22.1569H226.076C225.911 22.1569 225.845 22.3529 225.944 22.451L242.184 38.5621C242.447 38.8235 242.859 38.8235 243.123 38.5621L259.363 22.451C259.478 22.3366 259.396 22.1569 259.231 22.1569H253.549C252.956 22.1569 252.396 22.3856 251.984 22.7941L245.066 29.6569C243.732 30.9804 241.574 30.9804 240.24 29.6569L233.323 22.7941Z" fill="url(#ccpGrad)"/>
+</svg>
+      <div class="kicker">Gestión de riesgos · Inteligencia artificial</div>
+      <h1>Apetito de riesgo de las <em>iniciativas de IA</em></h1>
+      <p>Indicadores clave de riesgo (KRI) y de control (KCI) para las iniciativas de IA de BCP.</p>
+      <div class="meta">
+        <div>Audiencia<b>Alta dirección</b></div>
+        <div>Fecha<b>2 de diciembre de 2026</b></div>
+        <div>Alcance<b>BCP · corte <span data-f="corte"></span></b></div>
+      </div>
+      <div class="foot"><span>Confidencial</span><span class="tag">BOSQUEJO CON DATOS DE EJEMPLO</span></div>
+    </article>
+
+    <article class="slide">
+      <div class="kicker">En una mirada</div>
+      <h2 id="s2title"></h2>
+      <div class="glance">
+        <div class="score">
+          <div class="big num" id="s2big"></div>
+          <div class="lbl">indicadores fuera de apetito</div>
+          <div class="stack" id="s2stack"></div>
+          <div class="legend-row" id="s2leg"></div>
+          <div id="s2chips" class="chips"></div>
+        </div>
+        <div class="msgs" id="s2msgs"></div>
+      </div>
+      <div class="foot"></div>
+    </article>
+
+    <article class="slide">
+      <div class="kicker">Cobertura de la evaluación</div>
+      <h2 id="s3title"></h2>
+      <div class="cov">
+        <div class="funnel" id="s3funnel"></div>
+        <div class="kcis" id="s3kcis"></div>
+      </div>
+      <div class="foot"></div>
+    </article>
+
+    <article class="slide">
+      <div class="kicker">Indicadores de riesgo por dimensión</div>
+      <h2 id="s4title"></h2>
+      <div class="kgrid" id="s4grid"></div>
+      <div class="foot"></div>
+    </article>
+
+    <article class="slide">
+      <div class="kicker">Dónde se concentra el riesgo</div>
+      <h2 id="s5title"></h2>
+      <div class="heatwrap">
+        <div id="s5heat"></div>
+        <div class="side-note" id="s5side"></div>
+      </div>
+      <div class="foot"></div>
+    </article>
+
+    <article class="slide">
+      <div class="kicker">Terceros y resiliencia</div>
+      <h2 id="s6title"></h2>
+      <div class="tp">
+        <div class="hbars" id="s6bars"></div>
+        <div class="side-note" id="s6side"></div>
+      </div>
+      <div class="foot"></div>
+    </article>
+
+    <article class="slide">
+      <div class="kicker">Lo que pedimos a la alta dirección</div>
+      <h2>Cuatro decisiones para cerrar el marco de apetito</h2>
+      <div class="asks">
+        <div class="ask"><div class="ic">1</div><div><b>Aprobar los umbrales de apetito</b><span>Verde, ámbar y rojo para los 6 KRI y 3 KCI propuestos, con tolerancia baja en riesgos de cliente y datos.</span><span class="who">Walter · GGR</span></div></div>
+        <div class="ask"><div class="ic">2</div><div><b>Confirmar qué es una iniciativa material</b><span>Hoy usamos Tier 1 y 2. De esa definición depende el universo de todos los KRI.</span><span class="who">AI Risk Team</span></div></div>
+        <div class="ask"><div class="ic">3</div><div><b>Cerrar la brecha de evaluación</b><span id="s7ask3"></span><span class="who">Riesgo no financiero</span></div></div>
+        <div class="ask"><div class="ic">4</div><div><b>Formalizar la fuente de datos</b><span>Base GRC con código del playbook, nivel residual por categoría y registro de incidentes, hallazgos y costos.</span><span class="who">Luis Porras · Rodrigo Díaz</span></div></div>
+      </div>
+      <div class="steps"><span class="sl">Próximos pasos</span>
+        <div><b>Base GRC BCP jun-26</b>Luis entrega iniciativas con código playbook</div>
+        <div><b>Recalcular KRI</b>Reemplazar estos datos de ejemplo</div>
+        <div><b>Validar umbrales</b>Walter, GGR y Alejandra Mendoza</div>
+        <div><b>Extender</b>Resto de empresas de Credicorp</div>
+      </div>
+      <div class="foot"></div>
+    </article>
+
+  </div></div>
+  <div class="deckbar">
+    <button id="prev" aria-label="Anterior">‹</button>
+    <div class="dots" id="dots"></div>
+    <button id="next" aria-label="Siguiente">›</button>
+    <button id="fs" aria-label="Pantalla completa" title="Pantalla completa (F)">⤢</button>
+    <span class="hint">← → para navegar · F pantalla completa</span>
+  </div>
+</section>
+
+<!-- ================= ANEXO ================= -->
+<section class="view" id="v-annex">
+  <div class="wrap">
+    <div class="ahead">
+      <div>
+        <h1>Anexo interactivo</h1>
+        <p>Filtra el universo y los indicadores se recalculan. Los umbrales se pueden editar.</p>
+      </div>
+      <div class="hint-box" id="annexSample">Datos de ejemplo: no representan la situación real de BCP.</div>
+    </div>
+
+    <div class="filters">
+      <label>Categoría IA<select id="fCat"></select></label>
+      <label>Etapa<select id="fEtapa"></select></label>
+      <label>Materialidad<select id="fMat"><option value="">Todas</option><option value="1">Solo materiales (T1-T2)</option><option value="0">No materiales</option></select></label>
+      <label>Usuarios<select id="fUsr"><option value="">Todos</option><option>Externo</option><option>Interno</option></select></label>
+      <label>Evaluación<select id="fEval"><option value="">Todas</option><option>Finalizado</option><option>En proceso</option><option>No iniciado</option></select></label>
+      <label>Buscar<input id="fTxt" type="search" placeholder="Código o nombre"></label>
+      <button class="reset" id="fReset">Limpiar</button>
+      <span class="count" id="fCount"></span>
+    </div>
+
+    <div class="card">
+      <h3>Indicadores con el filtro actual</h3>
+      <p class="sub">Semáforo según los umbrales vigentes (tabla de abajo).</p>
+      <div class="kstrip" id="aKpis"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Riesgos residuales Altos o Críticos</h3>
+        <p class="sub">Por categoría IA y dimensión de apetito. Solo iniciativas con evaluación finalizada.</p>
+        <div id="aHeat" style="overflow:auto"></div>
+      </div>
+      <div class="card">
+        <h3>Umbrales de apetito</h3>
+        <p class="sub">Propuesta para validar con Walter / GGR. Verde si el valor ≤ «verde hasta»; ámbar si ≤ «ámbar hasta»; rojo si es mayor.</p>
+        <div style="overflow:auto"><table class="data" id="aUmb" style="cursor:default"></table></div>
+        <p class="note" style="margin-top:8px">Los cambios se aplican también a la presentación.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Iniciativas</h3>
+      <p class="sub">Clic en una fila para ver sus riesgos. Clic en un encabezado para ordenar.</p>
+      <div class="tblwrap"><table class="data" id="aTbl"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= METODOLOGÍA ================= -->
+<section class="view" id="v-meth">
+  <div class="wrap meth">
+    <div class="ahead"><div><h1>Metodología y datos</h1><p>Cómo se calcula cada indicador y qué falta para pasar a datos reales.</p></div></div>
+    <div class="card"><h3>Definición de los indicadores</h3><div style="overflow:auto"><table id="mDefs"></table></div></div>
+    <div class="grid2">
+      <div class="card"><h3>Categorías de riesgo IA y dimensión de apetito</h3>
+        <p class="sub">11 categorías del catálogo vigente (Base de Riesgos v4). La base GRC de junio usa 8: hay que mapearlas.</p>
+        <table id="mMap"></table>
+        <p class="note">[Supuesto] Las marcadas como «nueva» serían las 3 que no existen en la base de junio. Por confirmar con Percy Luna.</p>
+      </div>
+      <div class="card"><h3>Supuestos clave</h3>
+        <ul>
+          <li><b>Material</b> = Tier 1 o 2 del AI Risk Team [Supuesto; significado por confirmar].</li>
+          <li>Los KRI 1 a 3 se calculan sobre <b>materiales con evaluación finalizada</b>.</li>
+          <li>Se usa el nivel <b>residual</b>; con nivel inherente el resultado sube.</li>
+          <li>Escala de 4 niveles de la Base v4: Crítico, Alto, Relevante, Moderado.</li>
+          <li>KRI 5 mide la participación del principal proveedor entre las iniciativas con proveedor identificado; el HHI es complementario.</li>
+          <li>Umbrales: propuesta del equipo, pendiente de validación.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card"><h3>Cómo reemplazar los datos de ejemplo</h3>
+      <ol>
+        <li>Los datos están en el bloque <code>&lt;script id="datos" type="application/json"&gt;</code> al final de este archivo.</li>
+        <li>Reemplazar la lista <code>iniciativas</code> con la base GRC BCP a junio 2026, un registro por iniciativa, con estos campos: <code>codigo</code> (código playbook), <code>nombre</code>, <code>categoriaIA</code>, <code>etapa</code>, <code>tier</code>, <code>usuarios</code>, <code>proveedor</code>, <code>evaluacion</code>, <code>riesgos[]</code> (<code>categoria</code>, <code>residual</code>), <code>hallazgosAbiertos</code> (<code>criticos</code>, <code>altos</code>), <code>deficienciasRAI</code>, <code>eventosFueraLimite</code>, <code>presupuesto</code>, <code>costoReal</code>.</li>
+        <li>Poner <code>meta.esEjemplo = false</code> y actualizar <code>meta.corte</code>. Las etiquetas de «datos de ejemplo» desaparecen solas.</li>
+        <li>Un campo sin dato se deja en <code>null</code>: el indicador sale «Sin dato» en lugar de un valor engañoso.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<aside class="detail" id="detail" aria-hidden="true">
+  <header><div><h4 id="dTitle"></h4><p id="dSub"></p></div><button id="dClose" aria-label="Cerrar">✕</button></header>
+  <div class="body" id="dBody"></div>
+</aside>
+<div id="tip"></div>
+
+<script id="datos" type="application/json">{
+ "meta": {
+  "empresa": "BCP",
+  "corte": "30/06/2026",
+  "fuente": "DATOS DE EJEMPLO (sustituir por la base GRC BCP a junio 2026)",
+  "esEjemplo": true
+ },
+ "categoriasRiesgo": [
+  "Bajo rendimiento y falta de entendimiento",
+  "Privacidad y calidad de data",
+  "Amenaza de seguridad",
+  "Seguridad de los datos",
+  "Uso malicioso",
+  "Equidad deteriorada (sesgos)",
+  "Infracción de propiedad intelectual",
+  "Confianza entre agentes",
+  "Resiliencia y observabilidad",
+  "Riesgo de terceros",
+  "Riesgo estratégico"
+ ],
+ "mapaDimension": {
+  "Bajo rendimiento y falta de entendimiento": "KRI1",
+  "Privacidad y calidad de data": "KRI2",
+  "Amenaza de seguridad": "KRI2",
+  "Seguridad de los datos": "KRI2",
+  "Uso malicioso": "KRI2",
+  "Equidad deteriorada (sesgos)": "KRI3",
+  "Infracción de propiedad intelectual": "KRI3",
+  "Confianza entre agentes": "KRI4",
+  "Resiliencia y observabilidad": "KRI4",
+  "Riesgo de terceros": "KRI5",
+  "Riesgo estratégico": "KRI6"
+ },
+ "categoriasNuevas": [
+  "Confianza entre agentes",
+  "Resiliencia y observabilidad",
+  "Seguridad de los datos"
+ ],
+ "umbrales": [
+  {
+   "id": "KRI1",
+   "dim": "Riesgo de modelo (MRM)",
+   "nombre": "Materiales evaluadas con riesgo de modelo residual Alto o Crítico",
+   "unidad": "%",
+   "verde": 0,
+   "ambar": 10
+  },
+  {
+   "id": "KRI2",
+   "dim": "Ciber, datos y privacidad",
+   "nombre": "Materiales con hallazgos Altos o Críticos abiertos",
+   "unidad": "%",
+   "verde": 0,
+   "ambar": 5
+  },
+  {
+   "id": "KRI3",
+   "dim": "IA responsable y conducta",
+   "nombre": "Materiales con deficiencias materiales abiertas",
+   "unidad": "%",
+   "verde": 0,
+   "ambar": 10
+  },
+  {
+   "id": "KRI4",
+   "dim": "Operacional y autonomía",
+   "nombre": "Eventos fuera de límites de autonomía (n°)",
+   "unidad": "n",
+   "verde": 0,
+   "ambar": 2
+  },
+  {
+   "id": "KRI5",
+   "dim": "Terceros y resiliencia",
+   "nombre": "Concentración en el principal proveedor",
+   "unidad": "%",
+   "verde": 50,
+   "ambar": 70
+  },
+  {
+   "id": "KRI6",
+   "dim": "Uso y financiero",
+   "nombre": "Casos con costo por encima del presupuesto",
+   "unidad": "%",
+   "verde": 5,
+   "ambar": 10
+  },
+  {
+   "id": "KCI1",
+   "dim": "Gobierno",
+   "nombre": "Materiales sin evaluación finalizada",
+   "unidad": "%",
+   "verde": 10,
+   "ambar": 25
+  },
+  {
+   "id": "KCI2",
+   "dim": "Gobierno",
+   "nombre": "Go live sin evaluación finalizada",
+   "unidad": "%",
+   "verde": 5,
+   "ambar": 15
+  },
+  {
+   "id": "KCI3",
+   "dim": "Gobierno",
+   "nombre": "Activas sin proveedor identificado",
+   "unidad": "%",
+   "verde": 10,
+   "ambar": 20
+  }
+ ],
+ "iniciativas": [
+  {
+   "codigo": "EJ-001",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "OpenAI",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-002",
+   "nombre": "Asistente de canales",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-003",
+   "nombre": "Bot de atención pyme",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Desarrollo propio",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-004",
+   "nombre": "Chatbot de clientes",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-005",
+   "nombre": "Lectura de vouchers",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Google",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-006",
+   "nombre": "Chatbot de clientes",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-007",
+   "nombre": "Asistente de auditoría",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-008",
+   "nombre": "Resumen de llamadas",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-009",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 101000.0,
+   "costoReal": 83000.0
+  },
+  {
+   "codigo": "EJ-010",
+   "nombre": "Resumen de llamadas",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Piloto",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 1,
+   "eventosFueraLimite": 0,
+   "presupuesto": 150000.0,
+   "costoReal": 92000.0
+  },
+  {
+   "codigo": "EJ-011",
+   "nombre": "Resumen de llamadas",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-012",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Desarrollo",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-013",
+   "nombre": "Clasificador de reclamos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 105000.0,
+   "costoReal": 68000.0
+  },
+  {
+   "codigo": "EJ-014",
+   "nombre": "Consulta de procedimientos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-015",
+   "nombre": "Calidad de llamadas",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-016",
+   "nombre": "Buscador de políticas",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-017",
+   "nombre": "Generador de campañas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-018",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Piloto",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 287000.0,
+   "costoReal": 153000.0
+  },
+  {
+   "codigo": "EJ-019",
+   "nombre": "Transcripción de reuniones",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Piloto",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "Salesforce",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 330000.0,
+   "costoReal": 208000.0
+  },
+  {
+   "codigo": "EJ-020",
+   "nombre": "Migración de código",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Alto"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 44000.0,
+   "costoReal": 25000.0
+  },
+  {
+   "codigo": "EJ-021",
+   "nombre": "Clasificador de reclamos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Piloto",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 246000.0,
+   "costoReal": 220000.0
+  },
+  {
+   "codigo": "EJ-022",
+   "nombre": "Voicebot de cobranzas",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-023",
+   "nombre": "Ofertas personalizadas",
+   "categoriaIA": "Customer Engagement",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-024",
+   "nombre": "Chatbot de clientes",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Go live",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 242000.0,
+   "costoReal": 199000.0
+  },
+  {
+   "codigo": "EJ-025",
+   "nombre": "Migración de código",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Piloto",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 109000.0,
+   "costoReal": 64000.0
+  },
+  {
+   "codigo": "EJ-026",
+   "nombre": "Consulta de procedimientos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-027",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-028",
+   "nombre": "Validación de documentos",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Piloto",
+   "tier": "T3",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 185000.0,
+   "costoReal": 99000.0
+  },
+  {
+   "codigo": "EJ-029",
+   "nombre": "Agente de backoffice",
+   "categoriaIA": "Agente IA",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-030",
+   "nombre": "Resumen de expedientes",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-031",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 301000.0,
+   "costoReal": 193000.0
+  },
+  {
+   "codigo": "EJ-032",
+   "nombre": "Extractor de documentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Go live",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Crítico"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 234000.0,
+   "costoReal": 159000.0
+  },
+  {
+   "codigo": "EJ-033",
+   "nombre": "Lectura de vouchers",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Piloto",
+   "tier": "T5",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Crítico"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 1,
+   "eventosFueraLimite": 0,
+   "presupuesto": 247000.0,
+   "costoReal": 198000.0
+  },
+  {
+   "codigo": "EJ-034",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Go live",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": "Google",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 93000.0,
+   "costoReal": 59000.0
+  },
+  {
+   "codigo": "EJ-035",
+   "nombre": "Asistente de canales",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Go live",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 1,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 88000.0,
+   "costoReal": 80000.0
+  },
+  {
+   "codigo": "EJ-036",
+   "nombre": "Consulta de procedimientos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-037",
+   "nombre": "Análisis de contratos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-038",
+   "nombre": "Resumen de expedientes",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Piloto",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 2
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 294000.0,
+   "costoReal": 219000.0
+  },
+  {
+   "codigo": "EJ-039",
+   "nombre": "Clasificador de reclamos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-040",
+   "nombre": "Buscador de políticas",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-041",
+   "nombre": "Calidad de llamadas",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-042",
+   "nombre": "Speech analytics",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-043",
+   "nombre": "Asistente de canales",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Piloto",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Salesforce",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 287000.0,
+   "costoReal": 188000.0
+  },
+  {
+   "codigo": "EJ-044",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Desarrollo propio",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Crítico"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Alto"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 305000.0,
+   "costoReal": 273000.0
+  },
+  {
+   "codigo": "EJ-045",
+   "nombre": "Voicebot de cobranzas",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Desarrollo",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": null,
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-046",
+   "nombre": "Extractor de documentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-047",
+   "nombre": "Lectura de sustentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Desarrollo",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "OpenAI",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-048",
+   "nombre": "Consulta de procedimientos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-049",
+   "nombre": "Fichas de producto",
+   "categoriaIA": "Content Generation",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 96000.0,
+   "costoReal": 88000.0
+  },
+  {
+   "codigo": "EJ-050",
+   "nombre": "Validación de documentos",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 197000.0,
+   "costoReal": 177000.0
+  },
+  {
+   "codigo": "EJ-051",
+   "nombre": "Bot de atención pyme",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Google",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-052",
+   "nombre": "Resumen de llamadas",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Desarrollo",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-053",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 273000.0,
+   "costoReal": 187000.0
+  },
+  {
+   "codigo": "EJ-054",
+   "nombre": "Migración de código",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-055",
+   "nombre": "Copiloto de desarrollo",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-056",
+   "nombre": "Lectura de sustentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Piloto",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 44000.0,
+   "costoReal": 33000.0
+  },
+  {
+   "codigo": "EJ-057",
+   "nombre": "Resumen de llamadas",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "AWS",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 234000.0,
+   "costoReal": 178000.0
+  },
+  {
+   "codigo": "EJ-058",
+   "nombre": "Clasificador de reclamos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-059",
+   "nombre": "Chatbot de clientes",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-060",
+   "nombre": "Pruebas automáticas",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 362000.0,
+   "costoReal": 383000.0
+  },
+  {
+   "codigo": "EJ-061",
+   "nombre": "Bot de atención pyme",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Go live",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 1,
+   "presupuesto": 292000.0,
+   "costoReal": 203000.0
+  },
+  {
+   "codigo": "EJ-062",
+   "nombre": "Resumen de expedientes",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Google",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-063",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 2
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-064",
+   "nombre": "Copiloto de desarrollo",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 348000.0,
+   "costoReal": 328000.0
+  },
+  {
+   "codigo": "EJ-065",
+   "nombre": "Voicebot de cobranzas",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 1,
+   "presupuesto": 73000.0,
+   "costoReal": 50000.0
+  },
+  {
+   "codigo": "EJ-066",
+   "nombre": "Consulta de procedimientos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-067",
+   "nombre": "Asistente de auditoría",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 169000.0,
+   "costoReal": 125000.0
+  },
+  {
+   "codigo": "EJ-068",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Desarrollo",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Google",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-069",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Piloto",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Google",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 24000.0,
+   "costoReal": 21000.0
+  },
+  {
+   "codigo": "EJ-070",
+   "nombre": "Bot de atención pyme",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-071",
+   "nombre": "Buscador de políticas",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-072",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Piloto",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 141000.0,
+   "costoReal": 122000.0
+  },
+  {
+   "codigo": "EJ-073",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Piloto",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 32000.0,
+   "costoReal": 21000.0
+  },
+  {
+   "codigo": "EJ-074",
+   "nombre": "Migración de código",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-075",
+   "nombre": "Generador de campañas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-076",
+   "nombre": "Copiloto de desarrollo",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Crítico"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 253000.0,
+   "costoReal": 213000.0
+  },
+  {
+   "codigo": "EJ-077",
+   "nombre": "Lectura de sustentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Piloto",
+   "tier": "T3",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 335000.0,
+   "costoReal": 254000.0
+  },
+  {
+   "codigo": "EJ-078",
+   "nombre": "Lectura de sustentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Go live",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 3
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 68000.0,
+   "costoReal": 67000.0
+  },
+  {
+   "codigo": "EJ-079",
+   "nombre": "Bot de atención pyme",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-080",
+   "nombre": "Consulta de procedimientos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": "Salesforce",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-081",
+   "nombre": "Extractor de documentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-082",
+   "nombre": "Calidad de llamadas",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Ideación",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": "Google",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-083",
+   "nombre": "Voicebot de cobranzas",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Google",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-084",
+   "nombre": "Calidad de llamadas",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 141000.0,
+   "costoReal": 82000.0
+  },
+  {
+   "codigo": "EJ-085",
+   "nombre": "Lectura de sustentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-086",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Desarrollo",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-087",
+   "nombre": "Lectura de vouchers",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Desarrollo propio",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Crítico"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 3
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-088",
+   "nombre": "Clasificador de reclamos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "AWS",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-089",
+   "nombre": "Extractor de documentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T1",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-090",
+   "nombre": "Extractor de documentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Piloto",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 242000.0,
+   "costoReal": 187000.0
+  },
+  {
+   "codigo": "EJ-091",
+   "nombre": "Asistente normativo",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "OpenAI",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-092",
+   "nombre": "Buscador de políticas",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 230000.0,
+   "costoReal": 180000.0
+  },
+  {
+   "codigo": "EJ-093",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-094",
+   "nombre": "Buscador de políticas",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-095",
+   "nombre": "Buscador de políticas",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Crítico"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 199000.0,
+   "costoReal": 138000.0
+  },
+  {
+   "codigo": "EJ-096",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Ideación",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-097",
+   "nombre": "Copiloto de desarrollo",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Go live",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 1,
+   "eventosFueraLimite": 0,
+   "presupuesto": 283000.0,
+   "costoReal": 197000.0
+  },
+  {
+   "codigo": "EJ-098",
+   "nombre": "Síntesis de comités",
+   "categoriaIA": "Content Synthesis",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-099",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-100",
+   "nombre": "Copiloto de desarrollo",
+   "categoriaIA": "Coding Copilot",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-101",
+   "nombre": "Agente de backoffice",
+   "categoriaIA": "Agente IA",
+   "etapa": "Desarrollo",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": "AWS",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Crítico"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-102",
+   "nombre": "Agente de onboarding",
+   "categoriaIA": "Agente IA",
+   "etapa": "Piloto",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Salesforce",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 176000.0,
+   "costoReal": 183000.0
+  },
+  {
+   "codigo": "EJ-103",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-104",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-105",
+   "nombre": "Asistente de auditoría",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "AWS",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 335000.0,
+   "costoReal": 290000.0
+  },
+  {
+   "codigo": "EJ-106",
+   "nombre": "Fichas de producto",
+   "categoriaIA": "Content Generation",
+   "etapa": "Go live",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 118000.0,
+   "costoReal": 85000.0
+  },
+  {
+   "codigo": "EJ-107",
+   "nombre": "Speech analytics",
+   "categoriaIA": "Speech/Audio Analysis",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Moderado"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 1,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 177000.0,
+   "costoReal": 99000.0
+  },
+  {
+   "codigo": "EJ-108",
+   "nombre": "Asistente de canales",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Go live",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 1,
+   "presupuesto": 123000.0,
+   "costoReal": 95000.0
+  },
+  {
+   "codigo": "EJ-109",
+   "nombre": "Bot de atención pyme",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Salesforce",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-110",
+   "nombre": "Lectura de vouchers",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Externo",
+   "proveedor": "Google",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo de terceros",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-111",
+   "nombre": "Chatbot de clientes",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "OpenAI",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-112",
+   "nombre": "Copiloto de procesos",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Desarrollo",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Alto"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-113",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Desarrollo",
+   "tier": "T5",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-114",
+   "nombre": "Lectura de vouchers",
+   "categoriaIA": "Image/Video Analysis",
+   "etapa": "Desarrollo",
+   "tier": "T1",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "En proceso",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-115",
+   "nombre": "Voicebot de cobranzas",
+   "categoriaIA": "Chatbot/voicebot",
+   "etapa": "Desarrollo",
+   "tier": "T2",
+   "usuarios": "Externo",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-116",
+   "nombre": "Generador de campañas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "AWS",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-117",
+   "nombre": "Asistente normativo",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Ideación",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-118",
+   "nombre": "Asistente normativo",
+   "categoriaIA": "Knowledge Expert",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Seguridad de los datos",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Riesgo estratégico",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Resiliencia y observabilidad",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 166000.0,
+   "costoReal": 109000.0
+  },
+  {
+   "codigo": "EJ-119",
+   "nombre": "Extractor de documentos",
+   "categoriaIA": "Text Analysis",
+   "etapa": "Ideación",
+   "tier": "T2",
+   "usuarios": "Interno",
+   "proveedor": "Microsoft",
+   "evaluacion": "No iniciado",
+   "riesgos": [],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": null,
+   "costoReal": null
+  },
+  {
+   "codigo": "EJ-120",
+   "nombre": "Redacción de respuestas",
+   "categoriaIA": "Content Generation",
+   "etapa": "Go live",
+   "tier": "T4",
+   "usuarios": "Interno",
+   "proveedor": null,
+   "evaluacion": "Finalizado",
+   "riesgos": [
+    {
+     "categoria": "Bajo rendimiento y falta de entendimiento",
+     "residual": "Relevante"
+    },
+    {
+     "categoria": "Uso malicioso",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Confianza entre agentes",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Amenaza de seguridad",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Infracción de propiedad intelectual",
+     "residual": "Moderado"
+    },
+    {
+     "categoria": "Equidad deteriorada (sesgos)",
+     "residual": "Alto"
+    },
+    {
+     "categoria": "Privacidad y calidad de data",
+     "residual": "Relevante"
+    }
+   ],
+   "hallazgosAbiertos": {
+    "criticos": 0,
+    "altos": 0
+   },
+   "deficienciasRAI": 0,
+   "eventosFueraLimite": 0,
+   "presupuesto": 394000.0,
+   "costoReal": 198000.0
+  }
+ ]
+}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('datos').textContent);
+const INI = D.iniciativas;
+const RCATS = D.categoriasRiesgo;
+const UMB = D.umbrales;
+const NIV = ['Crítico','Alto','Relevante','Moderado'];
+const DIMS = {KRI1:'MRM',KRI2:'Ciber/datos',KRI3:'IA responsable',KRI4:'Operacional',KRI5:'Terceros',KRI6:'Financiero'};
+const COL = {verde:'var(--ok)',ambar:'var(--warn)',rojo:'var(--bad)',na:'var(--na)'};
+const TXT = {verde:'Dentro',ambar:'Alerta',rojo:'Fuera',na:'Sin dato'};
+const ICO = {verde:'✓',ambar:'!',rojo:'✕',na:'–'};
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtP = v=>v==null?'—':(Math.round(v*10)/10).toLocaleString('es-PE')+'%';
+const isMat = x=>x.tier==='T1'||x.tier==='T2';
+const isHigh = r=>r.residual==='Alto'||r.residual==='Crítico';
+
+/* ---------- datos de ejemplo: etiquetas ---------- */
+if(!D.meta.esEjemplo){document.querySelectorAll('#sampleTag,#annexSample,.cover .foot .tag').forEach(e=>e.style.display='none');}
+document.querySelectorAll('[data-f=corte]').forEach(e=>e.textContent=D.meta.corte);
+
+/* ---------- cálculo ---------- */
+function estado(u,v){ if(v==null||isNaN(v)) return 'na'; return v<=u.verde?'verde':(v<=u.ambar?'ambar':'rojo'); }
+function compute(list){
+  const mat = list.filter(isMat);
+  const ev = mat.filter(x=>x.evaluacion==='Finalizado');
+  const pct=(a,b)=>b?100*a/b:null;
+  const withP = list.filter(x=>x.proveedor);
+  const cnt = {}; withP.forEach(x=>cnt[x.proveedor]=(cnt[x.proveedor]||0)+1);
+  const provs = Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  const hhi = withP.length? provs.reduce((s,[,v])=>s+(v/withP.length)**2,0):null;
+  const bud = list.filter(x=>x.presupuesto!=null&&x.costoReal!=null);
+  const gl = list.filter(x=>x.etapa==='Go live');
+  const r = {};
+  const k1 = ev.filter(x=>x.riesgos.some(z=>z.categoria===RCATS[0]&&isHigh(z))).length;
+  r.KRI1={v:pct(k1,ev.length),num:k1,den:ev.length,base:'materiales evaluadas'};
+  const k2 = ev.filter(x=>(x.hallazgosAbiertos.altos+x.hallazgosAbiertos.criticos)>0).length;
+  r.KRI2={v:pct(k2,ev.length),num:k2,den:ev.length,base:'materiales evaluadas'};
+  const k3 = ev.filter(x=>x.deficienciasRAI>0).length;
+  r.KRI3={v:pct(k3,ev.length),num:k3,den:ev.length,base:'materiales evaluadas'};
+  const k4 = list.reduce((s,x)=>s+(x.eventosFueraLimite||0),0);
+  r.KRI4={v:k4,num:k4,den:null,base:'eventos en el periodo'};
+  r.KRI5={v:withP.length?pct(provs[0][1],withP.length):null,num:withP.length?provs[0][1]:0,den:withP.length,base:'con proveedor identificado',top:provs[0]?.[0],hhi,provs};
+  const k6 = bud.filter(x=>x.costoReal>x.presupuesto).length;
+  r.KRI6={v:pct(k6,bud.length),num:k6,den:bud.length,base:'con presupuesto'};
+  r.KCI1={v:pct(mat.length-ev.length,mat.length),num:mat.length-ev.length,den:mat.length,base:'materiales'};
+  const c2 = gl.filter(x=>x.evaluacion!=='Finalizado').length;
+  r.KCI2={v:pct(c2,gl.length),num:c2,den:gl.length,base:'en go live'};
+  const c3 = list.filter(x=>!x.proveedor).length;
+  r.KCI3={v:pct(c3,list.length),num:c3,den:list.length,base:'activas'};
+  UMB.forEach(u=>{r[u.id].st=estado(u,r[u.id].v);r[u.id].u=u;});
+  r._mat=mat; r._ev=ev; r._list=list; r._gl=gl;
+  return r;
+}
+const fmtV=(id,o)=> o.v==null?'—':(o.u.unidad==='n'?String(o.v):fmtP(o.v));
+const frac=o=> o.den==null? o.base : `${o.num} de ${o.den} ${o.base}`;
+const stHtml=st=>`<span class="st ${st}"><i>${ICO[st]}</i>${TXT[st]}</span>`;
+const thrTxt=u=>u.unidad==='n'?`Verde ≤ ${u.verde} · Ámbar ≤ ${u.ambar}`:`Verde ≤ ${u.verde}% · Ámbar ≤ ${u.ambar}%`;
+
+/* ---------- tooltip ---------- */
+const tip=$('#tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(!t){tip.classList.remove('on');return;}
+  tip.innerHTML=t.dataset.tip; tip.classList.add('on');
+  const w=tip.offsetWidth,h=tip.offsetHeight;
+  let x=e.clientX+14,y=e.clientY+14;
+  if(x+w>innerWidth-8)x=e.clientX-w-14; if(y+h>innerHeight-8)y=e.clientY-h-14;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+});
+
+/* ---------- presentación ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+const foot=`<span>BCP · Corte ${esc(D.meta.corte)} · Confidencial</span>${D.meta.esEjemplo?'<span class="tag">DATOS DE EJEMPLO</span>':'<span></span>'}<span class="pg"></span>`;
+slides.forEach((s,i)=>{const f=s.querySelector('.foot'); if(f&&!s.classList.contains('cover')){f.innerHTML=foot;f.querySelector('.pg').textContent=(i+1)+' / '+slides.length;}});
+const dots=$('#dots'); slides.forEach((_,i)=>{const d=document.createElement('i');d.onclick=()=>go(i);d.title='Diapositiva '+(i+1);dots.appendChild(d);});
+function go(i){cur=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,j)=>s.classList.toggle('on',j===cur));[...dots.children].forEach((d,j)=>d.classList.toggle('on',j===cur));}
+$('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+$('#fs').onclick=()=>{const el=$('#v-deck'); document.fullscreenElement?document.exitFullscreen():el.requestFullscreen&&el.requestFullscreen();};
+document.addEventListener('keydown',e=>{
+  if(!$('#v-deck').classList.contains('on')||e.target.matches('input,select'))return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1);}
+  if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(cur-1);}
+  if(e.key==='f'||e.key==='F')$('#fs').click();
+  if(e.key==='Home')go(0); if(e.key==='End')go(slides.length-1);
+});
+function fit(){const w=$('.stage-wrap');const s=Math.min(w.clientWidth/1280,w.clientHeight/720)*0.96;$('#stage').style.transform=`scale(${s})`;}
+addEventListener('resize',fit); document.addEventListener('fullscreenchange',fit);
+
+function gaugeHtml(o){
+  const u=o.u; const max = u.unidad==='n'? Math.max(u.ambar*2,(o.v||0)+1, 4) : Math.min(100, Math.max(u.ambar*2.5, (o.v||0)*1.25, 20));
+  const capV = o.v==null?null:Math.min(o.v,max);
+  const g=u.verde/max*100, a=(u.ambar-u.verde)/max*100, rr=100-g-a;
+  const mk = capV==null?'':`<div class="mk" style="left:calc(${capV/max*100}% - 1.5px)"></div>`;
+  const unit=u.unidad==='n'?'':'%';
+  return `<div class="gauge"><div style="width:${Math.max(g,1.2)}%;background:var(--ok)"></div><div style="width:${a}%;background:var(--warn)"></div><div style="width:${rr}%;background:var(--bad)"></div>${mk}
+  ${u.verde>0?`<span class="tk" style="left:${g}%">${u.verde}${unit}</span>`:''}<span class="tk" style="left:${g+a}%">${u.ambar}${unit}</span></div>`;
+}
+
+function renderDeck(){
+  const R=compute(INI);
+  const ids=UMB.map(u=>u.id);
+  const n={verde:0,ambar:0,rojo:0,na:0}; ids.forEach(i=>n[R[i].st]++);
+  const kris=ids.filter(i=>i.startsWith('KRI')), kcis=ids.filter(i=>i.startsWith('KCI'));
+  const redK=kris.filter(i=>R[i].st==='rojo');
+  // S2
+  $('#s2big').innerHTML=`${n.rojo}<small> de ${ids.length}</small>`;
+  $('#s2title').innerHTML = n.rojo? `<em>${n.rojo} de ${ids.length}</em> indicadores están fuera del apetito propuesto` : `Ningún indicador está fuera del apetito propuesto`;
+  $('#s2stack').innerHTML=['rojo','ambar','verde','na'].filter(k=>n[k]).map(k=>`<div style="flex:${n[k]};background:${COL[k]}" data-tip="<b>${TXT[k]}</b>: ${n[k]} indicadores"></div>`).join('');
+  $('#s2leg').innerHTML=['rojo','ambar','verde','na'].filter(k=>n[k]).map(k=>`<span style="--c:${COL[k]}">${TXT[k]} ${n[k]}</span>`).join('');
+  $('#s2chips').innerHTML=ids.map(i=>`<div class="chip" data-tip="<b>${i} · ${esc(R[i].u.dim)}</b><br>${esc(R[i].u.nombre)}: ${fmtV(i,R[i])} · ${TXT[R[i].st]}"><i style="background:${COL[R[i].st]}">${ICO[R[i].st]}</i>${i}</div>`).join('');
+  const k5=R.KRI5, m=R._mat.length, e=R._ev.length;
+  $('#s2msgs').innerHTML=[
+    [`Solo ${e} de ${m} iniciativas materiales tienen evaluación finalizada`, `Sin evaluación no hay medición de riesgo: el KCI 1 está ${TXT[R.KCI1.st].toLowerCase()} de apetito (${fmtP(R.KCI1.v)} sin evaluar).`],
+    [`${fmtP(k5.v)} de las iniciativas dependen de ${esc(k5.top)}`, `La concentración en un solo proveedor supera la tolerancia propuesta de ${k5.u.ambar}% (HHI ${k5.hhi?.toFixed(2)}).`],
+    [`Riesgo de modelo y autonomía: los focos a vigilar`, `${R.KRI1.num} materiales con riesgo de modelo Alto o Crítico y ${R.KRI4.num} eventos fuera de límites de autonomía en agentes y chatbots.`]
+  ].map((x,i)=>`<div class="msg"><div class="n">${i+1}</div><div><b>${x[0]}</b><span>${x[1]}</span></div></div>`).join('');
+  // S3
+  const tot=INI.length, evAll=INI.filter(x=>x.evaluacion==='Finalizado').length;
+  $('#s3title').innerHTML=`La mitad de las iniciativas materiales aún <em>no tiene evaluación de riesgos</em>`.replace('La mitad',fmtP(R.KCI1.v)==='50%'?'La mitad':`El ${fmtP(R.KCI1.v)}`);
+  const rows=[['Registradas','en el playbook',tot],['Evaluadas','todas las etapas',evAll],['Materiales','Tier 1 y 2',m,1],['Materiales evaluadas','base de los KRI 1-3',e,1]];
+  $('#s3funnel').innerHTML=rows.map(r=>`<div class="frow ${r[3]?'hl':''}"><div class="fl"><b>${r[0]}</b>${r[1]}</div><div class="fb" data-tip="<b>${r[0]}</b><br>${r[2]} iniciativas (${fmtP(100*r[2]/tot)} del total)"><div style="width:${100*r[2]/tot}%"></div></div><div class="fv num">${r[2]}</div></div>`).join('');
+  $('#s3kcis').innerHTML=kcis.map(i=>`<div class="kci"><div class="t">${esc(R[i].u.nombre)}</div><div class="v num">${fmtV(i,R[i])}</div><div class="d">${frac(R[i])} · ${stHtml(R[i].st)}</div></div>`).join('');
+  // S4
+  $('#s4title').innerHTML=`<em>${redK.length} de ${kris.length}</em> dimensiones de riesgo superan el apetito propuesto`;
+  $('#s4grid').innerHTML=kris.map(i=>{const o=R[i];return `<div class="kcard" style="--sc:${COL[o.st]}">
+    <div class="top"><span class="dim">${i} · ${esc(o.u.dim)}</span>${stHtml(o.st)}</div>
+    <div class="val num">${fmtV(i,o)}<small>${o.den!=null?o.num+' / '+o.den:''}</small></div>
+    <div class="nm">${esc(o.u.nombre)}</div>${gaugeHtml(o)}</div>`;}).join('');
+  // S5 heatmap categoría de riesgo x criticidad
+  const ev=R._ev; const M={}; let maxc=0, high=0, totr=0;
+  RCATS.forEach(c=>{M[c]={};NIV.forEach(l=>M[c][l]=0);});
+  ev.forEach(x=>x.riesgos.forEach(r=>{M[r.categoria][r.residual]++;totr++; if(isHigh(r))high++;}));
+  RCATS.forEach(c=>NIV.forEach(l=>maxc=Math.max(maxc,M[c][l])));
+  const topCat = RCATS.map(c=>[c,M[c]['Crítico']+M[c]['Alto']]).sort((a,b)=>b[1]-a[1]);
+  const SH={'Bajo rendimiento y falta de entendimiento':'riesgo de modelo','Privacidad y calidad de data':'privacidad y datos','Confianza entre agentes':'confianza entre agentes'};
+  const sh=c=>SH[c]||c.toLowerCase();
+  $('#s5title').innerHTML=`Los riesgos Altos y Críticos se concentran en <em>${esc(sh(topCat[0][0]))}</em> y ${esc(sh(topCat[1][0]))}`;
+  $('#s5heat').innerHTML=heatTable(RCATS,NIV,(c,l)=>M[c][l],maxc,(c,l,v)=>`<b>${esc(c)}</b><br>${l}: ${v} riesgos`, c=>D.categoriasNuevas.includes(c));
+  $('#s5side').innerHTML=`<div class="big num">${high}</div><p>riesgos residuales Altos o Críticos, de ${totr} identificados en ${ev.length} iniciativas materiales evaluadas.</p>
+   <div class="seqleg"><span>0</span><div class="bar" style="background:linear-gradient(90deg,#F7F4F0,#202E44)"></div><span>${maxc}</span></div>
+   <p class="note"><span class="newtag" style="margin:0 4px 0 0">NUEVA</span>categoría del catálogo de 11 que no está en la base de junio [Supuesto].</p>`;
+  // S6
+  const tot5=k5.den;
+  $('#s6title').innerHTML=`<em>${fmtP(k5.v)}</em> de las iniciativas con proveedor identificado dependen de ${esc(k5.top)}`;
+  const provs=k5.provs.slice(0,6);
+  $('#s6bars').innerHTML=provs.map(([p,v],j)=>{const pc=100*v/tot5;return `<div class="hb ${j===0?'top1':''}"><div class="l">${esc(p)}</div><div class="b" data-tip="<b>${esc(p)}</b><br>${v} iniciativas · ${fmtP(pc)}"><div style="width:${pc}%"></div>${j===0?`<span class="thr" style="left:${k5.u.ambar}%" data-tip="Tolerancia: ${k5.u.ambar}%"></span>`:''}</div><div class="v num">${fmtP(pc)}</div></div>`}).join('')+`<div class="note" style="padding-left:162px">Línea punteada: tolerancia máxima propuesta (${k5.u.ambar}%).</div>`;
+  $('#s6side').innerHTML=`<div>${stHtml(k5.st)}</div><div class="big num">${k5.hhi?.toFixed(2)}</div><p>Índice de concentración HHI (sobre 1). Por encima de 0.25 se considera alta concentración.</p>
+   <div class="big num" style="font-size:34px">${fmtP(R.KCI3.v)}</div><p>de las iniciativas no identifica proveedor (${R.KCI3.num}). La concentración real podría ser mayor.</p>`;
+  // S7
+  $('#s7ask3').textContent=`Evaluar las ${m-e} iniciativas materiales pendientes antes de su paso a producción, con un plan y fecha comprometida.`;
+}
+function heatTable(rowsA,cols,val,max,tipf,isNew){
+  const shade=v=>{ if(!v) return 'background:#F3EFEA;color:transparent'; const t=Math.min(1,.15+.85*v/max);
+    const mix=(a,b)=>Math.round(a+(b-a)*t); const c=`rgb(${mix(247,32)},${mix(244,46)},${mix(240,68)})`; return `background:${c};color:${t>.5?'#fff':'#202E44'}`; };
+  return `<table class="heat"><thead><tr><th></th>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rowsA.map(r=>`<tr><th class="rl">${esc(r)}${isNew&&isNew(r)?'<span class="newtag">NUEVA</span>':''}</th>${cols.map(c=>{const v=val(r,c);return `<td style="${shade(v)}" data-tip="${esc(tipf(r,c,v))}">${v||''}</td>`}).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+/* ---------- anexo ---------- */
+const uniq=k=>[...new Set(INI.map(x=>x[k]))].sort();
+const fill=(sel,vals)=>{sel.innerHTML='<option value="">Todas</option>'+vals.map(v=>`<option>${esc(v)}</option>`).join('');};
+fill($('#fCat'),uniq('categoriaIA'));
+fill($('#fEtapa'),['Ideación','Desarrollo','Piloto','Go live'].filter(e=>INI.some(x=>x.etapa===e)));
+const F=['fCat','fEtapa','fMat','fUsr','fEval','fTxt'].map(i=>$('#'+i));
+F.forEach(el=>el.addEventListener('input',renderAnnex));
+$('#fReset').onclick=()=>{F.forEach(el=>el.value='');renderAnnex();};
+function filtered(){
+  const [c,e,m,u,ev,t]=F.map(x=>x.value.trim().toLowerCase());
+  return INI.filter(x=>(!c||x.categoriaIA.toLowerCase()===c)&&(!e||x.etapa.toLowerCase()===e)&&(!m||(isMat(x)?'1':'0')===m)&&(!u||x.usuarios.toLowerCase()===u)&&(!ev||x.evaluacion.toLowerCase()===ev)&&(!t||(x.codigo+' '+x.nombre).toLowerCase().includes(t)));
+}
+let sortK='codigo',sortD=1,selCode=null;
+const COLS=[['codigo','Código'],['nombre','Iniciativa'],['categoriaIA','Categoría IA'],['etapa','Etapa'],['tier','Tier'],['usuarios','Usuarios'],['proveedor','Proveedor'],['evaluacion','Evaluación'],['_high','Riesgos Altos/Críticos'],['_hall','Hallazgos abiertos']];
+const derived=x=>({...x,_high:x.riesgos.filter(isHigh).length,_hall:x.hallazgosAbiertos.altos+x.hallazgosAbiertos.criticos});
+function renderAnnex(){
+  const list=filtered(); const R=compute(list);
+  $('#fCount').textContent=`${list.length} de ${INI.length} iniciativas`;
+  $('#aKpis').innerHTML=UMB.map(u=>{const o=R[u.id];return `<div class="ktile" data-tip="${esc(thrTxt(u))}"><div class="row"><span class="id">${u.id} · ${esc(u.dim)}</span></div><div class="n">${esc(u.nombre)}</div><div class="row"><span class="v num">${fmtV(u.id,o)}</span>${stHtml(o.st)}</div><div class="f">${esc(frac(o))}${u.id==='KRI5'&&o.hhi!=null?` · HHI ${o.hhi.toFixed(2)}`:''}</div></div>`}).join('');
+  // heat: categoría IA x dimensión
+  const cats=[...new Set(list.map(x=>x.categoriaIA))].sort(); const dims=Object.keys(DIMS);
+  const M={};let mx=0; cats.forEach(c=>{M[c]={};dims.forEach(d=>M[c][d]=0)});
+  R._ev.forEach(x=>x.riesgos.filter(isHigh).forEach(r=>{const d=D.mapaDimension[r.categoria];M[x.categoriaIA][d]++;}));
+  // también evaluadas no materiales para dar contexto
+  cats.forEach(c=>dims.forEach(d=>mx=Math.max(mx,M[c][d])));
+  $('#aHeat').innerHTML=cats.length?heatTable(cats,dims,(c,d)=>M[c][d],mx||1,(c,d,v)=>`<b>${esc(c)}</b><br>${DIMS[d]}: ${v} riesgos Altos/Críticos`).replace(/<th>(KRI\d)<\/th>/g,(m,k)=>`<th title="${esc(UMB.find(u=>u.id===k).dim)}">${DIMS[k]}</th>`):'<p class="note">Sin iniciativas materiales evaluadas con este filtro.</p>';
+  // tabla
+  const rows=list.map(derived).sort((a,b)=>{const va=a[sortK]??'',vb=b[sortK]??'';return (va>vb?1:va<vb?-1:0)*sortD;});
+  $('#aTbl').innerHTML=`<thead><tr>${COLS.map(([k,l])=>`<th data-k="${k}" ${k===sortK?`data-dir="${sortD>0?'asc':'desc'}"`:''}>${l}</th>`).join('')}</tr></thead><tbody>${rows.map(x=>`<tr data-c="${x.codigo}" class="${x.codigo===selCode?'sel':''}"><td>${x.codigo}</td><td>${esc(x.nombre)}</td><td>${esc(x.categoriaIA)}</td><td>${x.etapa}</td><td><span class="pill ${isMat(x)?'mat':''}">${x.tier}</span></td><td>${x.usuarios}</td><td>${esc(x.proveedor||'—')}</td><td>${x.evaluacion}</td><td class="num">${x.evaluacion==='Finalizado'?x._high:'—'}</td><td class="num">${x.evaluacion==='Finalizado'?x._hall:'—'}</td></tr>`).join('')}</tbody>`;
+}
+$('#aTbl').addEventListener('click',e=>{
+  const th=e.target.closest('th'); if(th){const k=th.dataset.k; sortD = sortK===k? -sortD:1; sortK=k; renderAnnex(); return;}
+  const tr=e.target.closest('tr[data-c]'); if(tr) openDetail(tr.dataset.c);
+});
+function openDetail(code){
+  const x=INI.find(i=>i.codigo===code); selCode=code; renderAnnex();
+  $('#dTitle').textContent=`${x.codigo} · ${x.nombre}`;
+  $('#dSub').textContent=`${x.categoriaIA} · ${x.etapa}`;
+  const rs=[...x.riesgos].sort((a,b)=>NIV.indexOf(a.residual)-NIV.indexOf(b.residual));
+  const pres=x.presupuesto!=null?`S/ ${x.presupuesto.toLocaleString('es-PE')}`:'—', cost=x.costoReal!=null?`S/ ${x.costoReal.toLocaleString('es-PE')}`:'—';
+  $('#dBody').innerHTML=`<dl class="kv"><dt>Tier</dt><dd>${x.tier}${isMat(x)?' · material':''}</dd><dt>Usuarios</dt><dd>${x.usuarios}</dd><dt>Proveedor</dt><dd>${esc(x.proveedor||'No identificado')}</dd><dt>Evaluación</dt><dd>${x.evaluacion}</dd>
+   <dt>Hallazgos abiertos</dt><dd>${x.hallazgosAbiertos.criticos} críticos · ${x.hallazgosAbiertos.altos} altos</dd><dt>Deficiencias IA resp.</dt><dd>${x.deficienciasRAI}</dd><dt>Eventos fuera de límite</dt><dd>${x.eventosFueraLimite}</dd><dt>Presupuesto / costo</dt><dd>${pres} / ${cost}</dd></dl>
+   <div><h3 style="margin:6px 0 8px;font-size:15px;color:var(--ink)">Riesgos residuales (${rs.length})</h3>
+   ${rs.length?`<div class="rlist">${rs.map(r=>`<div><span>${esc(r.categoria)} <span class="note">· ${DIMS[D.mapaDimension[r.categoria]]}</span></span><span class="crit ${r.residual}">${r.residual}</span></div>`).join('')}</div>`:'<p class="note">Sin evaluación finalizada.</p>'}</div>`;
+  $('#detail').classList.add('on'); $('#detail').setAttribute('aria-hidden','false');
+}
+$('#dClose').onclick=()=>{$('#detail').classList.remove('on');$('#detail').setAttribute('aria-hidden','true');selCode=null;renderAnnex();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#detail').classList.contains('on'))$('#dClose').click();});
+
+function renderUmb(){
+  $('#aUmb').innerHTML=`<thead><tr><th>ID</th><th>Indicador</th><th>Verde hasta</th><th>Ámbar hasta</th></tr></thead><tbody>${UMB.map((u,i)=>`<tr><td>${u.id}</td><td style="white-space:normal">${esc(u.nombre)}</td><td><input class="uinput num" type="number" step="0.5" data-i="${i}" data-k="verde" value="${u.verde}"></td><td><input class="uinput num" type="number" step="0.5" data-i="${i}" data-k="ambar" value="${u.ambar}"></td></tr>`).join('')}</tbody>`;
+}
+$('#aUmb').addEventListener('input',e=>{const t=e.target; if(!t.matches('input'))return; const v=parseFloat(t.value); if(isNaN(v))return; UMB[t.dataset.i][t.dataset.k]=v; renderAnnex(); renderDeck(); renderMeth();});
+
+/* ---------- metodología ---------- */
+const DEF={
+ KRI1:['Materiales con evaluación finalizada que tienen al menos un riesgo de «Bajo rendimiento y falta de entendimiento» con nivel residual Alto o Crítico','Base GRC + resultados MRM'],
+ KRI2:['Materiales evaluadas con hallazgos Altos o Críticos abiertos de ciberseguridad, datos o privacidad','Hallazgos por iniciativa'],
+ KRI3:['Materiales evaluadas con deficiencias materiales abiertas de sesgo, transparencia o conducta','Evaluación RNF / eventos reputacionales'],
+ KRI4:['Número de eventos en que un agente o chatbot actuó fuera de sus límites de autonomía','Registro de incidentes'],
+ KRI5:['Participación del principal proveedor entre las iniciativas con proveedor identificado (HHI complementario)','Playbook (campo estructurado)'],
+ KRI6:['Iniciativas cuyo costo real supera el presupuesto aprobado','Consumo y presupuesto por iniciativa'],
+ KCI1:['Materiales sin evaluación de riesgos finalizada','Base GRC'],
+ KCI2:['Iniciativas en go live sin evaluación finalizada','Base GRC + playbook'],
+ KCI3:['Iniciativas sin proveedor o herramienta identificada','Playbook']};
+function renderMeth(){
+  $('#mDefs').innerHTML=`<thead><tr><th>ID</th><th>Dimensión</th><th>Fórmula</th><th>Umbral propuesto</th><th>Fuente requerida</th></tr></thead><tbody>${UMB.map(u=>`<tr><td><b>${u.id}</b></td><td>${esc(u.dim)}</td><td>${esc(DEF[u.id][0])}</td><td style="white-space:nowrap">${thrTxt(u)}</td><td>${esc(DEF[u.id][1])}</td></tr>`).join('')}</tbody>`;
+  $('#mMap').innerHTML=`<thead><tr><th>Categoría de riesgo</th><th>Dimensión</th></tr></thead><tbody>${RCATS.map(c=>`<tr><td>${esc(c)}${D.categoriasNuevas.includes(c)?'<span class="newtag">NUEVA</span>':''}</td><td>${D.mapaDimension[c]} · ${esc(UMB.find(u=>u.id===D.mapaDimension[c]).dim)}</td></tr>`).join('')}</tbody>`;
+}
+
+/* ---------- vistas ---------- */
+function show(v){
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.view===v));
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  if(v==='deck')fit(); history.replaceState(null,'','#'+v); tip.classList.remove('on');
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+
+renderUmb(); renderDeck(); renderAnnex(); renderMeth(); go(0);
+const h=location.hash.slice(1); show(['deck','annex','meth'].includes(h)?h:'deck');
+})();
+</script>
+</body>
+</html>
