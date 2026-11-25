@@ -5,7 +5,9 @@ Corte: 25/11/2026. Confidencial. Fuente: `Inputs/Reporte iniciativas IA.xlsx` (r
 ## 1. Conclusión
 
 - **La base es usable y las llaves cruzan al 100%**: todas las evaluaciones, riesgos y planes cruzan con el código del playbook, y planes y controles cruzan con riesgos por ID Riesgo.
-- **Los riesgos IA no están separados.** La "Taxonomía" es la taxonomía corporativa de riesgo operacional (11 categorías: Procesamiento, Ciberseguridad, Modelo, Fraude, etc.), no las categorías IA de Percy. Solo "Modelo" es claramente IA. Por palabras clave, unos 75 de 155 riesgos (~48%) describen un riesgo propio de IA (alucinación, sesgo, prompts, Copilot, etc.) [Inferido]; el resto son riesgos tradicionales de la iniciativa.
+- **Los riesgos IA no están separados (confirmado por el responsable de la base, 25/11).** Se usa la metodología de Riesgos No Financieros; la "Taxonomía" es la corporativa. Los riesgos IA solo se distinguen por el contexto de la "Descripción riesgo", sin palabras clave confiables, así que se descarta el proxy por palabras clave y se propone una revisión manual de los 155 riesgos.
+- **Exposición residual = impacto × frecuencia:** la pérdida potencial en soles si el riesgo ocurre. Total S/ 125.4 MM; Fraude concentra S/ 67.4 MM (54%).
+- **No hay campo de materialidad.** Solo el Tier del playbook 20/11 (219 de 459). Tier t1-t2 (16) y evaluadas por AIR Team (23) coinciden en 1 sola iniciativa; ninguna t1-t2 está en Piloto, Despliegue o Captura de valor.
 - **No hay riesgo residual Alto/Crítico en las dimensiones de Walter.** Los 6 Alto/Crítico son de fraude (BCP-0312, BCP-0012, BCP-0477), que no entra en ninguna de las 6 dimensiones.
 - **Viabilidad: 3 KCI calculables; KRI 2 y 3 como proxy; KRI 1 y 5 parciales; KRI 4 y 6 no calculables.**
 
@@ -25,7 +27,7 @@ Corte: 25/11/2026. Confidencial. Fuente: `Inputs/Reporte iniciativas IA.xlsx` (r
 |---|---|---|---|---|
 | KRI1 | Model Risk / MRM | Parcial (proxy) | 15 riesgos "Modelo" en 10 iniciativas; 1 Relevante, 0 Alto/Crítico. 0 materiales evaluados. | Resultado MRM por caso y tolerancias |
 | KRI2 | Ciber / Datos / Privacidad | Proxy calculable | 48 riesgos en 21 iniciativas; 0 Alto/Crítico; 8 Relevante (7 iniciativas), 5 sin plan. | Definir "breach crítico" (¿residual ≥ Relevante sin plan?) |
-| KRI3 | IA responsable / Cumplimiento | Proxy calculable | 22 riesgos (Cumplimiento/Legal/Laboral) en 16 iniciativas; 4 Relevante, 3 sin plan. | Etiqueta IA (sesgo, transparencia, supervisión humana) |
+| KRI3 | IA responsable / Cumplimiento | Proxy calculable | 22 riesgos (Cumplimiento/Legal/Laboral) en 16 iniciativas; 4 Relevante, 3 sin plan. | Marca IA por contexto (sesgo, transparencia, supervisión humana) |
 | KRI4 | Operacional / Autonomía | No calculable | Solo exposición: 67 riesgos operativos/tecnología, 6 Relevante. | Incidentes y límites de autonomía |
 | KRI5 | Terceros | Parcial | 87% de las iniciativas con herramienta identificada usan Microsoft (206/236) [Inferido, playbook 20/11]. | Proveedor estructurado, due diligence, exit strategy |
 | KRI6 | Uso / Costo | No calculable | Sin datos de costo ni consumo. | Costo por iniciativa y presupuesto |
@@ -35,7 +37,8 @@ Corte: 25/11/2026. Confidencial. Fuente: `Inputs/Reporte iniciativas IA.xlsx` (r
 
 ## 4. Decisiones a validar antes del HTML
 
-1. Etiqueta de riesgo IA: ¿la pide Riesgos (categorías IA de Percy) o usamos el proxy por palabras clave?
+1. Etiqueta de riesgo IA: revisión manual por contexto de los 155 riesgos (idealmente validada por AIR Team).
+1b. Definición de "material": Tier t1-t2 o evaluación por AIR Team (hoy no coinciden).
 2. Mapeo taxonomía → dimensión de Walter, y dónde va Fraude (concentra todos los Alto/Crítico).
 3. Umbral de "crítico" para los KRI: con Alto/Crítico todos salen en 0; con ≥ Relevante salen valores.
 4. Tier y proveedor: tomarlos del playbook del 20/11 o pedirlos en esta base.
