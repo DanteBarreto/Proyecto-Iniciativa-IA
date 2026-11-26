@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de ruta Gobierno IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* Línea gráfica de la plantilla 06_Reporte_HTML/raf_apetito_ia_bcp.html (paleta grupocredicorp.com) */
+:root{
+  --ink:#202E44; --text:#333333; --slate:#4D5B70; --muted:#69727D;
+  --line:#D9D9D9; --line-soft:#ECE7E0; --cream:#FAF7F3; --white:#FFFFFF;
+  --magenta:#E93CAC; --magenta-d:#CC3366; --magenta-bg:#FDF2F9;
+  --teal:#2AD2C9; --teal-d:#1E9C95; --teal-bg:#E6F8F7;
+  --ok:#1E9E6A; --ok-bg:#E3F4EC; --warn:#D99000; --warn-bg:#FBF0D9; --bad:#D63A3A; --bad-bg:#FBE4E4; --na:#9AA1AC; --na-bg:#EEF0F3;
+  --serif:"Libre Baskerville",Georgia,serif;
+  --sans:"Inter Tight","Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:#fff;padding:8px 12px;z-index:99}
+.skip:focus{left:8px}
+a{color:var(--magenta-d)}
+
+/* barra superior */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 20px;background:var(--white);border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.brand .logo{height:20px;width:auto;color:#000;display:block}
+.brand span{color:var(--muted);font-size:13px;border-left:1px solid var(--line);padding-left:12px}
+.sample{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--magenta-d);border:1.5px solid var(--magenta);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--cream);padding:3px;border-radius:999px;overflow-x:auto;max-width:100%}
+.tabs button{white-space:nowrap;border:0;background:transparent;padding:6px 14px;border-radius:999px;cursor:pointer;font-weight:500;color:var(--slate);font-size:14px}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.view{display:none;max-width:1240px;margin:0 auto;padding:24px 20px 60px}
+.view.on{display:block}
+
+h1{font-family:var(--serif);font-weight:400;color:var(--ink);font-size:30px;line-height:1.2;margin:0 0 6px}
+h2{font-family:var(--serif);font-weight:400;color:var(--ink);font-size:22px;margin:0 0 6px}
+h3{font-size:16px;color:var(--ink);margin:0 0 6px}
+.lead{color:var(--slate);font-size:16px;margin:0 0 18px;max-width:900px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--magenta-d);margin-bottom:6px}
+.card{background:var(--white);border:1px solid var(--line-soft);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.muted{color:var(--muted)}.small{font-size:13px}
+ul.clean{margin:0;padding-left:18px}ul.clean li{margin:3px 0}
+
+/* chips de fuente y por confirmar */
+.src{display:inline-block;font-size:10.5px;font-weight:700;color:var(--teal-d);background:var(--teal-bg);border:1px solid #A9E9E5;border-radius:4px;padding:0 5px;margin-left:4px;vertical-align:1px;cursor:help;white-space:nowrap}
+.pc{display:inline-block;font-size:11px;font-weight:700;color:#8A5B00;background:var(--warn-bg);border:1px dashed var(--warn);border-radius:4px;padding:0 6px;white-space:nowrap}
+.sup{display:inline-block;font-size:11px;font-weight:700;color:var(--slate);background:var(--na-bg);border:1px dashed var(--na);border-radius:4px;padding:0 6px}
+.tagx{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;padding:1px 6px;border-radius:4px;text-transform:uppercase}
+.tagx.nuevo{background:var(--magenta-bg);color:var(--magenta-d);border:1px solid #F6C7E6}
+.tagx.heredado{background:var(--teal-bg);color:var(--teal-d);border:1px solid #A9E9E5}
+
+/* semáforo */
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;padding:2px 9px 2px 5px;border-radius:999px;white-space:nowrap}
+.st i{width:15px;height:15px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;color:#fff;font-weight:700}
+.st.verde{background:var(--ok-bg);color:#14704B}.st.verde i{background:var(--ok)}
+.st.ambar{background:var(--warn-bg);color:#8A5B00}.st.ambar i{background:var(--warn)}
+.st.rojo{background:var(--bad-bg);color:#A82626}.st.rojo i{background:var(--bad)}
+.st.stop{background:#3A0F0F;color:#fff}.st.stop i{background:var(--bad)}
+.st.na{background:var(--na-bg);color:var(--slate)}.st.na i{background:var(--na)}
+.thr{display:flex;gap:3px;font-size:12px;font-weight:600;margin-top:6px}
+.thr span{flex:1;text-align:center;border-radius:4px;padding:3px 4px;color:#fff;white-space:nowrap}
+.thr .v{background:var(--ok)}.thr .a{background:var(--warn)}.thr .r{background:var(--bad)}
+
+/* botones */
+.btn{border:1px solid var(--line);background:var(--white);border-radius:999px;padding:8px 16px;cursor:pointer;color:var(--ink);font-weight:500;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink)}
+.btn.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.mag{background:var(--magenta-d);color:#fff;border-color:var(--magenta-d)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* formularios */
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink)}
+label.f small{font-weight:400;color:var(--muted)}
+input[type=text],input[type=date],input[type=number],input[type=email],select,textarea{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%;font-weight:400}
+textarea{min-height:64px;resize:vertical}
+fieldset{border:1px solid var(--line-soft);border-radius:12px;padding:14px 16px;margin:0 0 16px;background:var(--white)}
+legend{font-weight:700;color:var(--ink);padding:0 6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line-soft);border-radius:10px;margin:6px 0;cursor:pointer;background:var(--white)}
+.opt:hover{border-color:var(--slate)}
+.opt input{margin-top:3px;accent-color:var(--magenta-d)}
+.opt.sel{border-color:var(--magenta);background:var(--magenta-bg)}
+.lvl{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;border-radius:6px;background:var(--ink);color:#fff;font-weight:700;font-size:13px;padding:0 6px}
+.lvl.nm{background:#6F7C91}
+
+/* hero */
+.hero{background:var(--ink);color:#fff;border-radius:16px;padding:32px 34px;position:relative;overflow:hidden;margin-bottom:18px}
+.hero .kicker{color:var(--teal)}
+.hero h1{color:#fff;font-size:34px;max-width:820px}
+.hero h1 em{font-style:normal;color:var(--magenta)}
+.hero p{color:#C9D1DC;max-width:760px;margin:6px 0 0}
+.hero .counters{display:flex;gap:40px;margin-top:24px;flex-wrap:wrap}
+.hero .counters b{display:block;font-size:40px;font-weight:600;line-height:1}
+.hero .counters span{font-size:13px;color:#AEB8C6}
+.hero .arc{position:absolute;right:-160px;top:-140px;width:480px;height:480px;border-radius:50%;border:48px solid rgba(233,60,172,.16);pointer-events:none}
+.hero .row{margin-top:24px}
+.hero .btn{border-color:rgba(255,255,255,.4);background:transparent;color:#fff}
+.hero .btn.mag{background:var(--magenta-d);border-color:var(--magenta-d)}
+
+/* tablas */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);padding:8px 8px;background:var(--cream)}
+.tbl td{border-bottom:1px solid var(--line-soft);padding:8px 8px;vertical-align:top}
+.tblwrap{overflow-x:auto}
+
+/* stepper */
+.stepper{display:flex;gap:6px;margin:0 0 18px;padding:0;list-style:none;flex-wrap:wrap}
+.stepper li{flex:1;min-width:120px}
+.stepper button{width:100%;text-align:left;border:1px solid var(--line-soft);background:var(--white);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px;color:var(--slate)}
+.stepper button b{display:block;color:var(--ink);font-size:14px}
+.stepper button[aria-current=step]{border-color:var(--magenta);box-shadow:inset 0 -3px 0 var(--magenta)}
+.stepper button.done b::after{content:" ✓";color:var(--ok)}
+.wpanel{display:none}.wpanel.on{display:block}
+.wnav{display:flex;justify-content:space-between;margin-top:8px}
+
+/* resultado */
+.result{border-radius:12px;padding:16px 18px;border:1px solid var(--line-soft);background:var(--white);border-left:6px solid var(--ink);margin:12px 0}
+.result.stop{border-left-color:var(--bad);background:var(--bad-bg)}
+.result.info{border-left-color:var(--warn);background:var(--warn-bg)}
+.result .big{font-size:22px;font-weight:700;color:var(--ink);margin:2px 0 6px}
+.route{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:700;font-size:13px;color:#fff}
+.route.Ágil{background:var(--teal-d)}.route.Estándar{background:#3B6FB6}.route.Reforzada{background:var(--ink)}.route.STOP{background:var(--bad)}
+
+/* línea de tiempo */
+.tl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0}
+.tl .tn{background:var(--white);border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px;position:relative;border-top:4px solid var(--slate)}
+.tl .tn.g{border-top-color:var(--magenta)}
+.tl .tn b{display:block;color:var(--ink)}
+.tl .tn .d{font-size:18px;font-weight:700;color:var(--ink);margin-top:6px}
+.bar{height:12px;border-radius:6px;background:var(--line-soft);position:relative;margin:10px 0 4px;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;border-radius:6px}
+
+/* pirámide y flujo */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pyr div{color:#fff;text-align:center;padding:12px 10px;border-radius:6px;font-weight:700}
+.pyr small{display:block;font-weight:400;opacity:.85}
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.flow .fs{background:var(--white);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;font-size:13px}
+.flow .fs header{background:var(--slate);color:#fff;padding:8px 10px;font-weight:700;display:flex;justify-content:space-between;gap:6px}
+.flow .fs:nth-child(2) header{background:#1E7FB8}.flow .fs:nth-child(3) header{background:#0F6FA8}.flow .fs:nth-child(4) header{background:#7A2A63}.flow .fs:nth-child(5) header{background:#2E7D32}
+.flow .fs .gt{background:#fff;color:var(--ink);border-radius:4px;padding:0 5px;font-size:11px}
+.flow .fs div{padding:8px 10px}
+.flow .fs .lb{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-bottom:0}
+.matrix{display:grid;grid-template-columns:240px repeat(4,minmax(0,1fr));gap:6px;font-size:13px}
+.matrix .h{font-weight:700;padding:8px;border-radius:8px;text-align:center}
+.matrix .c{padding:10px;border-radius:8px;background:var(--white);border:1px solid var(--line-soft)}
+
+/* dimensiones */
+.dimcard{background:var(--white);border:1px solid var(--line-soft);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.dimhead{display:grid;grid-template-columns:1fr 280px;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line-soft);background:linear-gradient(90deg,var(--white),var(--cream))}
+.mrow{display:grid;grid-template-columns:90px 1fr 110px 110px 110px;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line-soft);align-items:start;font-size:14px}
+.mrow:last-child{border-bottom:0}
+.mrow .code{font-weight:700;color:var(--ink);font-size:13px}
+.cell{border-radius:6px;padding:4px 6px;font-size:12.5px;font-weight:600;text-align:center}
+.cell.v{background:var(--ok-bg);color:#14704B}.cell.a{background:var(--warn-bg);color:#8A5B00}.cell.r{background:var(--bad-bg);color:#A82626}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--magenta-d);font-weight:600;font-size:13px}
+details .dd{background:var(--cream);border-radius:8px;padding:10px 12px;margin-top:6px;font-size:13px}
+details.big>summary{font-size:15px;color:var(--ink);padding:4px 0}
+mark{background:#FFE58A;padding:0 1px}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--cream);border:1px solid var(--line-soft);color:var(--slate)}
+label.chip{cursor:pointer}
+label.chip input{accent-color:var(--magenta-d)}
+
+/* ficha */
+.ficha h2{margin-top:0}
+.kv{display:grid;grid-template-columns:200px 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0;color:var(--ink)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
+
+@media (max-width:900px){
+  .g2,.g3,.g5,.tl,.flow{grid-template-columns:1fr}
+  .matrix{grid-template-columns:1fr}
+  .dimhead{grid-template-columns:1fr}
+  .mrow{grid-template-columns:1fr 1fr 1fr;}
+  .mrow .code,.mrow .mname{grid-column:1/-1}
+  .filters{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  .tabs{margin-left:0}
+  .hero{padding:22px 18px}.hero h1{font-size:26px}.hero .counters{display:grid;grid-template-columns:1fr 1fr;gap:16px}.hero .counters b{font-size:30px}
+  .view{padding:16px 16px 50px}
+}
+@media print{
+  .topbar,.stepper,.wnav,.noprint,.toast{display:none!important}
+  body{background:#fff;font-size:12px}
+  .view{display:none!important}
+  #v-ini.on,#v-wiz.on{display:block!important}
+  #v-wiz .wpanel{display:none!important}
+  #v-wiz #p5{display:block!important}
+  .card,.result{break-inside:avoid;border-color:#bbb}
+  .src{border:0;background:none}
+}
+
+/* ===== Guía de ruta: flujo dinámico ===== */
+.scen{display:grid;grid-template-columns:1fr 1.3fr 2fr auto;gap:12px;align-items:end;background:var(--white);border:1px solid var(--line-soft);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--slate)}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.seg button.stopb[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.flabel{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:5px;display:block}
+.cases{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 14px}
+.cases button{border:1px dashed var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--slate)}
+.cases button:hover,.cases button[aria-pressed=true]{border-style:solid;border-color:var(--magenta);color:var(--magenta-d);background:var(--magenta-bg)}
+
+.flowwrap{position:relative;background:var(--white);border:1px solid var(--line-soft);border-radius:14px;padding:92px 14px 40px}
+.flowsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.cols{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:30px;position:relative}
+.col{display:flex;flex-direction:column;gap:14px;justify-content:center;height:100%}
+.colwrap{position:relative}
+.colh{position:absolute;top:-44px;left:0;right:0;text-align:center}
+.colh b{display:block;font-size:13px;color:var(--ink)}
+.colh span{font-size:11.5px;color:var(--muted)}
+.node{position:relative;z-index:1;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;text-align:left;font-size:12.5px;line-height:1.3;transition:opacity .35s,border-color .35s,box-shadow .35s,transform .35s;width:100%}
+.node b{display:block;font-size:13px;color:var(--ink)}
+.node small{color:var(--muted)}
+.node .gt{position:absolute;top:-9px;right:8px;background:var(--magenta-d);color:#fff;font-size:10.5px;font-weight:700;border-radius:4px;padding:0 5px}
+.node.dia{border-style:dashed;text-align:center;background:var(--cream)}
+.node.k-stop{border-color:#E3A3A3;background:#FFF6F6}.node.k-rnf{border-color:#9ED3BB}.node.k-ger{border-color:#EBC77F}.node.k-com{border-color:#E9A0C9}.node.k-car{border-color:#E39A9A}
+.node.k-ag{border-left:5px solid var(--teal-d)}.node.k-es{border-left:5px solid #3B6FB6}.node.k-re{border-left:5px solid var(--ink)}
+.dim .node{opacity:.3}
+.dim .node.on{opacity:1;border-color:var(--magenta);box-shadow:0 0 0 3px rgba(233,60,172,.15)}
+.dim .node.maybe{opacity:.85;border-style:dashed;border-color:var(--magenta)}
+.node.cur{transform:scale(1.05);box-shadow:0 0 0 4px rgba(233,60,172,.35)!important;border-color:var(--magenta-d)!important;opacity:1!important}
+.node.sel{outline:3px solid var(--teal);outline-offset:2px}
+.chipsm{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.chipsm span{font-size:10.5px;background:var(--cream);border:1px solid var(--line-soft);border-radius:999px;padding:0 6px;color:var(--slate)}
+.edge{fill:none;stroke:#C9CFD8;stroke-width:1.6;transition:stroke .35s,opacity .35s}
+.dim .edge{opacity:.3}
+.edge.on{stroke:var(--magenta-d);stroke-width:2.6;opacity:1!important;stroke-dasharray:7 5;animation:dash 1s linear infinite}
+.edge.maybe{stroke:var(--magenta);opacity:.7!important;stroke-dasharray:3 4}
+.edge.loop{stroke-dasharray:4 4}
+@keyframes dash{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){.edge.on{animation:none}.node{transition:none}}
+.elabel{font-size:10.5px;fill:var(--muted);font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.elabel.on{fill:var(--magenta-d)}
+.clock{position:absolute;top:12px;height:26px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px;font-weight:600;transition:all .4s;z-index:2;white-space:nowrap;padding:0 10px;overflow:hidden}
+.clock.off{background:var(--bad-bg);color:#A82626}
+
+.player{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;margin:14px 0}
+.player .pbtns{display:flex;gap:6px}
+.player button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;height:34px;min-width:34px;padding:0 12px;cursor:pointer;font-weight:600}
+.player button.play{background:var(--magenta-d);border-color:var(--magenta-d)}
+.player .ptxt{font-size:14.5px}
+.player .ptxt b{color:var(--teal)}
+.player .pbar2{display:flex;gap:3px}
+.player .pbar2 i{width:16px;height:5px;border-radius:3px;background:rgba(255,255,255,.25)}
+.player .pbar2 i.on{background:var(--magenta)}
+
+.story{display:grid;grid-template-columns:1fr 380px;gap:14px}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:10px;margin-bottom:8px;background:#fff;cursor:pointer;transition:border-color .3s,background .3s;font-size:14px}
+.steps li .n{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.steps li.cur{border-color:var(--magenta);background:var(--magenta-bg)}
+.steps li.stop .n{background:var(--bad)}
+.steps li b{color:var(--ink)}
+.detail{position:sticky;top:70px;align-self:start;background:#fff;border:1px solid var(--line-soft);border-top:4px solid var(--teal);border-radius:12px;padding:14px 16px;font-size:13.5px}
+.detail h3{font-size:17px;margin-bottom:4px}
+.detail .lb{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+
+/* rutas y cupo */
+.cupo{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.cupo i{width:42px;height:42px;border-radius:8px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:13px;color:var(--slate);position:relative;transition:all .3s}
+.cupo i.z-v{border-color:#7CC4A2}.cupo i.z-a{border-color:#E5B14E}.cupo i.z-r{border-color:#D97070}
+.cupo i.prev{background:var(--slate);color:#fff}
+.cupo i.new{background:var(--magenta-d);color:#fff;animation:pop .5s}
+.cupo i.lim::after{content:"límite";position:absolute;bottom:-17px;font-size:10px;color:var(--bad);font-weight:700}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+input[type=range]{width:100%;accent-color:var(--magenta-d)}
+
+#flow{scroll-margin-top:64px}
+@media (max-width:600px){.brand span{font-size:11px;white-space:normal}.brand .logo{height:16px}}
+@media (max-width:900px){
+  .scen{grid-template-columns:1fr}
+  .cols{grid-template-columns:1fr;gap:10px}
+  .colh{position:static;text-align:left;margin-top:8px}
+  .flowwrap{padding:14px}
+  .flowsvg{display:none}
+  .clock{position:static;margin-bottom:8px;width:auto!important}
+  .story{grid-template-columns:1fr}
+  .detail{position:static}
+  .player{grid-template-columns:1fr}
+}
+@media print{ .view{display:none!important} .view.on{display:block!important} .player,.scen,.cases{display:none!important} }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Ir al contenido</a>
+<!--LOGO_DEFS-->
+<header class="topbar">
+  <div class="brand"><!--LOGO_SVG--><span>Guía de ruta Gobierno IA</span></div>
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" data-view="guia" aria-selected="true">Guía de ruta</button>
+    <button role="tab" data-view="rutas" aria-selected="false">Rutas y cupo</button>
+    <button role="tab" data-view="marco" aria-selected="false">Marco</button>
+    <button role="tab" data-view="dim" aria-selected="false">Dimensiones</button>
+    <button role="tab" data-view="anx" aria-selected="false">Anexos</button>
+  </nav>
+</header>
+<main id="main">
+<section class="view on" id="v-guia" aria-label="Guía de ruta"></section>
+<section class="view" id="v-rutas" aria-label="Rutas y cupo"></section>
+<section class="view" id="v-marco" aria-label="Marco"></section>
+<section class="view" id="v-dim" aria-label="Dimensiones"></section>
+<section class="view" id="v-anx" aria-label="Anexos"></section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!--
+  BLOQUE DE DATOS (configuración). Fuente: PPT Comité Gobierno IA v35.
+  Para actualizar a una nueva versión de la PPT: edita data/config_gobierno_ia.json y vuelve a generar
+  este HTML con build_herramienta.py. Toda la lógica lee de este bloque.
+-->
+<script id="config" type="application/json">/*CONFIG*/</script>
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const CFG = JSON.parse(document.getElementById('config').textContent);
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tx = s => esc(s).replace(/\[Por confirmar\]/g, '<span class="pc">Por confirmar</span>').replace(/\(por confirmar\)/gi, '<span class="pc">Por confirmar</span>');
+const PC = '<span class="pc">Por confirmar</span>';
+/* Las fuentes (slide) quedan en el bloque de datos y no se muestran en pantalla. */
+const src = s => '';
+const nivel = id => CFG.niveles.find(n => n.id === id);
+const A = id => CFG.autonomia.find(a => a.id === id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function show(v){
+  $$('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.view === v));
+  $$('.view').forEach(s => s.classList.toggle('on', s.id === 'v-'+v));
+  if(v === 'guia') requestAnimationFrame(() => drawEdges());
+  window.scrollTo(0,0);
+  try{ history.replaceState(null, '', '#'+v); }catch(e){}
+}
+$$('.tabs button').forEach(b => b.addEventListener('click', () => show(b.dataset.view)));
+
+/* ============ modelo del flujo (S3, S5, S6) ============ */
+const RUTA_NODO = {'Ágil':'ag', 'Estándar':'es', 'Reforzada':'re'};
+const INST_NODO = {verde:'rnf', ambar:'ger', rojo_bajo:'com', rojo_limite:'car'};
+const EDGES = [
+  ['reg','ley'], ['ley','stop','Sí'], ['ley','niv','No'],
+  ['niv','re'], ['niv','es'], ['niv','ag'],
+  ['re','eval'], ['es','eval'], ['ag','eval'],
+  ['eval','sem'], ['eval','rnf'],
+  ['sem','rnf'], ['sem','ger'], ['sem','com'], ['sem','car'],
+  ['rnf','mon'], ['ger','mon'], ['com','mon'], ['car','mon'],
+  ['mon','reev'], ['reev','niv','', 'loop']
+];
+const S = {ley:'no', nivel:'N2', semaforo:'', caso:''};
+
+/* Recorrido del escenario: lista de pasos con su caja y explicación */
+function recorrido(){
+  const P = CFG.pasos, out = [];
+  out.push({node:'reg', t:`<b>Registrar.</b> ${esc(P[0].responsable)} registra la iniciativa en el inventario (Playbook u otra herramienta con los campos corporativos). Resultado: <b>${esc(P[0].entregable.toLowerCase())}</b>.`, f:'S3'});
+  if(S.ley === 'indebido'){
+    out.push({node:'ley', t:`<b>Clasificar (G1) · Ley IA.</b> La iniciativa es un <b>uso indebido</b> según la Ley IA y su Reglamento (DS 115-2025-PCM).`, f:'S5'});
+    out.push({node:'stop', t:`<b>STOP, sin excepción.</b> La iniciativa se detiene: no entra a las rutas ni usa cupo. El listado literal de usos indebidos lo valida Legal contra el Reglamento.`, f:'S5, S6', stop:true});
+    return out;
+  }
+  const n = nivel(S.nivel);
+  out.push({node:'ley', t:`<b>Clasificar (G1) · Ley IA.</b> No es un uso indebido: la iniciativa entra a las rutas.`, f:'S5, S6'});
+  out.push({node:'niv', t:`<b>Clasificar (G1) · Triaje.</b> La 2.ª línea de riesgos / AI Risk Team asigna el nivel <b>${n.id}</b> (${esc(n.describe.toLowerCase().replace(/\.$/,''))}). Es <b>${n.material ? 'material: cuenta para el apetito' : 'no material: sigue el proceso vigente de RNF y no usa cupo'}</b>.`, f:'S3, S18'});
+  out.push({node:RUTA_NODO[n.ruta], t:`<b>Ruta de atención ${esc(n.ruta)}.</b> SLA sugerido: <b>${esc(n.slaTexto)}</b>, contados desde G1 hasta G3.`, f:'S6'});
+  out.push({node:'eval', t: n.material
+    ? `<b>Evaluar (G2).</b> Las especialidades evalúan en paralelo (${CFG.especialidades.evaluanG2.map(esc).join(' · ')}), cada una con su metodología y una matriz de controles proporcional al nivel ${n.id}${n.controles?` (${esc(n.controles.toLowerCase())})`:''}.`
+    : `<b>Evaluar (G2).</b> Evaluación con controles proporcionales al nivel ${n.id} (a menor materialidad, menos controles). Qué especialidades intervienen en N4–N5: ${PC}`, f:'S3, S4'});
+  if(!n.material){
+    out.push({node:'rnf', t:`<b>Decidir (G3).</b> ${esc(CFG.autonomiaNoMaterial.nota)}: <b>${esc(CFG.autonomiaNoMaterial.instancia)}</b>.`, f:'S6'});
+  } else {
+    const r = S.semaforo ? A(S.semaforo) : null;
+    out.push({node:'sem', t: r
+      ? `<b>Resultado de la evaluación: ${esc(r.condicion.toLowerCase())}</b> (${esc(r.detalle)}). Con este semáforo se fija en G2 quién aprobará.`
+      : `<b>Resultado de la evaluación.</b> Aún sin semáforo. Hay 4 caminos posibles: todo verde, algún ámbar, rojo bajo el límite o rojo que llega al límite. Elige uno arriba para verlo.`, f:'S6'});
+    out.push({node: r ? INST_NODO[r.id] : 'dec', t: r
+      ? `<b>Decidir (G3): ${esc(r.instancia)}.</b> ${esc(r.nota.charAt(0).toUpperCase()+r.nota.slice(1))}.${S.caso==='s7' ? ' En el ejemplo, MRM queda bajo el límite (Comité RNF) y Ciber llega al límite (CAR): manda el más exigente.' : ''}`
+      : `<b>Decidir (G3).</b> La instancia depende del semáforo: Autonomías vigentes de RNF, Gerencia, Comité de Riesgo No Financiero Corp o CAR.`, f: S.caso==='s7' ? 'S6, S7' : 'S6'});
+  }
+  out.push({node:'mon', t:`<b>Monitorear.</b> ${esc(CFG.pasos[4].que)}`, f:'S3'});
+  out.push({node:'reev', t:`<b>Reevaluación.</b> Ya en producción, un rojo o un cambio material vuelve a pasar la iniciativa por la ruta.`, f:'S3'});
+  return out;
+}
+function activos(){
+  const rec = recorrido(), seq = rec.map(r => r.node);
+  const on = new Set(seq.filter(x => x !== 'dec')), maybe = new Set(), eOn = new Set(), eMaybe = new Set();
+  const OPC = ['rnf','ger','com','car'];
+  if(seq.includes('dec')) OPC.forEach(x => maybe.add(x));
+  for(let i=0;i<seq.length-1;i++){
+    const a = seq[i], b = seq[i+1];
+    if(b === 'dec'){ OPC.forEach(x => eMaybe.add(a+'>'+x)); continue; }
+    if(a === 'dec'){ OPC.forEach(x => eMaybe.add(x+'>'+b)); continue; }
+    eOn.add(a+'>'+b);
+  }
+  if(seq.includes('reev')) eOn.add('reev>niv');
+  return {rec, on, maybe, eOn, eMaybe};
+}
+
+/* ============ GUÍA DE RUTA ============ */
+function nodeHTML(id){
+  const rutaN = r => CFG.niveles.filter(x => x.ruta === r).map(x => `${x.id} · ${esc(x.slaTexto)}`).join('<br>');
+  const M = {
+    reg:  `<b>Registrar</b><small>Inventario · código único</small>`,
+    ley:  `<b>¿Uso indebido según la Ley IA?</b><small>Ley 31814 · DS 115-2025-PCM</small>`,
+    stop: `<b>STOP</b><small>Prohibido · sin excepción ni cupo</small>`,
+    niv:  `<b>Triaje N1–N5</b><small>Materialidad e impacto</small>`,
+    re:   `<b>Reforzada</b><small>${rutaN('Reforzada')}</small>`,
+    es:   `<b>Estándar</b><small>${rutaN('Estándar')}</small>`,
+    ag:   `<b>Ágil</b><small>${rutaN('Ágil')}</small>`,
+    eval: `<b>Evaluación en paralelo</b><small>Controles proporcionales al nivel</small><div class="chipsm">${CFG.especialidades.evaluanG2.map(e => `<span>${esc(e)}</span>`).join('')}</div>`,
+    sem:  `<b>Semáforo por disciplina</b><small>frente al apetito · N1–N3</small>`,
+    rnf:  `<b>Autonomías vigentes de RNF</b><small>Todo verde · o N4–N5</small>`,
+    ger:  `<b>Gerencia Owner + Riesgos</b><small>+ AI Risk Team · algún ámbar</small>`,
+    com:  `<b>Comité de Riesgo No Financiero Corp</b><small>Rojo bajo el límite</small>`,
+    car:  `<b>CAR</b><small>Llega al límite · Directorio informado</small>`,
+    mon:  `<b>Tablero de apetito</b><small>Mensual · por disciplina</small>`,
+    reev: `<b>Reevaluación</b><small>Ante un rojo o un cambio material</small>`
+  };
+  const gate = {ley:'G1', niv:'G1', eval:'G2', sem:'G2', rnf:'G3', ger:'G3', com:'G3', car:'G3'}[id];
+  const kind = {stop:'k-stop', rnf:'k-rnf', ger:'k-ger', com:'k-com', car:'k-car', ag:'k-ag', es:'k-es', re:'k-re', ley:'dia', sem:'dia'}[id] || '';
+  return `<button class="node ${kind}" id="n-${id}" data-node="${id}" aria-controls="detail">${gate?`<span class="gt">${gate}</span>`:''}${M[id]}</button>`;
+}
+function renderGuia(){
+  const P = CFG.pasos;
+  const cols = [
+    {b:`1. ${P[0].nombre}`, s:P[0].etapa, nodes:['reg']},
+    {b:`2. Clasificar (triaje)`, s:`${P[1].etapa} · G1`, nodes:['stop','ley','niv']},
+    {b:'Ruta de atención', s:'cuánto tarda · se asigna en G1', nodes:['re','es','ag']},
+    {b:`3. Evaluar`, s:`${P[2].etapa} · G2`, nodes:['eval','sem']},
+    {b:`4. ${P[3].nombre}`, s:`${P[3].etapa} · G3`, nodes:['rnf','ger','com','car']},
+    {b:`5. ${P[4].nombre}`, s:P[4].etapa, nodes:['mon','reev']}
+  ];
+  const semLbl = {verde:'Todo verde', ambar:'Algún ámbar', rojo_bajo:'Rojo bajo el límite', rojo_limite:'Rojo que llega al límite'};
+  $('#v-guia').innerHTML = `
+  <div class="kicker">Guía de ruta</div>
+  <h1>¿Qué pasa con una iniciativa de IA, paso a paso?</h1>
+  <p class="lead">Elige un escenario y mira el camino que sigue la iniciativa: su ruta, cuánto tarda, quién evalúa y quién decide. Haz clic en cualquier caja para ver su detalle. ${src('S3, S6')}</p>
+  <div class="scen" role="group" aria-label="Escenario">
+    <div><span class="flabel">1 · ¿Uso indebido según la Ley IA? ${src('S5')}</span><div class="seg" id="segLey">
+      <button data-v="no">No</button><button data-v="indebido" class="stopb">Sí</button></div></div>
+    <div><span class="flabel">2 · Nivel del triaje ${src('S18')}</span><div class="seg" id="segNiv">
+      ${CFG.niveles.map(n => `<button data-v="${n.id}" title="${esc(n.materialidad)} · ${esc(n.ruta)} · ${esc(n.slaTexto)}">${n.id}</button>`).join('')}</div></div>
+    <div><span class="flabel">3 · Resultado de la evaluación en G2 (solo N1–N3) ${src('S6')}</span><div class="seg" id="segSem">
+      <button data-v="">Aún no</button>${CFG.autonomia.map(a => `<button data-v="${a.id}" title="${esc(a.detalle)}">${esc(semLbl[a.id] || a.condicion)}</button>`).join('')}</div></div>
+    <div><button class="btn pri" id="playTop">▶ Reproducir recorrido</button></div>
+  </div>
+  <div class="flowwrap" id="flow">
+    <svg class="flowsvg" id="svg" aria-hidden="true"></svg>
+    <div class="clock" id="clock"></div>
+    <div class="cols" id="cols">${cols.map(c => `<div class="colwrap"><div class="colh"><b>${esc(c.b)}</b><span>${esc(c.s)}</span></div><div class="col">${c.nodes.map(nodeHTML).join('')}</div></div>`).join('')}</div>
+  </div>
+  <div class="player" aria-label="Recorrido">
+    <div class="pbtns"><button id="pPrev" aria-label="Paso anterior">‹</button><button class="play" id="pPlay">▶ Reproducir</button><button id="pNext" aria-label="Paso siguiente">›</button></div>
+    <div class="ptxt" id="pTxt" aria-live="polite"></div>
+    <div class="pbar2" id="pBar"></div>
+  </div>
+  <div class="story">
+    <div><h2>El recorrido de este escenario</h2><ol class="steps" id="steps"></ol>
+      <div class="card small">${esc(CFG.reglasFlujo[1].t)} ${src('S3')}<br><b>Alcance:</b> ${esc(CFG.filosofia.alcance)} ${src('S4')}</div></div>
+    <aside class="detail" id="detail" aria-live="polite"></aside>
+  </div>`;
+  $$('#segLey button').forEach(b => b.onclick = () => { stop(); S.ley = b.dataset.v; S.caso=''; update(); });
+  $$('#segNiv button').forEach(b => b.onclick = () => { stop(); S.nivel = b.dataset.v; S.ley='no'; S.caso=''; update(); });
+  $$('#segSem button').forEach(b => b.onclick = () => { stop(); S.semaforo = b.dataset.v; S.caso=''; update(); });
+  $$('.node').forEach(b => b.onclick = () => { stop(); detail(b.dataset.node); });
+  $('#pPlay').onclick = () => playing ? stop() : play();
+  $('#playTop').onclick = () => play();
+  $('#pPrev').onclick = () => { stop(); goto(Math.max(0, pos-1)); };
+  $('#pNext').onclick = () => { stop(); goto(Math.min(REC.length-1, pos+1)); };
+  update();
+}
+let REC = [], pos = 0, playing = null;
+function update(){
+  const act = activos(); REC = act.rec;
+  const mat = nivel(S.nivel)?.material && S.ley !== 'indebido';
+  $$('#segLey button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === S.ley));
+  $$('#segNiv button').forEach(b => b.setAttribute('aria-pressed', S.ley !== 'indebido' && b.dataset.v === S.nivel));
+  $$('#segSem button').forEach(b => { b.setAttribute('aria-pressed', !!mat && b.dataset.v === S.semaforo); b.disabled = !mat; });
+  $('#flow').classList.add('dim');
+  $$('.node').forEach(n => { n.classList.toggle('on', act.on.has(n.dataset.node)); n.classList.toggle('maybe', act.maybe.has(n.dataset.node)); });
+  $('#steps').innerHTML = REC.map((r,i) => `<li data-i="${i}" class="${r.stop?'stop':''}"><span class="n">${i+1}</span><span>${r.t} ${src(r.f)}</span></li>`).join('');
+  $$('#steps li').forEach(li => li.onclick = () => { stop(); goto(+li.dataset.i); });
+  $('#pBar').innerHTML = REC.map(() => '<i></i>').join('');
+  drawEdges(act); goto(0, true);
+}
+function goto(i, silent){
+  pos = i; const r = REC[i];
+  $$('.node').forEach(n => n.classList.toggle('cur', !silent && (n.dataset.node === r.node || (r.node === 'dec' && n.classList.contains('maybe')))));
+  $$('#steps li').forEach((li,k) => li.classList.toggle('cur', !silent && k === i));
+  $$('#pBar i').forEach((x,k) => x.classList.toggle('on', !silent && k <= i));
+  $('#pTxt').innerHTML = silent ? `<b>${REC.length} pasos.</b> Pulsa «Reproducir» para recorrerlos, o haz clic en un paso.` : `<b>Paso ${i+1} de ${REC.length}.</b> ${r.t}`;
+  detail(silent ? (S.ley === 'indebido' ? 'stop' : RUTA_NODO[nivel(S.nivel).ruta]) : (r.node === 'dec' ? 'sem' : r.node));
+}
+function play(){
+  stop(); goto(0); $('#pPlay').textContent = '❚❚ Pausa';
+  if(innerWidth > 900) $('#flow').scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'start'});
+  playing = setInterval(() => { if(pos >= REC.length-1){ stop(); return; } goto(pos+1); }, reduce ? 3200 : 2400);
+}
+function stop(){ if(playing){ clearInterval(playing); playing = null; } const b = $('#pPlay'); if(b) b.textContent = '▶ Reproducir'; }
+
+/* Detalle de cada caja (desde el bloque de datos) */
+function detail(id){
+  $$('.node').forEach(n => n.classList.toggle('sel', n.dataset.node === id));
+  const P = CFG.pasos;
+  const step = s => `<div class="lb">Etapa</div>${esc(s.etapa)}${s.gate?` · gate ${s.gate}`:''}<div class="lb">Qué pasa</div>${esc(s.que)}<div class="lb">Resultado</div><b>${esc(s.entregable)}</b><div class="lb">Quién</div>${esc(s.responsable)}${s.notaResponsable?`<br><span class="muted">${esc(s.notaResponsable)}</span>`:''}`;
+  const ruta = r => `<div class="lb">Niveles</div>${CFG.niveles.filter(n => n.ruta === r).map(n => `<p style="margin:4px 0"><span class="lvl ${n.material?'':'nm'}">${n.id}</span> <b>${esc(n.slaTexto)}</b> · ${esc(n.describe)}<br><span class="muted">Ej.: ${esc(n.ejemplo)}</span></p>`).join('')}<div class="lb">Reloj</div>El SLA corre de la etapa G1 a la etapa G3, en días hábiles; son plazos sugeridos. Días por etapa: ${PC}`;
+  const rolDe = txt => CFG.roles.find(x => txt.includes(x.rol.split(' + ')[0].split(' (')[0]));
+  const inst = aid => { const a = A(aid), rol = rolDe(a.instancia); return `<div class="lb">Cuándo decide</div>${esc(a.condicion)}: ${esc(a.detalle)}.<div class="lb">Condición</div>${esc(a.nota)}${rol?`<div class="lb">Rol</div>${esc(rol.hace)} ${src(rol.fuente)}`:''}`; };
+  const D = {
+    reg:  {t:P[0].nombre, b:step(P[0]), f:P[0].fuente},
+    ley:  {t:'¿Uso indebido según la Ley IA?', b:`${esc(CFG.leyIA.pregunta)}<div class="lb">Ejemplos de uso indebido</div><ul class="clean">${CFG.leyIA.ejemplosIndebido.map(e=>`<li>${esc(e)}</li>`).join('')}</ul><div class="lb">Clasificación regulatoria</div>${CFG.leyIA.clasificaciones.map(c => `<p style="margin:4px 0"><b>${esc(c.nombre)}:</b> ${tx(c.efecto)} ${src(c.fuente)}</p>`).join('')}`, f:'S3, S5'},
+    stop: {t:'STOP · Prohibido', b:`<ul class="clean">${CFG.nivelesApetito[0].items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`, f:'S5, S6'},
+    niv:  {t:P[1].nombre, b:step(P[1]) + `<div class="lb">Niveles</div>${CFG.niveles.map(n => `<p style="margin:3px 0"><span class="lvl ${n.material?'':'nm'}">${n.id}</span> ${esc(n.materialidad)} · ${esc(n.ruta)} · ${esc(n.slaTexto)}</p>`).join('')}<p class="small muted">${esc(CFG.notaNiveles)}</p><p class="small"><b>Mejora en curso:</b> ${esc(CFG.propuesta.mejoraTriaje.aMejorar)} ${src('S2')}</p>`, f:'S3, S18'},
+    re:   {t:'Ruta Reforzada', b:ruta('Reforzada'), f:'S6, S18'},
+    es:   {t:'Ruta Estándar', b:ruta('Estándar'), f:'S6, S18'},
+    ag:   {t:'Ruta Ágil', b:ruta('Ágil') + `<div class="lb">Apetito</div>N4–N5 siguen el proceso vigente de RNF: no cuentan para el apetito ni usan cupo ${src('S5')}`, f:'S6, S18'},
+    eval: {t:P[2].nombre, b:step(P[2]) + `<div class="lb">Controles</div>${esc(CFG.controles.texto)} ${esc(CFG.controles.proporcional)} ${esc(CFG.controles.raci)}<br><span class="muted">${esc(CFG.controles.ejemploConteo)}</span><br>${PC} catálogo de controles por disciplina · especialidades según la ruta.<p><button class="btn sm" data-go="dim">Ver las 19 métricas que se evalúan ›</button></p>`, f:'S3, S4'},
+    sem:  {t:'Semáforo por disciplina frente al apetito', b:`Una métrica en rojo suma 1 a su dimensión; sin puntaje agregado, manda el peor semáforo ${src('S2, S8')}.<div class="lb">Cuatro resultados posibles</div>${CFG.autonomia.map(a => `<p style="margin:4px 0"><b>${esc(a.condicion)}</b> (${esc(a.detalle)}) → ${esc(a.instancia)}</p>`).join('')}<div class="lb">Varios rojos</div>${esc(CFG.reglaVariosRojos.t)} ${src('S7')}<p><button class="btn sm" data-go="rutas">Simular el cupo por dimensión ›</button></p>`, f:'S6'},
+    rnf:  {t:'Autonomías vigentes de RNF', b:inst('verde') + `<div class="lb">N4–N5</div>${esc(CFG.autonomiaNoMaterial.nota)}`, f:'S6'},
+    ger:  {t:A('ambar').instancia, b:inst('ambar'), f:'S6'},
+    com:  {t:A('rojo_bajo').instancia, b:inst('rojo_bajo'), f:'S6'},
+    car:  {t:'CAR', b:inst('rojo_limite') + `<div class="lb">Regla</div>Si una iniciativa llevaría al límite del apetito, decide el CAR ${src('S3, S5')}.`, f:'S6, S7'},
+    mon:  {t:P[4].nombre, b:step(P[4]), f:P[4].fuente},
+    reev: {t:'Reevaluación', b:`${esc(CFG.reglasFlujo[0].t)}<div class="lb">Disparadores</div><ul class="clean"><li>Un rojo en el tablero de apetito</li><li>Un cambio material: modelo, prompt o datos (ver métrica GOB-04)</li></ul>`, f:'S3, S9'}
+  };
+  const d = D[id]; if(!d) return;
+  $('#detail').innerHTML = `<div class="kicker">Detalle de la caja ${src(d.f)}</div><h3>${esc(d.t)}</h3>${d.b}`;
+  $$('[data-go]', $('#detail')).forEach(b => b.onclick = () => show(b.dataset.go));
+}
+
+/* Conexiones entre cajas (SVG) */
+function drawEdges(act){
+  act = act && act.eOn ? act : activos();
+  const wrap = $('#flow'), svg = $('#svg'); if(!wrap || !svg || !wrap.offsetParent) return;
+  placeClock();
+  if(innerWidth <= 900){ svg.innerHTML = ''; return; }
+  const W = wrap.getBoundingClientRect();
+  const R = id => { const r = $('#n-'+id).getBoundingClientRect(); return {l:r.left-W.left, r:r.right-W.left, t:r.top-W.top, b:r.bottom-W.top, cx:(r.left+r.right)/2-W.left, cy:(r.top+r.bottom)/2-W.top}; };
+  let h = '';
+  EDGES.forEach(([a,b,label,kind]) => {
+    const A1 = R(a), B1 = R(b); let d, lx, ly;
+    if(kind === 'loop'){
+      const yy = wrap.clientHeight - 14;
+      d = `M${A1.cx},${A1.b} L${A1.cx},${yy} L${B1.cx},${yy} L${B1.cx},${B1.b+2}`; lx = (A1.cx+B1.cx)/2; ly = yy - 5; label = 'Un rojo o un cambio material vuelve a pasar la iniciativa por la ruta';
+    } else if(Math.abs(A1.cx - B1.cx) < 30){
+      if(B1.t >= A1.b){ d = `M${A1.cx},${A1.b} L${B1.cx},${B1.t-2}`; ly = (A1.b + B1.t)/2 + 4; } else { d = `M${A1.cx},${A1.t} L${B1.cx},${B1.b+2}`; ly = (A1.t + B1.b)/2 + 4; } lx = A1.cx + 14;
+    } else {
+      const x1 = A1.r, y1 = A1.cy, x2 = B1.l, y2 = B1.cy, mx = (x1+x2)/2;
+      d = `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2-3},${y2}`; lx = x2 - 16; ly = y2 - 6;
+    }
+    const key = a+'>'+b, on = act.eOn.has(key), mb = act.eMaybe.has(key);
+    h += `<path class="edge ${on?'on':''} ${mb?'maybe':''} ${kind==='loop'?'loop':''}" d="${d}" marker-end="url(#ar${on||mb?'On':''})"/>`;
+    if(label) h += `<text class="elabel ${on||mb?'on':''}" x="${lx}" y="${ly}" text-anchor="${kind==='loop'?'middle':'start'}">${esc(label)}</text>`;
+  });
+  svg.innerHTML = `<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#C9CFD8"/></marker><marker id="arOn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#CC3366"/></marker></defs>` + h;
+}
+function placeClock(){
+  const c = $('#clock'), wrap = $('#flow'); if(!c || !wrap) return;
+  const n = nivel(S.nivel);
+  if(S.ley === 'indebido'){ c.className = 'clock off'; c.textContent = 'Sin reloj: la iniciativa se detiene (STOP)'; }
+  else { c.className = 'clock'; c.innerHTML = `⏱ Reloj del SLA, de G1 a G3 · ruta ${esc(n.ruta)} · ${esc(n.slaTexto)}`; }
+  if(innerWidth <= 900){ c.style.left = ''; c.style.width = ''; return; }
+  const W = wrap.getBoundingClientRect(), a = $('#n-ley').getBoundingClientRect(), b = $('#n-car').getBoundingClientRect();
+  c.style.left = (a.left - W.left) + 'px'; c.style.width = (b.right - a.left) + 'px';
+}
+addEventListener('resize', () => { clearTimeout(drawEdges.h); drawEdges.h = setTimeout(() => drawEdges(), 120); });
+
+/* ============ RUTAS Y CUPO ============ */
+const CUPO = {dim:'RAF-IA-03', hoy:3, roja:true};
+let RLVL = 'N2';
+function renderRutas(){
+  $('#v-rutas').innerHTML = `
+  <div class="kicker">Dos rutas sobre el mismo ciclo de vida</div><h1>Rutas: cuánto tarda y quién decide</h1>
+  <p class="lead">${esc(CFG.reglasFlujo[3].t)} ${src('S6')}</p>
+  <div class="grid g2">
+    <div class="card"><div class="kicker">Ruta de atención · cuánto tarda ${src('S6')}</div>
+      <p class="small muted" style="margin-top:0">Toca un nivel para ver su ruta y su plazo frente a los demás.</p>
+      <div class="seg" id="rLvl">${CFG.niveles.map(n => `<button data-v="${n.id}">${n.id}</button>`).join('')}</div>
+      <div id="rLvlOut"></div></div>
+    <div class="card"><div class="kicker">Ruta de autonomía · quién aprueba ${src('S6')}</div>
+      <p class="small muted" style="margin-top:0">Solo materiales (N1–N3). Se fija en G2 y decide la instancia en G3.</p>
+      <div class="tblwrap"><table class="tbl"><tbody>
+      ${CFG.autonomia.map(a => `<tr><td><span class="st ${a.id==='verde'?'verde':a.id==='ambar'?'ambar':'rojo'}"><i>${a.id==='verde'?'✓':'!'}</i>${esc(a.condicion)}</span><br><span class="small muted">${esc(a.detalle)}</span></td><td><b>${esc(a.instancia)}</b><br><span class="small muted">${esc(a.nota)}</span></td></tr>`).join('')}
+      <tr><td><span class="st na"><i>·</i>N4–N5</span></td><td>${esc(CFG.autonomiaNoMaterial.nota)}</td></tr>
+      <tr><td><span class="st stop"><i>✕</i>Ley IA: uso indebido</span></td><td><b>STOP</b>, sin excepción · fuera de las dos rutas ${src('S6')}</td></tr></tbody></table></div></div>
+  </div>
+  <div class="card"><div class="kicker">Simulador de cupo por dimensión ${src('S6, S7, S8')}</div>
+    <h2>¿Cuántos rojos faltan para que decida el CAR?</h2>
+    <p class="small" style="margin-top:0">${esc(CFG.reglaGeneralDimensiones[0])} ${esc(CFG.reglaVariosRojos.t)}</p>
+    <div class="grid g3">
+      <label class="f">Dimensión<select id="cDim">${CFG.dimensiones.map(d => `<option value="${d.id}" ${CUPO.dim===d.id?'selected':''}>${esc(d.id)} · ${esc(d.nombre)}</option>`).join('')}</select></label>
+      <label class="f">Iniciativas que hoy ya están en rojo: <span id="cHoyV"></span><input type="range" id="cHoy" min="0" max="8" step="1" value="${CUPO.hoy}"></label>
+      <div><span class="flabel">¿La nueva iniciativa queda en rojo en esta dimensión?</span><div class="seg" id="cRoja"><button data-v="1" aria-pressed="true">Sí</button><button data-v="0" aria-pressed="false">No</button></div></div>
+    </div>
+    <div class="cupo" id="cBoxes" aria-hidden="true"></div>
+    <div id="cOut" aria-live="polite" style="margin-top:22px"></div>
+    <p class="small muted">Cuadros: gris = rojos previos · magenta = la nueva iniciativa · borde verde, ámbar y rojo = apetito, ámbar y límite de la dimensión. <button class="btn sm" id="cS7">Ver un ejemplo</button></p>
+    <p class="small muted">Decide el CAR cuando, con la iniciativa, la dimensión <b>llega a su límite</b>.</p>
+  </div>`;
+  const lvl = () => { const n = nivel(RLVL); $$('#rLvl button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === RLVL));
+    $('#rLvlOut').innerHTML = `<div class="result" style="margin-top:12px"><div class="big"><span class="lvl ${n.material?'':'nm'}">${n.id}</span> <span class="route ${n.ruta}">${esc(n.ruta)}</span> ${esc(n.slaTexto)}</div><p class="small" style="margin:0">${esc(n.describe)} <span class="muted">Ej.: ${esc(n.ejemplo)}</span> ${src(n.fuente)}</p><p class="small" style="margin:6px 0 0">${n.material?'Material: cuenta para el apetito; quién aprueba depende del semáforo.':'No material: sigue las autonomías vigentes de RNF y no usa cupo.'}</p></div>
+    ${CFG.niveles.map(x => `<div class="row small" style="gap:8px;margin-top:4px"><span class="lvl ${x.material?'':'nm'}">${x.id}</span><span style="width:150px">${esc(x.ruta)} · ${esc(x.slaTexto)}</span><div class="bar" style="flex:1"><i style="left:${(x.slaMin||0)/30*100}%;width:${(x.slaMax-(x.slaMin||0))/30*100}%;background:${x.id===n.id?'var(--magenta-d)':'#B9C2CF'}"></i></div></div>`).join('')}
+    <p class="small muted">Escala de 0 a 30 días hábiles, de G1 a G3.</p>`; };
+  $$('#rLvl button').forEach(b => b.onclick = () => { RLVL = b.dataset.v; lvl(); });
+  lvl();
+  $('#cDim').onchange = e => { CUPO.dim = e.target.value; cupo(); };
+  $('#cHoy').oninput = e => { CUPO.hoy = +e.target.value; cupo(); };
+  $$('#cRoja button').forEach(b => b.onclick = () => { CUPO.roja = b.dataset.v === '1'; $$('#cRoja button').forEach(x => x.setAttribute('aria-pressed', x === b)); cupo(); });
+  $('#cS7').onclick = () => { const e = CFG.ejemplo; $('#cBoxes').innerHTML = ''; $('#cOut').innerHTML = `<div class="result" style="border-left-color:var(--bad)"><div class="kicker">Ejemplo ${src('S7')}</div><p style="margin:0"><b>${esc(e.iniciativa)}</b> · ${esc(e.triaje)}</p>${e.disciplinas.map(d => `<span class="chip">${esc(d.d)} · ${d.controles} controles · ${esc(d.resultado)}</span> `).join('')}${e.apetito.map(a => `<p style="margin:6px 0">${esc(a.nombre)} · ${esc(a.dim)}: hoy ${a.hoy} + esta = ${a.con} · el límite se alcanza en ${a.limite} → ${esc(a.texto)} → <b>${esc(a.instancia)}</b></p>`).join('')}<div class="big">${esc(e.decide)}</div></div>`; };
+  cupo();
+}
+function cupo(){
+  const d = CFG.dimensiones.find(x => x.id === CUPO.dim);
+  const lim = d.limite, con = CUPO.hoy + (CUPO.roja ? 1 : 0), n = Math.max(lim, con);
+  $('#cHoyV').textContent = CUPO.hoy;
+  let boxes = '';
+  for(let i=1;i<=n;i++){
+    const z = i <= d.apetitoMax ? 'z-v' : i < lim ? 'z-a' : 'z-r';
+    const k = i <= CUPO.hoy ? 'prev' : (CUPO.roja && i === CUPO.hoy+1) ? 'new' : '';
+    boxes += `<i class="${z} ${k} ${i===lim?'lim':''}">${i}</i>`;
+  }
+  $('#cBoxes').innerHTML = boxes;
+  let inst, color, msg;
+  if(!CUPO.roja){ inst = 'Esta dimensión no define la instancia'; color = 'var(--ok)'; msg = 'La iniciativa no suma a esta dimensión. Quién aprueba depende de las demás: todo verde → Autonomías vigentes de RNF; algún ámbar → Gerencia Owner + Gerencia de Riesgos.'; }
+  else if(con >= lim){ inst = A('rojo_limite').instancia; color = 'var(--bad)'; msg = `Hoy ${CUPO.hoy} + la nueva = ${con}. El límite de ${esc(d.nombre)} es ${esc(d.limiteTxt)}: la dimensión llega al límite: ${esc(A('rojo_limite').nota)}.`; }
+  else { inst = A('rojo_bajo').instancia; color = 'var(--magenta-d)'; msg = `Hoy ${CUPO.hoy} + la nueva = ${con}. Queda bajo el límite (${esc(d.limiteTxt)}): faltan ${lim - con} rojo(s) para llegar (${esc(A('rojo_bajo').nota)}).`; }
+  $('#cOut').innerHTML = `<div class="result" style="border-left-color:${color}"><div class="kicker">${esc(d.id)} · Apetito ${esc(d.apetito)} · Ámbar ${esc(d.ambar)} · Límite ${esc(d.limiteTxt)} ${src(d.fuente)}</div><div class="big">${esc(inst)}</div><p style="margin:0">${msg}</p></div>`;
+}
+
+/* ============ MARCO Y FLUJO ============ */
+function renderMarco(){
+  const F = CFG.filosofia;
+  $('#v-marco').innerHTML = `
+  <div class="kicker">Consultar el marco</div><h1>${esc(CFG.portada.titulo)}</h1>
+  <p class="lead">${esc(CFG.portada.bajada)} ${src('S1')}</p>
+  <div class="grid g5" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px">${CFG.portada.cifras.map(c => `<div class="card" style="margin:0"><b style="font-size:30px;color:var(--ink)">${esc(c.n)}</b><div class="small muted">${esc(c.t)}</div></div>`).join('')}</div>
+  <h2>${esc(CFG.propuesta.titulo)} ${src('S2')}</h2>
+  <div class="grid g3">
+    <div class="card"><div class="kicker">Qué proponemos</div><ul class="clean small">${CFG.propuesta.queProponemos.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="card"><div class="kicker">Principios de diseño</div><ul class="clean small">${CFG.propuesta.principios.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="card"><div class="kicker">Qué necesitamos del foro</div><ul class="clean small">${CFG.propuesta.necesitamosDelForo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  </div>
+  <details class="card"><summary>Ver detalle: oportunidad de mejora del triaje N1–N5 y evaluación de riesgos IA ${src('S2')}</summary><div class="dd"><b>Hoy.</b> ${esc(CFG.propuesta.mejoraTriaje.hoy)}<br><b>A mejorar.</b> ${esc(CFG.propuesta.mejoraTriaje.aMejorar)}<br><b>Por qué importa.</b> ${esc(CFG.propuesta.mejoraTriaje.porQueImporta)}<br><b>Umbrales y límites.</b> ${esc(CFG.propuesta.mejoraTriaje.umbrales)}<br>${esc(CFG.propuesta.mejoraTriaje.plazo)} · Alcance: ${esc(CFG.propuesta.alcance)}</div></details>
+  <h2>Filosofía del marco ${src('S4')}</h2>
+  <p class="lead">${esc(F.declaracion)} ${src(F.fuente)}</p>
+  <div class="card" style="border-left:4px solid var(--magenta)"><b>Alcance:</b> ${esc(F.alcance)} ${src('S4')}</div>
+  <h2>Declaración de apetito: tres niveles ${src('S5')}</h2>
+  <div class="grid g3">${CFG.nivelesApetito.map(n => `<div class="card" style="border-top:4px solid ${n.color==='stop'?'#3A0F0F':n.color==='rojo'?'var(--bad)':'var(--ok)'}">
+    <span class="st ${n.color}"><i>${n.color==='verde'?'✓':'✕'}</i>${esc(n.nombre)}</span><p class="small muted" style="margin:6px 0">${esc(n.regla)}</p>
+    ${n.items ? `<ul class="clean small">${n.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    ${n.grupos ? n.grupos.map(g => `<div class="small" style="margin-top:6px"><b>${esc(g.dim)}</b><ul class="clean">${g.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('') + `<p class="small muted">${esc(n.nota)}</p>` : ''}
+    ${src(n.fuente)}</div>`).join('')}</div>
+  <div class="grid g2">
+    <div class="card"><h2>Pirámide del marco ${src('S4')}</h2>
+      <div class="pyr">${F.piramide.map((x,i) => `<div style="width:${45+i*27}%;background:${['#7A2A63','#1E6FB8','#14808C'][i]}">${esc(x.nivel)}${i===0?' · 6 dimensiones':''}<small>${esc(x.lema)}</small></div>`).join('')}</div>
+      <ul class="clean small" style="margin-top:10px">${F.piramide.map(x => `<li><b>${esc(x.nivel)}:</b> ${esc(x.d)}</li>`).join('')}</ul>
+      <p class="small"><b>Transversal:</b> ${esc(F.transversal)}<br><b>Proporcionalidad:</b> ${esc(F.proporcionalidad)}</p></div>
+    <div class="card"><h2>Regla general de las dimensiones ${src('S8')}</h2><ul class="clean small">${CFG.reglaGeneralDimensiones.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <p class="small muted">${esc(CFG.ordenDimensiones)}</p>
+      <div class="grid g2 small" style="margin-top:8px">${CFG.dimensiones.map(d => `<div style="border:1px solid var(--line-soft);border-radius:8px;padding:8px"><b>${esc(d.id)}</b> ${esc(d.nombre)} <span class="tagx ${d.origen==='Nuevo'?'nuevo':'heredado'}">${esc(d.origen)}</span><div class="thr"><span class="v">${esc(d.apetito)}</span><span class="a">${esc(d.ambar)}</span><span class="r">${esc(d.limiteTxt)}</span></div></div>`).join('')}</div>
+      <p class="small"><button class="btn sm" data-go="dim">Abrir el explorador de dimensiones ›</button></p></div>
+  </div>
+  <h2>Cómo funciona: cinco pasos, del registro al monitoreo ${src('S3')}</h2>
+  <p class="small muted">El triaje fija cuánto tarda la evaluación; el resultado frente al apetito fija quién aprueba.</p>
+  <div class="flow">${CFG.pasos.map(s => `<div class="fs"><header><span>${s.n}. ${esc(s.nombre)}</span>${s.gate?`<span class="gt">${s.gate}</span>`:''}</header>
+    <div class="lb">Etapa</div><div>${esc(s.etapa)}</div><div class="lb">Qué pasa</div><div>${esc(s.que)}</div>
+    <div class="lb">Resultado</div><div><b>${esc(s.entregable)}</b></div><div class="lb">Quién</div><div>${esc(s.responsable)}${s.notaResponsable?`<br><span class="muted">${esc(s.notaResponsable)}</span>`:''}</div></div>`).join('')}</div>
+  <div class="card small" style="margin-top:12px">${CFG.reglasFlujo.map(r => esc(r.t) + ' ' + src(r.fuente)).join('<br>')}</div>
+  <h2>Dos rutas: cuánto tarda y quién decide ${src('S6')}</h2>
+  <div class="grid g2">
+    <div class="card"><div class="kicker">Ruta de atención · cuánto tarda · se asigna en G1</div>
+      <table class="tbl"><thead><tr><th>Nivel</th><th>Materialidad</th><th>Días hábiles (G1→G3)</th><th>Ruta</th></tr></thead><tbody>
+      ${CFG.niveles.map(n => `<tr><td><span class="lvl ${n.material?'':'nm'}">${n.id}</span></td><td>${esc(n.materialidad)}</td><td>${esc(n.slaTexto)}</td><td><span class="route ${n.ruta}">${esc(n.ruta)}</span></td></tr>`).join('')}</tbody></table>
+      <details><summary>Ver detalle: qué describe cada nivel ${src('S18')}</summary><div class="dd">${CFG.niveles.map(n => `<p style="margin:4px 0"><b>${n.id}</b> · ${esc(n.describe)} <span class="muted">Ej.: ${esc(n.ejemplo)}</span></p>`).join('')}<p class="muted">${esc(CFG.notaNiveles)}</p></div></details></div>
+    <div class="card"><div class="kicker">Ruta de autonomía · solo materiales (N1–N3) · se fija en G2, decide en G3</div>
+      <table class="tbl"><thead><tr><th>Resultado de la evaluación</th><th>Quién decide</th></tr></thead><tbody>
+      ${CFG.autonomia.map(a => `<tr><td><span class="st ${a.id==='verde'?'verde':a.id==='ambar'?'ambar':'rojo'}"><i>${a.id==='verde'?'✓':'!'}</i>${esc(a.condicion)}</span><br><span class="small muted">${esc(a.detalle)}</span></td><td><b>${esc(a.instancia)}</b><br><span class="small muted">${esc(a.nota)}</span></td></tr>`).join('')}
+      <tr><td><span class="st na"><i>·</i>N4–N5</span></td><td>${esc(CFG.autonomiaNoMaterial.nota)}</td></tr>
+      <tr><td><span class="st stop"><i>✕</i>Ley IA: uso indebido</span></td><td><b>STOP</b>, sin excepción · fuera de las dos rutas</td></tr></tbody></table></div>
+  </div>
+  <h2>Roles y responsabilidades</h2>
+  <div class="card"><div class="tblwrap"><table class="tbl"><tbody>${CFG.roles.map(r => `<tr><td style="width:32%"><b>${esc(r.rol)}</b></td><td>${esc(r.hace)} ${src(r.fuente)}</td></tr>`).join('')}</tbody></table></div></div>
+  <h2>${esc(CFG.queFalta.titulo)} ${src(CFG.queFalta.fuente)}</h2>
+  <div class="grid g3">${CFG.queFalta.pasos.map(s => `<div class="card small"><div class="kicker">Paso ${s.n}</div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>${s.resultado?`<p><b>Resultado:</b> ${esc(s.resultado)}</p>`:''}</div>`).join('')}</div>
+  <p class="small muted">Plazo estimado: ${CFG.queFalta.plazos.map(esc).join(' · ')} ${src('S12')}</p>`;
+  $$('[data-go]', $('#v-marco')).forEach(b => b.onclick = () => show(b.dataset.go));
+}
+
+/* ============ DIMENSIONES ============ */
+const dimState = {q:'', dim:'', origen:'', ambar:''};
+function renderDimShell(){
+  $('#v-dim').innerHTML = `<div class="kicker">Consultar el marco</div><h1>Explorador de dimensiones</h1>
+  <p class="lead">6 dimensiones → 19 métricas → umbrales → controles. ${esc(CFG.reglaGeneralDimensiones[0])} ${src('S8')}</p>
+  <div class="filters" role="search">
+    <label class="f">Buscar <input type="text" id="fq" placeholder="Ej.: alucinación, proveedor, datos personales" value="${esc(dimState.q)}"></label>
+    <label class="f">Dimensión <select id="fd"><option value="">Todas</option>${CFG.dimensiones.map(d => `<option value="${d.id}" ${dimState.dim===d.id?'selected':''}>${esc(d.id)} · ${esc(d.nombre)}</option>`).join('')}</select></label>
+    <label class="f">Origen <select id="fo"><option value="">Todos</option><option value="Propio IA" ${dimState.origen==='Propio IA'?'selected':''}>Propio IA</option><option value="Heredado" ${dimState.origen==='Heredado'?'selected':''}>Heredado</option></select></label>
+    <label class="f">Tipo de umbral <select id="fa"><option value="">Todos</option><option value="con" ${dimState.ambar==='con'?'selected':''}>Con zona ámbar</option><option value="sin" ${dimState.ambar==='sin'?'selected':''}>Sin ámbar (el primer caso es rojo)</option></select></label>
+  </div>
+  <p class="small muted" id="dimCount" aria-live="polite"></p><div id="dimList"></div>`;
+  const upd = () => { dimState.q = $('#fq').value; dimState.dim = $('#fd').value; dimState.origen = $('#fo').value; dimState.ambar = $('#fa').value; renderDimList(); };
+  $('#fq').addEventListener('input', upd); ['#fd','#fo','#fa'].forEach(s => $(s).addEventListener('change', upd));
+  renderDimList();
+}
+function renderDimList(){
+  const q = dimState.q.trim().toLowerCase();
+  const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const qn = norm(q);
+  const hl = s => { const e = esc(s); if(!qn) return e; const i = norm(s).indexOf(qn); return i < 0 ? e : esc(s.slice(0,i)) + '<mark>' + esc(s.slice(i, i+q.length)) + '</mark>' + esc(s.slice(i+q.length)); };
+  let total = 0;
+  const html = CFG.dimensiones.filter(d => !dimState.dim || d.id === dimState.dim).map(d => {
+    const ms = d.metricas.filter(m => (!dimState.origen || m.origen === dimState.origen) && (!dimState.ambar || (dimState.ambar==='sin') === (m.ambar === '—'))
+      && (!qn || norm([m.id, m.nombre, m.cuenta, m.ejemplo, m.numerador, m.como, d.nombre].join(' ')).includes(qn)));
+    if(!ms.length) return ''; total += ms.length;
+    return `<article class="dimcard">
+      <div class="dimhead"><div><span class="small muted">${esc(d.id)}</span> <span class="tagx ${d.origen==='Nuevo'?'nuevo':'heredado'}">${esc(d.origen)}</span> ${src(d.fuente)}<h2 style="margin:2px 0">${hl(d.nombre)}</h2>
+        <p class="small" style="margin:0">${esc(d.subtitulo)}. <span class="muted">Vigila: ${esc(d.vigila)}.</span></p>
+        <p class="small muted" style="margin:4px 0 0">Unidad de conteo: ${esc(d.unidad)} ${src('S15–S17')}</p></div>
+        <div><div class="small" style="font-weight:600;color:var(--ink)">Umbral de la dimensión (n.º de iniciativas con brecha)</div>
+          <div class="thr"><span class="v">Apetito ${esc(d.apetito)}</span><span class="a">Ámbar ${esc(d.ambar)}</span><span class="r">Límite ${esc(d.limiteTxt)}</span></div>
+          <p class="small muted" style="margin:6px 0 0">${d.metricas.length} métricas</p></div></div>
+      <div class="mrow small muted" style="font-weight:600;padding-top:6px;padding-bottom:6px"><span>Código</span><span>Métrica</span><span>Verde</span><span>Ámbar</span><span>Rojo</span></div>
+      ${ms.map(m => `<div class="mrow"><span class="code">${hl(m.id)}</span>
+        <div class="mname"><b style="color:var(--ink)">${hl(m.nombre)}</b> ${src(m.fuente)} <span class="tagx ${m.origen==='Propio IA'?'nuevo':'heredado'}">${esc(m.origen)}</span>${m.porConfirmar?` <span class="pc" title="${esc(m.porConfirmar)}">Por confirmar</span>`:''}
+          <div class="small">${hl(m.cuenta)}</div><div class="small muted">Ej.: ${hl(m.ejemplo)}</div>
+          <details><summary>Ver detalle: cómo se mide ${src(m.fuenteAnexo)}</summary><div class="dd">
+            <b>Numerador:</b> ${tx(m.numerador)}<br><b>Denominador:</b> ${tx(m.denominador)}<br><b>Cómo se cuenta:</b> ${tx(m.como)}${m.vigente?`<br><b>Indicador vigente:</b> ${esc(m.vigente)}`:''}${m.porConfirmar?`<br>${PC} ${esc(m.porConfirmar)}`:''}</div></details></div>
+        <span class="cell v">${esc(m.verde)}</span><span class="cell a">${esc(m.ambar)}</span><span class="cell r">${esc(m.rojo)}</span></div>`).join('')}
+      <div style="padding:10px 18px;border-top:1px solid var(--line-soft)" class="small">
+        <b>Controles:</b> ${esc(CFG.controles.texto)} Proporcionales al nivel N1–N5, con RACI ${src(CFG.controles.fuente)} · ${PC} detalle de controles
+        ${d.porQue?`<details><summary>Por qué importa</summary><div class="dd">${esc(d.porQue)} ${src(d.fuente)}</div></details>`:''}
+        <details><summary>Ver detalle: sustento ${src(d.fuenteSustento)}</summary><div class="dd">${esc(d.sustento)}</div></details></div>
+    </article>`; }).join('');
+  $('#dimList').innerHTML = html || '<p class="muted">Sin resultados. Prueba con otra palabra o quita filtros.</p>';
+  $('#dimCount').textContent = `${total} de 19 métricas`;
+}
+
+/* ============ ANEXOS ============ */
+function renderAnexos(){
+  const A = CFG.anexos;
+  $('#v-anx').innerHTML = `<div class="kicker">Documento de apoyo</div><h1>Anexos</h1>
+  <p class="lead">Detalle complementario del marco: taxonomía, niveles, medición de métricas, sustento y fuentes.</p>
+  <details class="big card"><summary>Taxonomía IA: un solo lenguaje para registrar y clasificar ${src(A.taxonomia.fuente)}</summary>
+    <div class="grid g3" style="margin-top:10px">${A.taxonomia.grupos.map(g => `<div><b class="small" style="color:var(--ink)">${esc(g.t)} <span class="muted">· ${g.valores.length} valores</span></b><div class="chips" style="margin-top:4px">${g.valores.map(v => `<span class="chip">${esc(v)}</span>`).join('')}</div></div>`).join('')}</div>
+    <ul class="clean small" style="margin-top:10px">${A.taxonomia.notas.map(n => `<li>${esc(n)}</li>`).join('')}</ul></details>
+  <details class="big card"><summary>Niveles N1 a N5: qué describe cada uno y cuánto tarda ${src('S18')}</summary>
+    <div class="tblwrap"><table class="tbl" style="margin-top:8px"><thead><tr><th>Nivel</th><th>Qué describe</th><th>Ejemplo</th><th>Ruta y días</th><th>Cuenta para el apetito</th></tr></thead><tbody>
+    ${CFG.niveles.map(n => `<tr><td><span class="lvl ${n.material?'':'nm'}">${n.id}</span></td><td>${esc(n.describe)}</td><td class="small">${esc(n.ejemplo)}</td><td>${esc(n.ruta)} · ${esc(n.slaTexto)}</td><td>${n.material?'Sí / material':'No / no material'}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small muted">${esc(CFG.notaNiveles)}</p></details>
+  <details class="big card"><summary>Cómo se mide cada métrica ${src('S15–S17')}</summary><p class="small">El numerador, denominador y forma de conteo de cada métrica está en el <button class="btn sm" data-go="dim">explorador de dimensiones</button>, en «Ver detalle» de cada métrica.</p></details>
+  <details class="big card"><summary>Sustento del marco: de dónde sale cada pieza ${src(A.sustentoMarco.fuente)}</summary>
+    <div class="tblwrap"><table class="tbl" style="margin-top:8px"><thead><tr><th>Pieza del marco</th><th>Qué dicen las fuentes</th><th>Fuentes</th></tr></thead><tbody>${A.sustentoMarco.filas.map(f => `<tr><td><b>${esc(f.pieza)}</b></td><td class="small">${esc(f.dice)}</td><td class="small">${esc(f.fuentes)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small">${esc(A.sustentoMarco.nota)}</p><p class="small muted">${esc(A.sustentoMarco.notaDimensiones)}</p>
+    <p class="small">El sustento por dimensión ${src('S20–S21')} está en cada dimensión del explorador.</p></details>
+  <details class="big card"><summary>Fuentes consultadas ${src(A.fuentes.fuente)}</summary><ul class="clean small" style="margin-top:8px">${A.fuentes.lista.map(x => `<li>${esc(x)}</li>`).join('')}</ul><p class="small muted">${esc(A.fuentes.nota)}</p></details>
+`;
+  $$('[data-go]', $('#v-anx')).forEach(b => b.onclick = () => show(b.dataset.go));
+}
+
+
+
+/* ============ arranque ============ */
+renderGuia(); renderRutas(); renderMarco(); renderDimShell(); renderAnexos();
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if(b && !b.onclick) show(b.dataset.go); });
+const fromHash = () => { const h = location.hash.slice(1); if(['guia','rutas','marco','dim','anx'].includes(h)) show(h); };
+fromHash(); addEventListener('hashchange', fromHash);
+if(document.fonts) document.fonts.ready.then(() => drawEdges());
+</script>
+</body>
+</html>

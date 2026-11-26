@@ -1,0 +1,1218 @@
+{
+  "meta": {
+    "version": "v35",
+    "documento": "PPT Comité Gobierno IA v35",
+    "archivo": "Inputs/PPT Comité Gobierno IA v35.pptx",
+    "fecha": "Noviembre 2026",
+    "estado": "Propuesta para validación (S1). Umbrales propios de IA preliminares; heredados por ratificar (S8). Criterios de triaje en revisión (S18).",
+    "actualizado": "2026-11-26b"
+  },
+  "reglas": {
+    "_doc": "Reglas de la herramienta que la PPT no fija.",
+    "carCuando": "limite",
+    "_carCuando_doc": "limite: decide el CAR cuando, con la iniciativa, la dimensión llega a su límite (lógica de S5, S6 y S7). Alternativa 'excede_apetito' (redacción de S3 y S6)."
+  },
+  "portada": {
+    "titulo": "Marco de apetito al riesgo de IA y rutas de atención y de autonomía",
+    "bajada": "Una propuesta que reutiliza lo que ya existe en el Grupo y mide lo propio de la IA: qué se vigila, cuánto tarda cada iniciativa y quién decide.",
+    "cifras": [
+      {
+        "n": "6",
+        "t": "dimensiones de apetito"
+      },
+      {
+        "n": "19",
+        "t": "métricas de las dimensiones"
+      },
+      {
+        "n": "2",
+        "t": "rutas de decisión"
+      },
+      {
+        "n": "1",
+        "t": "ciclo de vida de la iniciativa"
+      }
+    ],
+    "contenido": [
+      {
+        "t": "Cómo funciona",
+        "d": "Cinco pasos de punta a punta: registrar, clasificar, evaluar, decidir y monitorear."
+      },
+      {
+        "t": "Qué medimos",
+        "d": "Seis dimensiones de apetito y 19 métricas; solo una es monetaria."
+      },
+      {
+        "t": "Quién decide y qué falta",
+        "d": "Dos rutas (cuánto tarda y quién aprueba), datos que lo alimentan y hoja de ruta."
+      }
+    ],
+    "fuente": "S1"
+  },
+  "propuesta": {
+    "titulo": "Un RAF de IA que reutiliza lo que ya funciona y mide lo propio de la IA",
+    "queProponemos": [
+      "6 dimensiones de apetito que miden cuántas iniciativas materiales operan con brecha.",
+      "3 heredadas del RAF vigente con foco IA (Ciber, Operativo, Terceros) y 3 nuevas (Gobierno de riesgos IA, Legal / Ley IA, Modelo).",
+      "2 rutas sobre el ciclo de vida existente: atención (cuánto tarda) y autonomía (quién aprueba).",
+      "1 registro conectado: inventario, base de riesgos y bases de eventos unidos por el código de iniciativa."
+    ],
+    "principios": [
+      "Reutilizar antes que crear: ciclo de vida, taxonomías, triaje, evaluación RNF y gobierno de métricas de GGR.",
+      "Medir lo propio de la IA sin forzarlo a dinero: solo 1 de 19 métricas es monetaria.",
+      "Sin puntaje agregado: el apetito se lee por disciplina y manda el peor semáforo.",
+      "Cada especialidad conserva su metodología."
+    ],
+    "necesitamosDelForo": [
+      "Validar la estructura de apetito (6 dimensiones) y la lógica de las dos rutas.",
+      "Habilitar datos: vínculo inventario–GRC y etiqueta IA en incidentes y pérdidas.",
+      "Cerrar umbrales con los dueños de cada métrica: ratificar o reescalar los heredados y aprobar los nuevos.",
+      "Extender a las empresas: que cada una distinga el riesgo IA en su base de riesgos."
+    ],
+    "alcance": "Marco corporativo para las empresas del Grupo.",
+    "mejoraTriaje": {
+      "hoy": "Triaje N1–N5 del AI Risk Team (tomado al 100%) como base. La evaluación de riesgos sigue la lógica tradicional: aún no se distingue el riesgo IA con las 11 categorías.",
+      "aMejorar": "Etiquetar riesgos y controles con las 11 categorías IA. Sumar criterios al triaje: exposición del caso de uso, complejidad del modelo, autonomía y supervisión, e impacto en clientes. Asimismo, segmentar IA tradicional de IA no tradicional.",
+      "porQueImporta": "Es la base del marco: abre las rutas, la intensidad, tiempos y el escalamiento. Distinguir el riesgo IA permite aterrizar el apetito y alinear controles.",
+      "umbrales": "Los propuestos se revisarán, en conjunto entre los equipos, para llegar a un valor más afinado.",
+      "plazo": "Propuesta de nuevo triaje: ~2 semanas"
+    },
+    "fuente": "S2"
+  },
+  "pasos": [
+    {
+      "n": 1,
+      "id": "registrar",
+      "nombre": "Registrar",
+      "gate": null,
+      "etapa": "Ideación",
+      "que": "La iniciativa se registra en el inventario (Playbook u otra herramienta con los campos corporativos).",
+      "entregable": "Código único de iniciativa",
+      "responsable": "1.ª línea · Programa IA",
+      "fuente": "S3"
+    },
+    {
+      "n": 2,
+      "id": "clasificar",
+      "nombre": "Clasificar (triaje) / Pre-assessment",
+      "gate": "G1",
+      "etapa": "Ideación",
+      "que": "Primera clasificación de riesgo: nivel N1–N5 (materialidad e impacto) y categoría de la Ley IA.",
+      "entregable": "Ruta de atención: Ágil, Estándar o Reforzada",
+      "responsable": "2.ª línea de riesgos",
+      "notaResponsable": "El nivel lo asigna el AI Risk Team en Ideación (G1).",
+      "fuente": "S3"
+    },
+    {
+      "n": 3,
+      "id": "evaluar",
+      "nombre": "Evaluar / Assessment",
+      "gate": "G2",
+      "etapa": "Diseño y desarrollo",
+      "que": "Las especialidades evalúan en paralelo el riesgo, con su metodología y matriz de controles proporcionales al riesgo.",
+      "entregable": "Semáforo por disciplina frente al apetito. Aquí se fija quién aprobará.",
+      "responsable": "MRM · Legal · Ciber · RNF · Terceros · Cumplimiento",
+      "fuente": "S3"
+    },
+    {
+      "n": 4,
+      "id": "decidir",
+      "nombre": "Decidir",
+      "gate": "G3",
+      "etapa": "Piloto",
+      "que": "Se cruza el resultado de los controles por especialidad y el nivel de materialidad.",
+      "entregable": "Instancia que aprueba: Gerencia, Comité de Riesgo No Financiero o CAR",
+      "responsable": "Instancia según la ruta de autonomía",
+      "fuente": "S3"
+    },
+    {
+      "n": 5,
+      "id": "monitorear",
+      "nombre": "Monitorear",
+      "gate": null,
+      "etapa": "Despliegue y valor",
+      "que": "El tablero de apetito se actualiza mensualmente con evaluaciones, incidentes y pérdidas etiquetadas como IA.",
+      "entregable": "Reevaluación ante un rojo o un cambio material",
+      "responsable": "1.ª y 2.ª línea · AI Risk Officer",
+      "fuente": "S3"
+    }
+  ],
+  "reglasFlujo": [
+    {
+      "t": "La evaluación confirma o ajusta la clasificación inicial. Ya en producción, un rojo o un cambio material vuelve a pasar la iniciativa por la ruta.",
+      "fuente": "S3"
+    },
+    {
+      "t": "Fuera de las rutas: uso indebido según la Ley IA = STOP, sin excepción. Si una iniciativa llevaría al límite del apetito, decide el CAR.",
+      "fuente": "S3"
+    },
+    {
+      "t": "El reloj del SLA corre de la etapa G1 a la etapa G3.",
+      "fuente": "S3, S6"
+    },
+    {
+      "t": "El nivel N1–N5 fija los días (se asigna en G1); en las materiales (N1–N3), el color de la iniciativa fija quién decide (se fija en G2, decide en G3).",
+      "fuente": "S6"
+    }
+  ],
+  "filosofia": {
+    "declaracion": "Como Grupo, usamos la IA para mejorar la experiencia del cliente y la eficiencia, protegiendo a los clientes, sus datos y la continuidad del servicio. No permitimos los usos indebidos que defina la Ley IA; no toleramos IA material sin registro ni aprobación, datos personales sin base legal ni obligaciones legales de riesgo alto incumplidas; y solo aceptamos brechas dentro del cupo de cada dimensión, con la aprobación que corresponda a su ruta.",
+    "alcance": "El apetito está diseñado para las iniciativas materiales (N1–N3); las no materiales siguen el proceso vigente de RNF.",
+    "piramide": [
+      {
+        "nivel": "Dimensión",
+        "lema": "lo que ve Dirección",
+        "d": "Seis dimensiones de apetito. Cada una con apetito, ámbar y límite. Es el nivel que ve Dirección y el CAR."
+      },
+      {
+        "nivel": "Métrica",
+        "lema": "lo que mide cada disciplina",
+        "d": "Métricas heredadas y propuestas. Cada disciplina mide sus métricas. Una métrica en rojo suma a su dimensión."
+      },
+      {
+        "nivel": "Control",
+        "lema": "lo que se opera y se evalúa",
+        "d": "Set de controles por disciplina. Se evalúan en cada iniciativa. Algunos controles son además métricas que alimentan el apetito."
+      }
+    ],
+    "transversal": "RACI de controles: cada control tiene responsables definidos entre todos los stakeholders.",
+    "proporcionalidad": "A mayor materialidad, mayor set de controles: N1 más controles, N5 menos controles.",
+    "fuente": "S4"
+  },
+  "nivelesApetito": [
+    {
+      "id": "prohibido",
+      "nombre": "Prohibido",
+      "regla": "sin excepción y sin cupo",
+      "color": "stop",
+      "items": [
+        "Cualquier uso indebido que defina la Ley IA y su Reglamento (DS 115-2025-PCM), es decir, los que vulneran derechos fundamentales.",
+        "Ej.: manipulación o explotación de vulnerabilidades, inferencia de datos sensibles por biometría, identificación biométrica en tiempo real en espacios públicos, vigilancia masiva sin base legal, predicción de delitos por perfiles.",
+        "La iniciativa se detiene: no entra a las rutas ni usa cupo. El listado literal de usos indebidos lo valida Legal contra el Reglamento."
+      ],
+      "fuente": "S5"
+    },
+    {
+      "id": "sin_apetito",
+      "nombre": "Sin apetito",
+      "regla": "el primer caso ya es rojo y se mide en el RAF",
+      "color": "rojo",
+      "grupos": [
+        {
+          "dim": "Gobierno de riesgos IA",
+          "items": [
+            "IA material en uso sin registro, dueño ni aprobación",
+            "Cambios materiales sin reevaluación",
+            "Brechas críticas con plazo vencido"
+          ]
+        },
+        {
+          "dim": "Ciber / Privacidad de Datos",
+          "items": [
+            "Datos personales en IA sin base legal ni evaluación de privacidad",
+            "Incidentes significativos con vector IA †"
+          ]
+        },
+        {
+          "dim": "Legal / Ley IA",
+          "items": [
+            "Obligaciones de riesgo alto sin atención a requerimiento de la Ley"
+          ]
+        },
+        {
+          "dim": "Terceros",
+          "items": [
+            "Proveedores de IA con riesgos altos o críticos de ciberseguridad sin plan de acción vigente †"
+          ]
+        }
+      ],
+      "nota": "† Métrica heredada del RAF vigente; se ratifica con su dueño.",
+      "fuente": "S5"
+    },
+    {
+      "id": "con_condiciones",
+      "nombre": "Aceptado con condiciones",
+      "regla": "dentro del cupo de cada dimensión",
+      "color": "verde",
+      "items": [
+        "Iniciativas materiales (N1–N3) con brecha dentro del cupo de su dimensión, aprobadas según la ruta de autonomía.",
+        "Cuando una dimensión llega a su límite decide el CAR. Las iniciativas N4–N5 siguen el proceso vigente de RNF y no usan cupo."
+      ],
+      "fuente": "S5"
+    }
+  ],
+  "leyIA": {
+    "pregunta": "¿La iniciativa podría ser un uso indebido según la Ley IA (Ley 31814 y DS 115-2025-PCM)?",
+    "ejemplosIndebido": [
+      "Manipulación o explotación de vulnerabilidades",
+      "Inferencia de datos sensibles por biometría",
+      "Identificación biométrica en tiempo real en espacios públicos",
+      "Vigilancia masiva sin base legal",
+      "Predicción de delitos por perfiles"
+    ],
+    "clasificaciones": [
+      {
+        "id": "indebido",
+        "nombre": "Uso indebido",
+        "efecto": "STOP: la iniciativa se detiene, sin excepción. No entra a las rutas ni usa cupo.",
+        "fuente": "S5, S6"
+      },
+      {
+        "id": "alto",
+        "nombre": "Uso de riesgo alto",
+        "efecto": "Aplica la métrica LEG-02: obligaciones de riesgo alto sin evidencia (transparencia algorítmica, supervisión humana, registro y documentación).",
+        "fuente": "S9, S14"
+      },
+      {
+        "id": "aceptable",
+        "nombre": "Uso de riesgo aceptable",
+        "efecto": "Valor de la clasificación regulatoria (Ley IA Perú).",
+        "fuente": "S14"
+      }
+    ]
+  },
+  "niveles": [
+    {
+      "id": "N1",
+      "materialidad": "Material",
+      "material": true,
+      "ruta": "Reforzada",
+      "slaMin": 25,
+      "slaMax": 30,
+      "slaTexto": "25–30 d.h.",
+      "describe": "Afectación financiera directa material; capital, provisiones, solvencia; derechos; decisiones adversas; servicio crítico.",
+      "criterios": [
+        "Afectación financiera directa material",
+        "Impacto en capital, provisiones o solvencia",
+        "Afecta derechos de las personas",
+        "Toma o sustenta decisiones adversas",
+        "Soporta un servicio crítico"
+      ],
+      "ejemplo": "Agente que ejecuta pagos y transferencias a pedido del cliente",
+      "controles": "Más controles",
+      "fuente": "S6, S18"
+    },
+    {
+      "id": "N2",
+      "materialidad": "Material",
+      "material": true,
+      "ruta": "Estándar",
+      "slaMin": 20,
+      "slaMax": 25,
+      "slaTexto": "20–25 d.h.",
+      "describe": "Interacción directa con cliente; información financiera; decisión material controlada; datos sensibles.",
+      "criterios": [
+        "Interacción directa con el cliente",
+        "Usa o entrega información financiera",
+        "Decisión material controlada",
+        "Usa datos sensibles"
+      ],
+      "ejemplo": "Chatbot que atiende consultas de clientes",
+      "controles": "",
+      "fuente": "S6, S18"
+    },
+    {
+      "id": "N3",
+      "materialidad": "Material",
+      "material": true,
+      "ruta": "Estándar",
+      "slaMin": 15,
+      "slaMax": 20,
+      "slaTexto": "15–20 d.h.",
+      "describe": "Proceso interno con impacto indirecto sobre clientes o resultados.",
+      "criterios": [
+        "Proceso interno con impacto indirecto sobre clientes o resultados"
+      ],
+      "ejemplo": "Resumen automático de reclamos para los analistas",
+      "controles": "",
+      "fuente": "S6, S18"
+    },
+    {
+      "id": "N4",
+      "materialidad": "No material",
+      "material": false,
+      "ruta": "Ágil",
+      "slaMin": 10,
+      "slaMax": 15,
+      "slaTexto": "10–15 d.h.",
+      "describe": "Automatización interna sin decisión material ni impacto directo sobre clientes.",
+      "criterios": [
+        "Automatización interna sin decisión material ni impacto directo sobre clientes"
+      ],
+      "ejemplo": "Clasificador de tickets del soporte interno",
+      "controles": "",
+      "fuente": "S6, S18"
+    },
+    {
+      "id": "N5",
+      "materialidad": "No material",
+      "material": false,
+      "ruta": "Ágil",
+      "slaMin": null,
+      "slaMax": 10,
+      "slaTexto": "hasta 10 d.h.",
+      "describe": "Productividad personal y asistencia no vinculante.",
+      "criterios": [
+        "Productividad personal y asistencia no vinculante"
+      ],
+      "ejemplo": "Asistente de redacción de correos internos",
+      "controles": "Menos controles",
+      "fuente": "S6, S18"
+    }
+  ],
+  "notaNiveles": "Nivel asignado por el AI Risk Team en Ideación (G1); criterios de la clasificación actual, en revisión. Los días son plazos sugeridos (SLA), en días hábiles (d.h.). A mayor nivel de materialidad (N1), más controles por disciplina.",
+  "rutasAtencion": [
+    {
+      "id": "Ágil",
+      "niveles": [
+        "N5",
+        "N4"
+      ],
+      "materialidad": "No material",
+      "fuente": "S6"
+    },
+    {
+      "id": "Estándar",
+      "niveles": [
+        "N3",
+        "N2"
+      ],
+      "materialidad": "Material",
+      "fuente": "S6"
+    },
+    {
+      "id": "Reforzada",
+      "niveles": [
+        "N1"
+      ],
+      "materialidad": "Material",
+      "fuente": "S6"
+    }
+  ],
+  "autonomia": [
+    {
+      "id": "verde",
+      "condicion": "Todo verde",
+      "detalle": "cada métrica en verde",
+      "instancia": "Autonomías vigentes de RNF",
+      "nota": "sin instancias nuevas del RAF",
+      "orden": 1,
+      "fuente": "S6"
+    },
+    {
+      "id": "ambar",
+      "condicion": "Algún ámbar",
+      "detalle": "alguna métrica en ámbar, ninguna métrica en rojo",
+      "instancia": "Gerencia Owner + Gerencia de Riesgos + opinión AI Risk Team",
+      "nota": "el ámbar lleva fecha de cierre",
+      "orden": 2,
+      "fuente": "S6"
+    },
+    {
+      "id": "rojo_bajo",
+      "condicion": "Rojo en alguna disciplina",
+      "detalle": "su dimensión queda bajo el límite",
+      "instancia": "Comité de Riesgo No Financiero Corp",
+      "nota": "+ AI Risk Team y condiciones",
+      "orden": 3,
+      "fuente": "S6"
+    },
+    {
+      "id": "rojo_limite",
+      "condicion": "Rojo en alguna disciplina",
+      "detalle": "su dimensión llegaría al límite",
+      "instancia": "CAR",
+      "nota": "se excede el apetito · Directorio informado",
+      "orden": 4,
+      "fuente": "S6"
+    }
+  ],
+  "autonomiaNoMaterial": {
+    "instancia": "Autonomías vigentes de RNF",
+    "nota": "N4–N5 siguen el proceso de autonomías vigentes de RNF",
+    "fuente": "S6"
+  },
+  "reglaVariosRojos": {
+    "t": "Cada rojo se mide contra el cupo de su propia dimensión; la iniciativa va a la instancia del rojo que más cerca está del límite (manda el más exigente).",
+    "fuente": "S7"
+  },
+  "ejemplo": {
+    "titulo": "Iniciativa con impacto a clientes: si hay varios rojos, manda el más exigente",
+    "iniciativa": "Chatbot que atiende consultas de clientes · interacción directa con el cliente",
+    "triaje": "N2 · material · Estándar · 20–25 d.h.",
+    "disciplinas": [
+      {
+        "d": "MRM",
+        "controles": 15,
+        "resultado": "1 métrica en rojo"
+      },
+      {
+        "d": "Ciberseguridad",
+        "controles": 12,
+        "resultado": "1 métrica en rojo"
+      },
+      {
+        "d": "Legal",
+        "controles": 8,
+        "resultado": "Todo en verde"
+      },
+      {
+        "d": "Riesgo no Financiero",
+        "controles": 5,
+        "resultado": "Todo en verde"
+      }
+    ],
+    "apetito": [
+      {
+        "dim": "RAF-IA-06",
+        "nombre": "MRM",
+        "hoy": 1,
+        "con": 2,
+        "limite": 4,
+        "texto": "Usa 1 cupo: bajo el límite",
+        "instancia": "Comité RNF Corp"
+      },
+      {
+        "dim": "RAF-IA-03",
+        "nombre": "Ciberseguridad",
+        "hoy": 3,
+        "con": 4,
+        "limite": 4,
+        "texto": "Llega al límite",
+        "instancia": "CAR"
+      }
+    ],
+    "decide": "DECIDE EL CAR · se excede el apetito · Directorio informado",
+    "fuente": "S7"
+  },
+  "reglaGeneralDimensiones": [
+    "Una métrica en rojo suma 1 a su dimensión. Cada iniciativa cuenta una sola vez por dimensión, aunque tenga varios rojos.",
+    "Cuentan solo las iniciativas materiales (N1–N3) en producción; en Gobierno, los casos de IA en uso.",
+    "Umbrales en número de iniciativas (o casos) con brecha. Los umbrales propios de IA son preliminares; los heredados se ratifican con su dueño y podrían reescalarse."
+  ],
+  "ordenDimensiones": "De lo estructural a lo técnico: 01 Perímetro (qué IA existe) · 02 Obligaciones (lo que la norma exige) · 03 Clientes (protege sus datos) · 04 Operación (pérdidas y continuidad) · 05 Dependencias (proveedores externos) · 06 Desempeño (calidad técnica del modelo).",
+  "dimensiones": [
+    {
+      "id": "RAF-IA-01",
+      "nombre": "Gobierno de riesgos IA",
+      "subtitulo": "Casos de IA materiales fuera de gobierno o con brecha del marco",
+      "vigila": "IA fuera del inventario (Shadow IA), brechas críticas abiertas, riesgo residual alto o crítico y cambios sin reevaluación",
+      "origen": "Nuevo",
+      "apetito": "0",
+      "ambar": "1–2",
+      "limiteTxt": "≥3",
+      "apetitoMax": 0,
+      "limite": 3,
+      "unidad": "casos de IA materiales en uso",
+      "porQue": "Las demás dimensiones solo evalúan lo que está en el inventario. Esta vigila que el banco controle su universo de IA, cierre sus brechas críticas y no acepte riesgo residual alto o crítico sin una decisión.",
+      "sustento": "FSB (2026): documentar el uso de IA, evaluar su materialidad y riesgo al inicio y después, y definir roles y responsabilidades claros (prácticas 2, 3 y 5). NIST AI RMF: gobernar es una función transversal a mapear, medir y gestionar. PRA: ligar los gatillos de revalidación al apetito. McKinsey: el gobierno es una de las cinco dimensiones de madurez de IA responsable. Fuentes [5] [6] [4] [17].",
+      "fuente": "S8, S9",
+      "fuenteSustento": "S20",
+      "metricas": [
+        {
+          "id": "GOB-01",
+          "nombre": "IA en uso sin registro, dueño o aprobación (Shadow IA)",
+          "origen": "Propio IA",
+          "verde": "0",
+          "ambar": "—",
+          "rojo": "≥1",
+          "cuenta": "Caso material en uso que no figura en el inventario, no tiene dueño o no tiene decisión G3.",
+          "ejemplo": "Un área usa un chatbot con datos de clientes sin haberlo registrado → ROJO",
+          "numerador": "Casos de IA materiales detectados en uso sin registro en el inventario, sin propietario o sin decisión G3",
+          "denominador": "— (conteo)",
+          "como": "Evento; detección: cruce del registro único con fuentes independientes",
+          "fuente": "S9",
+          "fuenteAnexo": "S15"
+        },
+        {
+          "id": "GOB-02",
+          "nombre": "Efectividad del gobierno de riesgos IA (brechas críticas abiertas)",
+          "origen": "Propio IA",
+          "verde": "0 abiertas",
+          "ambar": "≥1 en plazo",
+          "rojo": "≥1 vencida",
+          "cuenta": "Iniciativa con ≥1 brecha crítica abierta: hallazgo crítico, gate o límite incumplido, o excepción vencida.",
+          "ejemplo": "Falla crítica de Ciber con plazo al 15/12 → ÁMBAR hasta esa fecha; si el 16/12 sigue abierta → ROJO",
+          "numerador": "Iniciativas con ≥1 brecha crítica abierta: hallazgo crítico de cualquier especialidad, gate o límite del RAF incumplido, o excepción vencida",
+          "denominador": "— (estado por iniciativa)",
+          "como": "Ámbar: brecha abierta dentro del plazo comprometido. Rojo: plazo vencido. Definición de «brecha crítica» por validar con el AI Risk Team",
+          "porConfirmar": "Definición de «brecha crítica»",
+          "fuente": "S9",
+          "fuenteAnexo": "S15"
+        },
+        {
+          "id": "GOB-03",
+          "nombre": "Riesgo residual alto o crítico",
+          "origen": "Propio IA",
+          "verde": "Bajo o medio",
+          "ambar": "Alto",
+          "rojo": "Crítico",
+          "cuenta": "Clasificación de riesgo residual de la iniciativa, tomada de la evaluación RNF existente; la consolida el AI Risk Officer.",
+          "ejemplo": "Asistente con residual bajo → VERDE · chatbot con residual alto aceptado por el Comité → ÁMBAR · agente de pagos con residual crítico → ROJO",
+          "numerador": "Iniciativas cuya clasificación de riesgo residual (evaluación RNF existente) es alta o crítica",
+          "denominador": "— (estado por iniciativa)",
+          "como": "Bajo o medio = verde; alto = ámbar; crítico = rojo. La consolida el AI Risk Officer; no se crea una matriz nueva",
+          "fuente": "S9",
+          "fuenteAnexo": "S15"
+        },
+        {
+          "id": "GOB-04",
+          "nombre": "Cambios materiales sin reevaluación",
+          "origen": "Propio IA",
+          "verde": "0",
+          "ambar": "—",
+          "rojo": "≥1",
+          "cuenta": "Cambio de modelo, prompt o datos que no volvió a pasar por 2.ª línea.",
+          "ejemplo": "El proveedor actualiza el modelo base y nadie lo reevalúa → ROJO",
+          "numerador": "Cambios materiales (modelo, prompt o datos) sin reevaluación de 2.ª línea",
+          "denominador": "— (conteo)",
+          "como": "Conteo de cambios",
+          "fuente": "S9",
+          "fuenteAnexo": "S15"
+        }
+      ]
+    },
+    {
+      "id": "RAF-IA-02",
+      "nombre": "Legal / Ley IA",
+      "subtitulo": "Iniciativas materiales con brecha legal o de la Ley IA",
+      "vigila": "Incumplimientos de la Ley IA confirmados y obligaciones de riesgo alto sin evidencia (transparencia, documentación o supervisión humana)",
+      "origen": "Nuevo",
+      "apetito": "0",
+      "ambar": "1",
+      "limiteTxt": "≥2",
+      "apetitoMax": 0,
+      "limite": 2,
+      "unidad": "iniciativas materiales en producción",
+      "porQue": "Métricas propuestas para salvaguardar el buen gobierno de riesgos IA y cumplimiento a la Ley IA del Perú.",
+      "sustento": "La Ley 31814 y su Reglamento (DS 115-2025-PCM) definen los usos de la IA según su nivel de riesgo, prohíben los usos indebidos que vulneran derechos fundamentales, limitan los de riesgo alto a condiciones estrictas y promueven la transparencia y la supervisión humana. Como referencia, el EU AI Act regula prácticas prohibidas (art. 5) y exige a los sistemas de alto riesgo gestión de riesgos, gobierno de datos, transparencia, supervisión humana, precisión, robustez y ciberseguridad (arts. 9 a 15). Fuentes [8] [9].",
+      "fuente": "S8, S9",
+      "fuenteSustento": "S20",
+      "metricas": [
+        {
+          "id": "LEG-01",
+          "nombre": "Incumplimiento legal confirmado",
+          "origen": "Propio IA",
+          "verde": "0",
+          "ambar": "—",
+          "rojo": "≥1",
+          "cuenta": "Legal confirma una obligación incumplida, una discriminación o un reclamo fundado en la Ley IA.",
+          "ejemplo": "Reclamo fundado por una decisión discriminatoria del sistema IA → ROJO",
+          "numerador": "Iniciativas con una obligación incumplida, una discriminación o un reclamo fundado en la Ley IA, confirmados por Legal",
+          "denominador": "— (conteo)",
+          "como": "Conteo de eventos; escala solo",
+          "fuente": "S9",
+          "fuenteAnexo": "S15"
+        },
+        {
+          "id": "LEG-02",
+          "nombre": "Obligaciones de riesgo alto sin evidencia (cumple o no cumple)",
+          "origen": "Propio IA",
+          "verde": "Cumple todas",
+          "ambar": "—",
+          "rojo": "Falta ≥1",
+          "cuenta": "Uso de riesgo alto sin evidencia de transparencia algorítmica, supervisión humana o de registro y documentación.",
+          "ejemplo": "Scoring de crédito sin transparencia algorítmica → ROJO",
+          "numerador": "Iniciativas de uso de riesgo alto sin evidencia vigente de transparencia algorítmica, supervisión humana efectiva o registro y documentación",
+          "denominador": "— (estado por iniciativa)",
+          "como": "Cumple todas = verde; falta alguna = rojo. Sin ámbar: son obligaciones exigibles",
+          "fuente": "S9",
+          "fuenteAnexo": "S15"
+        }
+      ]
+    },
+    {
+      "id": "RAF-IA-03",
+      "nombre": "Ciber / Privacidad de Datos",
+      "subtitulo": "Iniciativas materiales con brecha de ciber, datos o privacidad",
+      "vigila": "Vulnerabilidades, incidentes con vector IA, componentes obsoletos y datos personales sin base legal ni evaluación de privacidad",
+      "origen": "Heredado + 1 nuevo",
+      "apetito": "≤2",
+      "ambar": "3",
+      "limiteTxt": "≥4",
+      "apetitoMax": 2,
+      "limite": 4,
+      "unidad": "iniciativas materiales en producción",
+      "porQue": "Una falla de seguridad o de privacidad expone datos de clientes de forma difícil de revertir. Vigila la exposición antes del incidente.",
+      "sustento": "La Ley 29733 y su nuevo Reglamento (DS 016-2024-JUS, publicado el 30/11/2024 y vigente desde el 30/03/2025) refuerzan las medidas de seguridad y la transparencia en el tratamiento de datos personales. OWASP (2026) lista entre los riesgos de aplicaciones LLM la inyección de prompts, la divulgación de información sensible, la agencia excesiva y la cadena de suministro. NIST AI 600-1 incluye privacidad de datos y seguridad de la información entre los riesgos de la IA generativa. FSB, práctica 11: gestionar los riesgos cibernéticos y de TIC de la IA. Fuentes [10] [11] [7] [5].",
+      "fuente": "S8, S10",
+      "fuenteSustento": "S20",
+      "metricas": [
+        {
+          "id": "CYB-01",
+          "nombre": "Vulnerabilidades altas y críticas >30 d por activo IA",
+          "origen": "Heredado",
+          "verde": "<2%",
+          "ambar": "2%–<5%",
+          "rojo": "≥5%",
+          "cuenta": "Vulnerabilidades AC sin corregir (>30 d) ÷ activos que soportan IA.",
+          "ejemplo": "3 críticas sin parche en 50 activos del agente de pagos = 0,06 → ROJO",
+          "numerador": "Vulnerabilidades altas y críticas sin remediar (>30 días) en producción",
+          "denominador": "Total de activos en producción del mismo tipo (servidores, aplicaciones AC, activos críticos, aplicaciones AC con PaaS)",
+          "como": "Ratio por activo; solo activos que soportan IA",
+          "vigente": "Vigente 20",
+          "fuente": "S10",
+          "fuenteAnexo": "S16"
+        },
+        {
+          "id": "CYB-02",
+          "nombre": "Incidentes significativos con vector IA",
+          "origen": "Heredado",
+          "verde": "0",
+          "ambar": "—",
+          "rojo": "≥1",
+          "cuenta": "Incidente de impacto intermedio o mayor originado en la IA.",
+          "ejemplo": "Fuga de datos de clientes por inyección de prompts → ROJO y escala solo",
+          "numerador": "Incidentes con vector IA e impacto intermedio o mayor en al menos un ámbito (financiero, continuidad, reputacional, legal)",
+          "denominador": "— (conteo)",
+          "como": "Conteo de eventos; rojo si >0",
+          "vigente": "Vigente 21",
+          "fuente": "S10",
+          "fuenteAnexo": "S16"
+        },
+        {
+          "id": "CYB-03",
+          "nombre": "Componentes IA obsoletos o fuera de soporte",
+          "origen": "Heredado",
+          "verde": "<5%",
+          "ambar": "5–<10%",
+          "rojo": "≥10%",
+          "cuenta": "Instancias obsoletas ÷ instancias usadas por aplicaciones IA.",
+          "ejemplo": "3 de 40 instancias en versión descontinuada = 7,5% → ÁMBAR",
+          "numerador": "Instancias obsoletas usadas por aplicaciones IA",
+          "denominador": "Total de instancias usadas por aplicaciones IA",
+          "como": "% del portafolio IA (software; hardware análogo)",
+          "vigente": "Vigente 19",
+          "fuente": "S10",
+          "fuenteAnexo": "S16"
+        },
+        {
+          "id": "CYB-04",
+          "nombre": "Datos personales en IA sin base legal ni evaluación de privacidad",
+          "origen": "Propio IA",
+          "verde": "Con respaldo",
+          "ambar": "En trámite con plan",
+          "rojo": "Sin respaldo",
+          "cuenta": "Iniciativa en producción con datos personales sin respaldo documentado.",
+          "ejemplo": "Chatbot que usa el historial de clientes sin base legal → ROJO · con la evaluación en trámite y plan vigente → ÁMBAR",
+          "numerador": "Iniciativas en producción que tratan datos personales sin base legal documentada o sin evaluación de privacidad vigente",
+          "denominador": "— (estado por iniciativa)",
+          "como": "Verde: respaldo completo; ámbar: en trámite con plan vigente; rojo: en producción sin respaldo",
+          "fuente": "S10",
+          "fuenteAnexo": "S16"
+        }
+      ]
+    },
+    {
+      "id": "RAF-IA-04",
+      "nombre": "Operativo y Resiliencia",
+      "subtitulo": "Iniciativas materiales con brecha operativa",
+      "vigila": "Pérdidas y provisiones por eventos IA y disponibilidad de servicios IA críticos",
+      "origen": "Heredado",
+      "apetito": "≤2",
+      "ambar": "3",
+      "limiteTxt": "≥4",
+      "apetitoMax": 2,
+      "limite": 4,
+      "unidad": "iniciativas materiales en producción",
+      "porQue": "",
+      "sustento": "Basilea (2021) incorpora un principio específico sobre riesgo de TIC y principios de resiliencia operativa, además de la planificación de la continuidad del negocio, y vuelve sobre los indicadores clave de riesgo y las declaraciones de apetito y tolerancia. FSB (2026): evaluar el desempeño de los casos de uso (práctica 9) y gestionar los riesgos cibernéticos y de TIC (práctica 11). NIST: «seguro y resiliente» es una característica de una IA confiable. Fuentes [2] [5] [6].",
+      "fuente": "S8, S10",
+      "fuenteSustento": "S21",
+      "metricas": [
+        {
+          "id": "OPS-01",
+          "nombre": "Pérdidas operativas por eventos IA (realizadas y provisiones)",
+          "origen": "Heredado",
+          "verde": "<1,1%",
+          "ambar": "1,1–<1,3%",
+          "rojo": "≥1,3%",
+          "cuenta": "Pérdida realizada o provisionada de eventos con etiqueta IA (indicador vigente). Única métrica monetaria.",
+          "ejemplo": "Reembolsos por transferencias erróneas del agente + provisión por reclamos = 1,2% → ÁMBAR",
+          "numerador": "Pérdida operativa realizada más provisiones por eventos con etiqueta IA",
+          "denominador": "Base del indicador vigente en RnF (por confirmar)",
+          "como": "Límite por subsidiaria; BCP: amarillo 1,1% · rojo 1,3%",
+          "porConfirmar": "Denominador; umbrales de empresas distintas de BCP",
+          "vigente": "Vigente 16",
+          "fuente": "S10",
+          "fuenteAnexo": "S16"
+        },
+        {
+          "id": "OPS-02",
+          "nombre": "Disponibilidad de servicios IA críticos",
+          "origen": "Heredado",
+          "verde": ">99,5%",
+          "ambar": "99,0–99,5%",
+          "rojo": "≤99,0%",
+          "cuenta": "Tiempo disponible ÷ tiempo total del mes.",
+          "ejemplo": "El asistente cae 8 h en el mes = 98,9% → ROJO",
+          "numerador": "(#EndPoints × Σ horas disponibles) − (#EndPoints afectados × Σ horas indisponibles)",
+          "denominador": "#EndPoints × Σ horas disponibles. En el vigente el conjunto es “Big 7”; aquí, los servicios IA críticos",
+          "como": "% mensual; BCP: amarillo 99,5% · rojo 99,0%",
+          "porConfirmar": "El valor 99,0% figura en ámbar y en rojo",
+          "vigente": "Vigente 17",
+          "fuente": "S10",
+          "fuenteAnexo": "S16"
+        }
+      ]
+    },
+    {
+      "id": "RAF-IA-05",
+      "nombre": "Terceros",
+      "subtitulo": "Iniciativas materiales afectadas por brecha de terceros o concentración",
+      "vigila": "Proveedores IA de alto riesgo evaluados y con planes al día, y concentración en un mismo proveedor o modelo",
+      "origen": "Heredado + 1 nuevo",
+      "apetito": "≤2",
+      "ambar": "3–5",
+      "limiteTxt": "≥6",
+      "apetitoMax": 2,
+      "limite": 6,
+      "unidad": "iniciativas materiales en producción",
+      "porQue": "Varias iniciativas dependen del mismo proveedor y una falla externa las afecta a la vez. Muestra la dependencia antes de una caída. Concentración: usa la misma escala de la dimensión, para que un solo proveedor no pueda agotar por sí solo el apetito de Terceros.",
+      "sustento": "El toolkit del FSB (2023) cubre la identificación de servicios críticos, el monitoreo continuo de proveedores, el registro de relaciones con terceros, la continuidad, las estrategias de salida y la gestión del riesgo de concentración. El FSB (2025) incluye como caso de estudio las dependencias de terceros y la concentración de proveedores de IA generativa. BoE y FCA (2024): un tercio de los casos de IA son de terceros y los 3 principales proveedores concentran 73% de la nube, 44% de los modelos y 33% de los datos. Fuentes [12] [13] [14] [5].",
+      "fuente": "S8, S11",
+      "fuenteSustento": "S21",
+      "metricas": [
+        {
+          "id": "TER-01",
+          "nombre": "Proveedores IA de alto riesgo evaluados en 12 meses",
+          "origen": "Heredado",
+          "verde": "100%",
+          "ambar": "95–<100%",
+          "rojo": "<95%",
+          "cuenta": "Evaluados en 12 meses ÷ total de proveedores IA de alto riesgo.",
+          "ejemplo": "18 de 20 proveedores evaluados = 90% → ROJO",
+          "numerador": "Proveedores de servicios IA de alto riesgo evaluados en los últimos 12 meses",
+          "denominador": "Total de proveedores de servicios IA de alto riesgo",
+          "como": "% con frecuencia mensual",
+          "vigente": "Vigente 22",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        },
+        {
+          "id": "TER-02",
+          "nombre": "Proveedores IA con riesgos AC sin plan",
+          "origen": "Heredado",
+          "verde": "0",
+          "ambar": "—",
+          "rojo": "≥1",
+          "cuenta": "Proveedores con riesgos altos o críticos sin plan de acción o con plan vencido.",
+          "ejemplo": "El proveedor del modelo tiene un riesgo crítico y no presentó plan → ROJO",
+          "numerador": "Proveedores IA de alto riesgo con riesgos altos o críticos de ciberseguridad sin plan de acción o con plan vencido",
+          "denominador": "— (conteo)",
+          "como": "Conteo mensual; límite 0 (inferido del gráfico)",
+          "vigente": "Vigente 22",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        },
+        {
+          "id": "TER-03",
+          "nombre": "Concentración en un mismo proveedor o modelo",
+          "origen": "Propio IA",
+          "verde": "≤2",
+          "ambar": "3–5",
+          "rojo": "≥6",
+          "cuenta": "Iniciativas materiales en producción que dependen del mismo proveedor o modelo; cada una hereda su color.",
+          "ejemplo": "Un mismo modelo sostiene 4 iniciativas materiales → ÁMBAR · si sostiene 6, una sola caída agota el apetito de Terceros → ROJO",
+          "numerador": "Iniciativas materiales en producción que dependen del mismo proveedor o modelo (se toma el grupo más grande)",
+          "denominador": "— (conteo por proveedor o modelo)",
+          "como": "Cada iniciativa hereda el color de su proveedor: ≤2 verde, 3–5 ámbar, ≥6 rojo. Misma escala de la dimensión Terceros; propuesta, a calibrar con el inventario",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        }
+      ]
+    },
+    {
+      "id": "RAF-IA-06",
+      "nombre": "Riesgo de modelo",
+      "subtitulo": "Iniciativas materiales con brecha de riesgo de modelo",
+      "vigila": "Cuatro métricas técnicas del modelo, cada una con su umbral: alucinaciones, toxicidad, robustez y deterioro",
+      "origen": "Nuevo",
+      "apetito": "≤2",
+      "ambar": "3",
+      "limiteTxt": "≥4",
+      "apetitoMax": 2,
+      "limite": 4,
+      "unidad": "iniciativas materiales en producción",
+      "porQue": "",
+      "sustento": "La Resolución SBS 053-2023 fija el gobierno, el inventario y los lineamientos de desarrollo, validación, implementación, uso y seguimiento de modelos, e incluye la contratación de proveedores de modelos; su ámbito son los modelos usados en la gestión de riesgos. NIST AI 600-1 identifica la confabulación (alucinación) entre los riesgos de la IA generativa; autores de Wells Fargo señalan las alucinaciones y la toxicidad como los principales riesgos de modelo nuevos. La guía interagencial de EE. UU. de 2026 deja fuera de su alcance la IA generativa y agéntica. Fuentes [15] [7] [20] [16].",
+      "fuente": "S8, S11",
+      "fuenteSustento": "S21",
+      "metricas": [
+        {
+          "id": "MRM-01",
+          "nombre": "Alucinaciones financieras materiales",
+          "origen": "Propio IA",
+          "verde": "<0,25%",
+          "ambar": "0,25–<0,50%",
+          "rojo": "≥0,50%",
+          "cuenta": "Respuestas con error financiero material ÷ respuestas evaluadas.",
+          "ejemplo": "12 de 2.000 respuestas con error financiero material = 0,60% → ROJO",
+          "numerador": "Respuestas evaluadas con error financiero material",
+          "denominador": "Respuestas evaluadas (muestra)",
+          "como": "Ratio por iniciativa",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        },
+        {
+          "id": "MRM-02",
+          "nombre": "Respuestas tóxicas",
+          "origen": "Propio IA",
+          "verde": "<0,20%",
+          "ambar": "0,20–<0,50%",
+          "rojo": "≥0,50%",
+          "cuenta": "Respuestas tóxicas ÷ respuestas evaluadas.",
+          "ejemplo": "5 de 2.000 respuestas tóxicas = 0,25% → ÁMBAR",
+          "numerador": "Respuestas evaluadas calificadas como tóxicas",
+          "denominador": "Respuestas evaluadas (muestra)",
+          "como": "Ratio por iniciativa",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        },
+        {
+          "id": "MRM-03",
+          "nombre": "Fallas ante pruebas adversariales",
+          "origen": "Propio IA",
+          "verde": "<1,0%",
+          "ambar": "1,0–<2,0%",
+          "rojo": "≥2,0%",
+          "cuenta": "Pruebas adversariales fallidas ÷ pruebas ejecutadas.",
+          "ejemplo": "12 de 1.000 pruebas fallidas = 1,2% → ÁMBAR",
+          "numerador": "Pruebas adversariales fallidas",
+          "denominador": "Pruebas adversariales ejecutadas",
+          "como": "Ratio por iniciativa",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        },
+        {
+          "id": "MRM-04",
+          "nombre": "Deterioro del desempeño vs. validación",
+          "origen": "Propio IA",
+          "verde": "<10%",
+          "ambar": "10–<15%",
+          "rojo": "≥15%",
+          "cuenta": "(Métrica validada − métrica actual) ÷ métrica validada.",
+          "ejemplo": "El desempeño baja de 0,80 a 0,70 = 12,5% de deterioro → ÁMBAR",
+          "numerador": "Métrica validada − métrica actual",
+          "denominador": "Métrica validada",
+          "como": "Ratio por iniciativa",
+          "fuente": "S11",
+          "fuenteAnexo": "S17"
+        }
+      ]
+    }
+  ],
+  "controles": {
+    "texto": "Set de controles por disciplina. Se evalúan en cada iniciativa. Algunos controles son además métricas que alimentan el apetito.",
+    "proporcional": "A mayor materialidad, mayor set de controles: N1 más controles, N5 menos controles.",
+    "raci": "RACI de controles: cada control tiene responsables definidos entre todos los stakeholders.",
+    "matriz": "Las especialidades evalúan con su metodología y matriz de controles proporcionales al riesgo.",
+    "ejemploConteo": "Ejemplo ilustrativo: MRM 15 controles · Ciberseguridad 12 · Legal 8 · Riesgo no Financiero 5.",
+    "detalle": "[Por confirmar] Detalle de controles por disciplina.",
+    "fuente": "S4"
+  },
+  "especialidades": {
+    "evaluanG2": [
+      "MRM",
+      "Legal",
+      "Ciber",
+      "RNF",
+      "Terceros",
+      "Cumplimiento"
+    ],
+    "nota": "Evalúan en paralelo en G2. Qué especialidades intervienen según la ruta: [Por confirmar].",
+    "fuente": "S3"
+  },
+  "roles": [
+    {
+      "rol": "1.ª línea · Programa IA",
+      "hace": "Registra la iniciativa en el inventario y participa del monitoreo.",
+      "fuente": "S3"
+    },
+    {
+      "rol": "2.ª línea de riesgos / AI Risk Team",
+      "hace": "Clasifica la iniciativa (triaje N1–N5) en G1; opina en las rutas ámbar y roja.",
+      "fuente": "S3, S6, S18"
+    },
+    {
+      "rol": "AI Risk Officer",
+      "hace": "Consolida el riesgo residual; participa del monitoreo; define y aprueba métricas nuevas.",
+      "fuente": "S3, S12, S15"
+    },
+    {
+      "rol": "Especialidades (MRM, Legal, Ciber, RNF, Terceros, Cumplimiento)",
+      "hace": "Evalúan en paralelo en G2 con su metodología y matriz de controles; dan el semáforo por disciplina.",
+      "fuente": "S3"
+    },
+    {
+      "rol": "Legal",
+      "hace": "Valida el listado literal de usos indebidos; confirma incumplimientos de la Ley IA.",
+      "fuente": "S5, S15"
+    },
+    {
+      "rol": "Gerencia Owner + Gerencia de Riesgos",
+      "hace": "Aprueban cuando hay algún ámbar y ningún rojo; el ámbar lleva fecha de cierre.",
+      "fuente": "S6"
+    },
+    {
+      "rol": "Comité de Riesgo No Financiero Corp",
+      "hace": "Aprueba cuando hay un rojo y su dimensión queda bajo el límite.",
+      "fuente": "S6"
+    },
+    {
+      "rol": "CAR",
+      "hace": "Decide cuando una dimensión llega a su límite (se excede el apetito).",
+      "fuente": "S5, S6"
+    },
+    {
+      "rol": "Directorio",
+      "hace": "Informado cuando decide el CAR.",
+      "fuente": "S6"
+    },
+    {
+      "rol": "Dueños de métricas",
+      "hace": "Heredadas (Ciber, RNF, Terceros) ratifican umbral; nuevas (AI Risk Officer, Legal, MRM) definen y aprueban.",
+      "fuente": "S12"
+    }
+  ],
+  "queFalta": {
+    "titulo": "Qué falta para cerrar el RAF de IA: 3 pasos",
+    "pasos": [
+      {
+        "n": 1,
+        "t": "Simular el consumo del apetito con datos reales",
+        "d": "Conectar tres fuentes (Inventario / Playbook, Taxonomía / clasificaciones, Riesgos / base GRC) y calcular controles → métricas → dimensiones con datos reales. Alinear la llave inventario–GRC y sumar incidentes y pérdidas etiquetados IA.",
+        "resultado": "Iniciativas con brecha por cada dimensión, con su semáforo, sobre una muestra real"
+      },
+      {
+        "n": 2,
+        "t": "Simular casos icónicos por las dos rutas",
+        "d": "Depende del 1. Simular un par de casos reales, uno por ruta (G1 atención, G2 autonomía, G3 decide). Se compara: días e instancia que habría decidido vs. lo que ocurrió.",
+        "resultado": "Dos casos con rutas distintas (p. ej., Ágil y Estándar o Reforzada)"
+      },
+      {
+        "n": 3,
+        "t": "Cerrar números con los responsables y pilotear",
+        "d": "En paralelo. Heredados del RAF vigente ratifican umbral: Ciber, RNF, Terceros. Nuevos definen y aprueban: AI Risk Officer, Legal, MRM. Se cierra por cada métrica y dimensión: apetito, tolerancia y límite.",
+        "resultado": ""
+      }
+    ],
+    "plazos": [
+      "Diagnosticar lo que tenemos ~2 días",
+      "Poblar datos IA para el cálculo de apetito ~2 semanas"
+    ],
+    "fuente": "S12"
+  },
+  "anexos": {
+    "taxonomia": {
+      "fuente": "S14",
+      "grupos": [
+        {
+          "t": "Sistema IA",
+          "valores": [
+            "Chatbot/Voicebot",
+            "Knowledge Expert",
+            "Text Analysis",
+            "Image/Video Analysis",
+            "Speech Analysis",
+            "Content Generation",
+            "Coding"
+          ]
+        },
+        {
+          "t": "Tipo de IA",
+          "valores": [
+            "IA Descriptiva/Clasificadora",
+            "IA Predictiva",
+            "IA Generativa",
+            "Workflow con IA",
+            "Agente de IA",
+            "Modelo fundacional"
+          ]
+        },
+        {
+          "t": "Categoría de Riesgos IA",
+          "valores": [
+            "Amenaza de seguridad",
+            "Rendimiento y explicabilidad",
+            "Confianza entre agentes*",
+            "Equidad deteriorada (sesgos)",
+            "Infracción de propiedad intelectual",
+            "Privacidad y calidad de data",
+            "Resiliencia y observabilidad*",
+            "Riesgo de terceros",
+            "Riesgo estratégico",
+            "Seguridad de los datos*",
+            "Uso malicioso"
+          ]
+        },
+        {
+          "t": "Clasificación regulatoria (Ley IA Perú)",
+          "valores": [
+            "Uso indebido",
+            "Uso de riesgo alto",
+            "Uso de riesgo aceptable"
+          ]
+        },
+        {
+          "t": "Especialidades de 1.ª Línea",
+          "valores": [
+            "Áreas de Negocio",
+            "Tecnología",
+            "Ciberseguridad",
+            "Data"
+          ]
+        },
+        {
+          "t": "Especialidades de 2.ª Línea",
+          "valores": [
+            "Riesgos no Financieros",
+            "Riesgo de Modelo",
+            "Cyber Risk",
+            "Legal",
+            "Cumplimiento",
+            "Otras especialidades"
+          ]
+        },
+        {
+          "t": "Triaje N1–N5 (materialidad)",
+          "valores": [
+            "N1 (Material)",
+            "N2 (Material)",
+            "N3 (Material)",
+            "N4 (No Material)",
+            "N5 (No Material)"
+          ]
+        },
+        {
+          "t": "Tiering MRM",
+          "valores": [
+            "Tier 1",
+            "Tier 2",
+            "Tier 3",
+            "Tier 4"
+          ]
+        }
+      ],
+      "notas": [
+        "* Categoría agéntica: aplica sobre todo a soluciones con agentes. El alcance e impacto (clientes, regulador, volumen) se captura en el triaje, cuya calibración está en revisión.",
+        "Un solo lenguaje: toda iniciativa se registra con estos valores. Las áreas no crean categorías propias; si falta un valor, se propone su inclusión a quien mantiene la lista.",
+        "Se registra en el inventario: sistema y tipo de IA se informan al registrar (Política de Inventario). Categorías de riesgo, triaje y flujos de evaluación deben quedar en la Política de Riesgos IA.",
+        "Mantener el vínculo: el código de iniciativa debería vincular iniciativa con taxonomía. Hoy el registro conserva iniciativa, pero no lo vincula con la taxonomía (desde aprox. febrero 2026)."
+      ]
+    },
+    "sustentoMarco": {
+      "fuente": "S19",
+      "filas": [
+        {
+          "pieza": "Estructura: dimensión → métrica → control",
+          "dice": "Un marco de apetito se compone de una declaración de apetito, límites de riesgo y roles y responsabilidades (FSB). EBRD publica su declaración por tipo de riesgo, con un anexo de taxonomía de riesgos y de métricas y controles ligados al apetito. Basilea (2021) trata la articulación de apetito y tolerancia y el uso de indicadores clave de riesgo.",
+          "fuentes": "[1] [3] [2]"
+        },
+        {
+          "pieza": "Declaración escrita con tres niveles: prohibido, sin apetito y con condiciones",
+          "dice": "El FSB espera una declaración escrita que combine límites cuantitativos con declaraciones cualitativas para lo difícil de medir (consulta de 2013). Bank of Cyprus declara cero tolerancia a violaciones regulatorias y exige rectificación inmediata. Lo prohibido por norma viene de la Ley 31814 (usos indebidos) y, como referencia, del art. 5 del EU AI Act.",
+          "fuentes": "[1] [21] [8] [9]"
+        },
+        {
+          "pieza": "Apetito de IA ligado a la estrategia y al riesgo de modelo",
+          "dice": "FSB (oct-2026), práctica 1: alinear la adopción y el gobierno de la IA con el modelo de negocio, el apetito de riesgo y la estrategia. PRA: la junta fija un apetito de riesgo de modelo, conviene expresarlo antes de desplegar IA y ML, y los gatillos de revalidación pueden ligarse al apetito.",
+          "fuentes": "[5] [4]"
+        },
+        {
+          "pieza": "Materialidad N1–N5 y controles proporcionales",
+          "dice": "FSB, práctica 5: evaluar de forma sistemática la materialidad y el riesgo de cada caso de uso, al inicio y después. En el Reino Unido, las entidades califican la materialidad de sus casos de IA (62% baja, 16% alta). La Ley 31814 y el EU AI Act gradúan las obligaciones según el nivel de riesgo.",
+          "fuentes": "[5] [14] [8] [9]"
+        },
+        {
+          "pieza": "Gestión de riesgos de IA por dimensiones, con gobierno transversal",
+          "dice": "NIST AI RMF organiza la gestión en cuatro funciones (gobernar, mapear, medir y gestionar) y hace del gobierno una función transversal. McKinsey evalúa la madurez de IA responsable en cinco dimensiones: estrategia, gestión de riesgos, datos y tecnología, gobierno y, desde 2026, gobierno y controles de IA agéntica.",
+          "fuentes": "[6] [17]"
+        }
+      ],
+      "nota": "Lo que las fuentes no dan: umbrales numéricos de apetito de IA. Los umbrales de la propuesta son propios del Grupo: los heredados vienen del RAF vigente y los propios de IA son preliminares, a ratificar con cada dueño.",
+      "notaDimensiones": "Las fuentes respaldan qué vigilar, no cuánto. Contexto de mercado: según una encuesta de McKinsey (2025, vía AI Index 2026), la inexactitud (74%), la ciberseguridad (72%) y el cumplimiento regulatorio (63%) son los riesgos de IA que más organizaciones consideran relevantes [19]*. Menos de 30% de los bancos europeos encuestados había integrado la IA generativa y agéntica en su marco de riesgo de modelo [18]."
+    },
+    "fuentes": {
+      "fuente": "S22",
+      "lista": [
+        "[1] FSB · Principles for an Effective Risk Appetite Framework (nov-2013; consulta jul-2013)",
+        "[2] BCBS · Revisions to the Principles for the Sound Management of Operational Risk (mar-2021)",
+        "[3] EBRD · Risk Appetite Statement (jun-2024)",
+        "[4] PRA / Bank of England · SS1/23 y mesa sobre gestión de riesgo de modelo con IA y ML (oct-2025)",
+        "[5] FSB · Sound Practices for Responsible Adoption of AI, informe final (15-oct-2026)",
+        "[6] NIST · AI Risk Management Framework 1.0 (ene-2023)",
+        "[7] NIST · AI 600-1, Generative AI Profile (jul-2024)*",
+        "[8] PCM, Perú · Ley 31814 y Reglamento, DS 115-2025-PCM (set-2025)",
+        "[9] Unión Europea · Reglamento (UE) 2024/1689, AI Act: arts. 5 y 9 a 15",
+        "[10] MINJUSDH, Perú · Ley 29733 y Reglamento, DS 016-2024-JUS (nov-2024; vigente mar-2025)",
+        "[11] OWASP · Top 10 for LLM Applications 2026",
+        "[12] FSB · Enhancing Third-Party Risk Management and Oversight: toolkit (dic-2023)",
+        "[13] FSB · Monitoring Adoption of AI and Related Vulnerabilities (oct-2025)",
+        "[14] Bank of England y FCA · Artificial intelligence in UK financial services (nov-2024)",
+        "[15] SBS, Perú · Resolución 053-2023, Reglamento de Gestión de Riesgos de Modelo (ene-2023)",
+        "[16] OCC, Fed y FDIC · Model Risk Management: guía revisada, OCC Bulletin 2026-13 (abr-2026)",
+        "[17] McKinsey · State of AI trust in 2026: shifting to the agentic era (mar-2026)",
+        "[18] McKinsey · Evolving model risk management in the age of AI (jul-2026)",
+        "[19] McKinsey y Stanford HAI · AI Index 2026: riesgos de IA considerados relevantes vs. mitigados*",
+        "[20] Wells Fargo (autores) · Model Risk Management for Generative AI in Financial Institutions (arXiv, mar-2025)",
+        "[21] Bank of Cyprus · Risk Appetite Statement, riesgo de cumplimiento (mar-2022)"
+      ],
+      "nota": "* Consultada a través de un resumen secundario; conviene verificarla en la fuente original antes de citarla fuera del Grupo. Las fuentes de bancos no incluyen umbrales numéricos de apetito de IA."
+    }
+  },
+  "pendientes": [
+    {
+      "t": "Días por etapa (G1, G2, G3): la PPT solo fija el total de G1 a G3.",
+      "fuente": "S3, S6"
+    },
+    {
+      "t": "Días para Registrar, Monitorear y la reevaluación.",
+      "fuente": "S3"
+    },
+    {
+      "t": "Criterios de triaje: cualitativos y en revisión; nuevo triaje en ~2 semanas.",
+      "fuente": "S2, S18"
+    },
+    {
+      "t": "Efecto de «Uso de riesgo alto» (Ley IA) sobre el nivel o la ruta.",
+      "fuente": "S14"
+    },
+    {
+      "t": "Catálogo de controles por disciplina.",
+      "fuente": "S4"
+    },
+    {
+      "t": "Qué especialidades intervienen según la ruta (en especial N4–N5).",
+      "fuente": "S3"
+    },
+    {
+      "t": "CAR: «excede el apetito» (S3, S6) vs. «llega al límite» (S5, S7). La herramienta usa el límite por defecto (configurable).",
+      "fuente": "S3, S5, S6, S7"
+    },
+    {
+      "t": "Quién hace el triaje: «2.ª línea de riesgos» (S3) vs. «AI Risk Team» (S18).",
+      "fuente": "S3, S18"
+    },
+    {
+      "t": "Terminología: ámbar (S8–S11) vs. tolerancia (S12).",
+      "fuente": "S8, S12"
+    },
+    {
+      "t": "TER-01: el anexo dice «amarillo 100% · rojo 95%»; manda la slide principal.",
+      "fuente": "S11, S17"
+    },
+    {
+      "t": "OPS-02: el valor 99,0% figura en ámbar y en rojo.",
+      "fuente": "S10"
+    },
+    {
+      "t": "CYB-01, CYB-03 y TER-01 son ratios de cartera: falta cómo se atribuyen a una iniciativa.",
+      "fuente": "S10, S11"
+    },
+    {
+      "t": "Umbrales preliminares (propios IA) y por ratificar (heredados); OPS-01 denominador y umbral fuera de BCP; TER-02 límite inferido; definición de «brecha crítica».",
+      "fuente": "S8, S12, S15–S17"
+    }
+  ]
+}
