@@ -1,0 +1,2008 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de ruta Gobierno IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* Línea gráfica de la plantilla 06_Reporte_HTML/raf_apetito_ia_bcp.html (paleta grupocredicorp.com) */
+:root{
+  --ink:#202E44; --text:#333333; --slate:#4D5B70; --muted:#69727D;
+  --line:#D9D9D9; --line-soft:#ECE7E0; --cream:#FAF7F3; --white:#FFFFFF;
+  --magenta:#E93CAC; --magenta-d:#CC3366; --magenta-bg:#FDF2F9;
+  --teal:#2AD2C9; --teal-d:#1E9C95; --teal-bg:#E6F8F7;
+  --ok:#1E9E6A; --ok-bg:#E3F4EC; --warn:#D99000; --warn-bg:#FBF0D9; --bad:#D63A3A; --bad-bg:#FBE4E4; --na:#9AA1AC; --na-bg:#EEF0F3;
+  --serif:"Libre Baskerville",Georgia,serif;
+  --sans:"Inter Tight","Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{background:var(--cream);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:2px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:#fff;padding:8px 12px;z-index:99}
+.skip:focus{left:8px}
+a{color:var(--magenta-d)}
+
+/* barra superior */
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 20px;background:var(--white);border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.brand .logo{height:20px;width:auto;color:#000;display:block}
+.brand span{color:var(--muted);font-size:13px;border-left:1px solid var(--line);padding-left:12px}
+.sample{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--magenta-d);border:1.5px solid var(--magenta);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--cream);padding:3px;border-radius:999px;overflow-x:auto;max-width:100%}
+.tabs button{white-space:nowrap;border:0;background:transparent;padding:6px 14px;border-radius:999px;cursor:pointer;font-weight:500;color:var(--slate);font-size:14px}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.view{display:none;max-width:1240px;margin:0 auto;padding:24px 20px 60px}
+.view.on{display:block}
+
+h1{font-family:var(--serif);font-weight:400;color:var(--ink);font-size:30px;line-height:1.2;margin:0 0 6px}
+h2{font-family:var(--serif);font-weight:400;color:var(--ink);font-size:22px;margin:0 0 6px}
+h3{font-size:16px;color:var(--ink);margin:0 0 6px}
+.lead{color:var(--slate);font-size:16px;margin:0 0 18px;max-width:900px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--magenta-d);margin-bottom:6px}
+.card{background:var(--white);border:1px solid var(--line-soft);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.muted{color:var(--muted)}.small{font-size:13px}
+ul.clean{margin:0;padding-left:18px}ul.clean li{margin:3px 0}
+
+/* chips de fuente y por confirmar */
+.src{display:inline-block;font-size:10.5px;font-weight:700;color:var(--teal-d);background:var(--teal-bg);border:1px solid #A9E9E5;border-radius:4px;padding:0 5px;margin-left:4px;vertical-align:1px;cursor:help;white-space:nowrap}
+.pc{display:inline-block;font-size:11px;font-weight:700;color:#8A5B00;background:var(--warn-bg);border:1px dashed var(--warn);border-radius:4px;padding:0 6px;white-space:nowrap}
+.sup{display:inline-block;font-size:11px;font-weight:700;color:var(--slate);background:var(--na-bg);border:1px dashed var(--na);border-radius:4px;padding:0 6px}
+.tagx{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;padding:1px 6px;border-radius:4px;text-transform:uppercase}
+.tagx.nuevo{background:var(--magenta-bg);color:var(--magenta-d);border:1px solid #F6C7E6}
+.tagx.heredado{background:var(--teal-bg);color:var(--teal-d);border:1px solid #A9E9E5}
+
+/* semáforo */
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;padding:2px 9px 2px 5px;border-radius:999px;white-space:nowrap}
+.st i{width:15px;height:15px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;color:#fff;font-weight:700}
+.st.verde{background:var(--ok-bg);color:#14704B}.st.verde i{background:var(--ok)}
+.st.ambar{background:var(--warn-bg);color:#8A5B00}.st.ambar i{background:var(--warn)}
+.st.rojo{background:var(--bad-bg);color:#A82626}.st.rojo i{background:var(--bad)}
+.st.stop{background:#3A0F0F;color:#fff}.st.stop i{background:var(--bad)}
+.st.na{background:var(--na-bg);color:var(--slate)}.st.na i{background:var(--na)}
+.thr{display:flex;gap:3px;font-size:12px;font-weight:600;margin-top:6px}
+.thr span{flex:1;text-align:center;border-radius:4px;padding:3px 4px;color:#fff;white-space:nowrap}
+.thr .v{background:var(--ok)}.thr .a{background:var(--warn)}.thr .r{background:var(--bad)}
+
+/* botones */
+.btn{border:1px solid var(--line);background:var(--white);border-radius:999px;padding:8px 16px;cursor:pointer;color:var(--ink);font-weight:500;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink)}
+.btn.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.mag{background:var(--magenta-d);color:#fff;border-color:var(--magenta-d)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* formularios */
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink)}
+label.f small{font-weight:400;color:var(--muted)}
+input[type=text],input[type=date],input[type=number],input[type=email],select,textarea{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%;font-weight:400}
+textarea{min-height:64px;resize:vertical}
+fieldset{border:1px solid var(--line-soft);border-radius:12px;padding:14px 16px;margin:0 0 16px;background:var(--white)}
+legend{font-weight:700;color:var(--ink);padding:0 6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line-soft);border-radius:10px;margin:6px 0;cursor:pointer;background:var(--white)}
+.opt:hover{border-color:var(--slate)}
+.opt input{margin-top:3px;accent-color:var(--magenta-d)}
+.opt.sel{border-color:var(--magenta);background:var(--magenta-bg)}
+.lvl{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;border-radius:6px;background:var(--ink);color:#fff;font-weight:700;font-size:13px;padding:0 6px}
+.lvl.nm{background:#6F7C91}
+
+/* hero */
+.hero{background:var(--ink);color:#fff;border-radius:16px;padding:32px 34px;position:relative;overflow:hidden;margin-bottom:18px}
+.hero .kicker{color:var(--teal)}
+.hero h1{color:#fff;font-size:34px;max-width:820px}
+.hero h1 em{font-style:normal;color:var(--magenta)}
+.hero p{color:#C9D1DC;max-width:760px;margin:6px 0 0}
+.hero .counters{display:flex;gap:40px;margin-top:24px;flex-wrap:wrap}
+.hero .counters b{display:block;font-size:40px;font-weight:600;line-height:1}
+.hero .counters span{font-size:13px;color:#AEB8C6}
+.hero .arc{position:absolute;right:-160px;top:-140px;width:480px;height:480px;border-radius:50%;border:48px solid rgba(233,60,172,.16);pointer-events:none}
+.hero .row{margin-top:24px}
+.hero .btn{border-color:rgba(255,255,255,.4);background:transparent;color:#fff}
+.hero .btn.mag{background:var(--magenta-d);border-color:var(--magenta-d)}
+
+/* tablas */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);padding:8px 8px;background:var(--cream)}
+.tbl td{border-bottom:1px solid var(--line-soft);padding:8px 8px;vertical-align:top}
+.tblwrap{overflow-x:auto}
+
+/* stepper */
+.stepper{display:flex;gap:6px;margin:0 0 18px;padding:0;list-style:none;flex-wrap:wrap}
+.stepper li{flex:1;min-width:120px}
+.stepper button{width:100%;text-align:left;border:1px solid var(--line-soft);background:var(--white);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px;color:var(--slate)}
+.stepper button b{display:block;color:var(--ink);font-size:14px}
+.stepper button[aria-current=step]{border-color:var(--magenta);box-shadow:inset 0 -3px 0 var(--magenta)}
+.stepper button.done b::after{content:" ✓";color:var(--ok)}
+.wpanel{display:none}.wpanel.on{display:block}
+.wnav{display:flex;justify-content:space-between;margin-top:8px}
+
+/* resultado */
+.result{border-radius:12px;padding:16px 18px;border:1px solid var(--line-soft);background:var(--white);border-left:6px solid var(--ink);margin:12px 0}
+.result.stop{border-left-color:var(--bad);background:var(--bad-bg)}
+.result.info{border-left-color:var(--warn);background:var(--warn-bg)}
+.result .big{font-size:22px;font-weight:700;color:var(--ink);margin:2px 0 6px}
+.route{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:700;font-size:13px;color:#fff}
+.route.Ágil{background:var(--teal-d)}.route.Estándar{background:#3B6FB6}.route.Reforzada{background:var(--ink)}.route.STOP{background:var(--bad)}
+
+/* línea de tiempo */
+.tl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0}
+.tl .tn{background:var(--white);border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px;position:relative;border-top:4px solid var(--slate)}
+.tl .tn.g{border-top-color:var(--magenta)}
+.tl .tn b{display:block;color:var(--ink)}
+.tl .tn .d{font-size:18px;font-weight:700;color:var(--ink);margin-top:6px}
+.bar{height:12px;border-radius:6px;background:var(--line-soft);position:relative;margin:10px 0 4px;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;border-radius:6px}
+
+/* pirámide y flujo */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pyr div{color:#fff;text-align:center;padding:12px 10px;border-radius:6px;font-weight:700}
+.pyr small{display:block;font-weight:400;opacity:.85}
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.flow .fs{background:var(--white);border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;font-size:13px}
+.flow .fs header{background:var(--slate);color:#fff;padding:8px 10px;font-weight:700;display:flex;justify-content:space-between;gap:6px}
+.flow .fs:nth-child(2) header{background:#1E7FB8}.flow .fs:nth-child(3) header{background:#0F6FA8}.flow .fs:nth-child(4) header{background:#7A2A63}.flow .fs:nth-child(5) header{background:#2E7D32}
+.flow .fs .gt{background:#fff;color:var(--ink);border-radius:4px;padding:0 5px;font-size:11px}
+.flow .fs div{padding:8px 10px}
+.flow .fs .lb{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-bottom:0}
+.matrix{display:grid;grid-template-columns:240px repeat(4,minmax(0,1fr));gap:6px;font-size:13px}
+.matrix .h{font-weight:700;padding:8px;border-radius:8px;text-align:center}
+.matrix .c{padding:10px;border-radius:8px;background:var(--white);border:1px solid var(--line-soft)}
+
+/* dimensiones */
+.dimcard{background:var(--white);border:1px solid var(--line-soft);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.dimhead{display:grid;grid-template-columns:1fr 280px;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line-soft);background:linear-gradient(90deg,var(--white),var(--cream))}
+.mrow{display:grid;grid-template-columns:90px 1fr 110px 110px 110px;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line-soft);align-items:start;font-size:14px}
+.mrow:last-child{border-bottom:0}
+.mrow .code{font-weight:700;color:var(--ink);font-size:13px}
+.cell{border-radius:6px;padding:4px 6px;font-size:12.5px;font-weight:600;text-align:center}
+.cell.v{background:var(--ok-bg);color:#14704B}.cell.a{background:var(--warn-bg);color:#8A5B00}.cell.r{background:var(--bad-bg);color:#A82626}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--magenta-d);font-weight:600;font-size:13px}
+details .dd{background:var(--cream);border-radius:8px;padding:10px 12px;margin-top:6px;font-size:13px}
+details.big>summary{font-size:15px;color:var(--ink);padding:4px 0}
+mark{background:#FFE58A;padding:0 1px}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--cream);border:1px solid var(--line-soft);color:var(--slate)}
+label.chip{cursor:pointer}
+label.chip input{accent-color:var(--magenta-d)}
+
+/* ficha */
+.ficha h2{margin-top:0}
+.kv{display:grid;grid-template-columns:200px 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0;color:var(--ink)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
+
+@media (max-width:900px){
+  .g2,.g3,.g5,.tl,.flow{grid-template-columns:1fr}
+  .matrix{grid-template-columns:1fr}
+  .dimhead{grid-template-columns:1fr}
+  .mrow{grid-template-columns:1fr 1fr 1fr;}
+  .mrow .code,.mrow .mname{grid-column:1/-1}
+  .filters{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  .tabs{margin-left:0}
+  .hero{padding:22px 18px}.hero h1{font-size:26px}.hero .counters{display:grid;grid-template-columns:1fr 1fr;gap:16px}.hero .counters b{font-size:30px}
+  .view{padding:16px 16px 50px}
+}
+@media print{
+  .topbar,.stepper,.wnav,.noprint,.toast{display:none!important}
+  body{background:#fff;font-size:12px}
+  .view{display:none!important}
+  #v-ini.on,#v-wiz.on{display:block!important}
+  #v-wiz .wpanel{display:none!important}
+  #v-wiz #p5{display:block!important}
+  .card,.result{break-inside:avoid;border-color:#bbb}
+  .src{border:0;background:none}
+}
+
+/* ===== Guía de ruta: flujo dinámico ===== */
+.scen{display:grid;grid-template-columns:1fr 1.3fr 2fr auto;gap:12px;align-items:end;background:var(--white);border:1px solid var(--line-soft);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--slate)}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.seg button.stopb[aria-pressed=true]{background:var(--bad);border-color:var(--bad)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.flabel{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:5px;display:block}
+.cases{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 14px}
+.cases button{border:1px dashed var(--line);background:transparent;border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;color:var(--slate)}
+.cases button:hover,.cases button[aria-pressed=true]{border-style:solid;border-color:var(--magenta);color:var(--magenta-d);background:var(--magenta-bg)}
+
+.flowwrap{position:relative;background:var(--white);border:1px solid var(--line-soft);border-radius:14px;padding:92px 14px 40px}
+.flowsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.cols{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:30px;position:relative}
+.col{display:flex;flex-direction:column;gap:14px;justify-content:center;height:100%}
+.colwrap{position:relative}
+.colh{position:absolute;top:-44px;left:0;right:0;text-align:center}
+.colh b{display:block;font-size:13px;color:var(--ink)}
+.colh span{font-size:11.5px;color:var(--muted)}
+.node{position:relative;z-index:1;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;text-align:left;font-size:12.5px;line-height:1.3;transition:opacity .35s,border-color .35s,box-shadow .35s,transform .35s;width:100%}
+.node b{display:block;font-size:13px;color:var(--ink)}
+.node small{color:var(--muted)}
+.node .gt{position:absolute;top:-9px;right:8px;background:var(--magenta-d);color:#fff;font-size:10.5px;font-weight:700;border-radius:4px;padding:0 5px}
+.node.dia{border-style:dashed;text-align:center;background:var(--cream)}
+.node.k-stop{border-color:#E3A3A3;background:#FFF6F6}.node.k-rnf{border-color:#9ED3BB}.node.k-ger{border-color:#EBC77F}.node.k-com{border-color:#E9A0C9}.node.k-car{border-color:#E39A9A}
+.node.k-ag{border-left:5px solid var(--teal-d)}.node.k-es{border-left:5px solid #3B6FB6}.node.k-re{border-left:5px solid var(--ink)}
+.dim .node{opacity:.3}
+.dim .node.on{opacity:1;border-color:var(--magenta);box-shadow:0 0 0 3px rgba(233,60,172,.15)}
+.dim .node.maybe{opacity:.85;border-style:dashed;border-color:var(--magenta)}
+.node.cur{transform:scale(1.05);box-shadow:0 0 0 4px rgba(233,60,172,.35)!important;border-color:var(--magenta-d)!important;opacity:1!important}
+.node.sel{outline:3px solid var(--teal);outline-offset:2px}
+.chipsm{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.chipsm span{font-size:10.5px;background:var(--cream);border:1px solid var(--line-soft);border-radius:999px;padding:0 6px;color:var(--slate)}
+.edge{fill:none;stroke:#C9CFD8;stroke-width:1.6;transition:stroke .35s,opacity .35s}
+.dim .edge{opacity:.3}
+.edge.on{stroke:var(--magenta-d);stroke-width:2.6;opacity:1!important;stroke-dasharray:7 5;animation:dash 1s linear infinite}
+.edge.maybe{stroke:var(--magenta);opacity:.7!important;stroke-dasharray:3 4}
+.edge.loop{stroke-dasharray:4 4}
+@keyframes dash{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){.edge.on{animation:none}.node{transition:none}}
+.elabel{font-size:10.5px;fill:var(--muted);font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.elabel.on{fill:var(--magenta-d)}
+.clock{position:absolute;top:12px;height:26px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px;font-weight:600;transition:all .4s;z-index:2;white-space:nowrap;padding:0 10px;overflow:hidden}
+.clock.off{background:var(--bad-bg);color:#A82626}
+
+.player{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;margin:14px 0}
+.player .pbtns{display:flex;gap:6px}
+.player button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;height:34px;min-width:34px;padding:0 12px;cursor:pointer;font-weight:600}
+.player button.play{background:var(--magenta-d);border-color:var(--magenta-d)}
+.player .ptxt{font-size:14.5px}
+.player .ptxt b{color:var(--teal)}
+.player .pbar2{display:flex;gap:3px}
+.player .pbar2 i{width:16px;height:5px;border-radius:3px;background:rgba(255,255,255,.25)}
+.player .pbar2 i.on{background:var(--magenta)}
+
+.story{display:grid;grid-template-columns:1fr 380px;gap:14px}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:10px;margin-bottom:8px;background:#fff;cursor:pointer;transition:border-color .3s,background .3s;font-size:14px}
+.steps li .n{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.steps li.cur{border-color:var(--magenta);background:var(--magenta-bg)}
+.steps li.stop .n{background:var(--bad)}
+.steps li b{color:var(--ink)}
+.detail{position:sticky;top:70px;align-self:start;background:#fff;border:1px solid var(--line-soft);border-top:4px solid var(--teal);border-radius:12px;padding:14px 16px;font-size:13.5px}
+.detail h3{font-size:17px;margin-bottom:4px}
+.detail .lb{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+
+/* rutas y cupo */
+.cupo{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.cupo i{width:42px;height:42px;border-radius:8px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:13px;color:var(--slate);position:relative;transition:all .3s}
+.cupo i.z-v{border-color:#7CC4A2}.cupo i.z-a{border-color:#E5B14E}.cupo i.z-r{border-color:#D97070}
+.cupo i.prev{background:var(--slate);color:#fff}
+.cupo i.new{background:var(--magenta-d);color:#fff;animation:pop .5s}
+.cupo i.lim::after{content:"límite";position:absolute;bottom:-17px;font-size:10px;color:var(--bad);font-weight:700}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+input[type=range]{width:100%;accent-color:var(--magenta-d)}
+
+#flow{scroll-margin-top:64px}
+@media (max-width:600px){.brand span{font-size:11px;white-space:normal}.brand .logo{height:16px}}
+@media (max-width:900px){
+  .scen{grid-template-columns:1fr}
+  .cols{grid-template-columns:1fr;gap:10px}
+  .colh{position:static;text-align:left;margin-top:8px}
+  .flowwrap{padding:14px}
+  .flowsvg{display:none}
+  .clock{position:static;margin-bottom:8px;width:auto!important}
+  .story{grid-template-columns:1fr}
+  .detail{position:static}
+  .player{grid-template-columns:1fr}
+}
+@media print{ .view{display:none!important} .view.on{display:block!important} .player,.scen,.cases{display:none!important} }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Ir al contenido</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="ccpGrad" x1="233.076" y1="29.5098" x2="252.095" y2="10.3386" gradientUnits="userSpaceOnUse"><stop offset="0.15" stop-color="#2AD2C9"/><stop offset="0.22" stop-color="#32CAC7"/><stop offset="0.34" stop-color="#4BB7C3"/><stop offset="0.49" stop-color="#7398BD"/><stop offset="0.67" stop-color="#AA6DB5"/><stop offset="0.85" stop-color="#E93CAC"/></linearGradient></defs></svg>
+<header class="topbar">
+  <div class="brand"><svg class="logo" viewBox="0 0 336 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Credicorp">
+<path d="M58.6353 23.0228C62.2753 21.1111 64.2682 17.8594 64.2682 13.8235C64.2682 7.79408 59.8376 4.19931 52.4094 4.19931H46.4471C44.9153 4.19931 43.68 5.4248 43.68 6.9444V36.5032C43.68 36.6013 43.7624 36.683 43.8612 36.683H48.0282C48.1271 36.683 48.2094 36.6013 48.2094 36.5032V10.2451C48.2094 9.28101 49 8.49669 49.9718 8.49669H52.4094C57.2353 8.49669 59.6894 10.3431 59.6894 14.0032C59.6894 17.6634 57.5976 19.8529 52.8871 21.3398L52.4094 21.4869L61.8635 36.5849C61.8635 36.5849 61.9459 36.6666 62.0118 36.6666H66.92C67.0518 36.6666 67.1506 36.5196 67.0682 36.4052L58.6188 23.0228H58.6353ZM100.174 4.19931H85.68C84.1482 4.19931 82.9129 5.4248 82.9129 6.9444V33.9379C82.9129 35.4575 84.1482 36.683 85.68 36.683H100.174C100.273 36.683 100.355 36.6013 100.355 36.5032V32.549C100.355 32.4509 100.273 32.3692 100.174 32.3692H90.1929C88.6612 32.3692 87.4259 31.1437 87.4259 29.6241V22.1405H98.4777C98.5765 22.1405 98.6588 22.0588 98.6588 21.9607V18.0065C98.6588 17.9085 98.5765 17.8268 98.4777 17.8268H87.4259V11.2254C87.4259 9.70584 88.6612 8.48035 90.1929 8.48035H100.174C100.273 8.48035 100.355 8.39865 100.355 8.30061V4.34636C100.355 4.24833 100.273 4.16663 100.174 4.16663V4.19931ZM129.673 4.19931H120.4C118.868 4.19931 117.633 5.4248 117.633 6.9444V33.9379C117.633 35.4575 118.868 36.683 120.4 36.683H129.673C140 36.683 146.671 30.2614 146.671 20.3268C146.671 10.3921 140 4.19931 129.673 4.19931ZM129.673 32.3856H124.913C123.381 32.3856 122.146 31.1601 122.146 29.6405V11.2418C122.146 9.72218 123.381 8.49669 124.913 8.49669H129.673C137.167 8.49669 142.009 13.1862 142.009 20.4575C142.009 27.7287 137.282 32.3692 129.673 32.3692V32.3856ZM168.066 4.19931H166.485C164.953 4.19931 163.718 5.4248 163.718 6.9444V36.5032C163.718 36.6013 163.8 36.683 163.899 36.683H168.066C168.165 36.683 168.247 36.6013 168.247 36.5032V4.37904C168.247 4.28101 168.165 4.19931 168.066 4.19931ZM324.141 4.19931H318.179C316.647 4.19931 315.412 5.4248 315.412 6.9444V36.683H319.941V10.2451C319.941 9.28101 320.732 8.49669 321.704 8.49669H324.141C328.967 8.49669 331.421 10.3431 331.421 14.0032C331.421 16.5522 330.351 18.4313 328.061 19.8366C327.122 20.4085 325.986 20.915 324.635 21.3398L324.158 21.4869L326.167 24.7058C328.522 24.4281 331.833 22.1078 331.833 22.1078C334.534 20.147 335.984 17.2712 335.984 13.8235C335.984 7.79408 331.553 4.19931 324.125 4.19931H324.141ZM17.0141 8.30061C18.4471 8.30061 22.2024 8.49669 26.0565 10.3921C26.1718 10.4411 26.3035 10.4575 26.4188 10.3921C26.5341 10.3431 26.6165 10.2287 26.6494 10.098L27.3906 6.97708C27.44 6.78101 27.3412 6.58493 27.16 6.48689C24.2941 5.0163 20.8682 4.281 16.9976 4.281C7 4.281 0 10.9313 0 20.4575C0 29.9836 7 36.6013 17.0141 36.6013C20.8847 36.6013 24.3106 35.8496 27.1765 34.3954C27.3576 34.3137 27.44 34.1013 27.4071 33.9052L26.6659 30.7843C26.6329 30.6536 26.5506 30.5555 26.4353 30.4902C26.32 30.4411 26.1882 30.4411 26.0729 30.4902C22.2188 32.3692 18.4635 32.5817 17.0306 32.5817C9.81647 32.5817 4.59529 27.4836 4.59529 20.4575C4.59529 13.4313 9.83294 8.28427 17.0306 8.28427L17.0141 8.30061ZM202.028 8.30061C203.461 8.30061 207.216 8.49669 211.071 10.3921C211.186 10.4411 211.318 10.4575 211.433 10.3921C211.548 10.3431 211.631 10.2287 211.664 10.098L212.405 6.97708C212.454 6.78101 212.355 6.58493 212.174 6.48689C209.308 5.0163 205.882 4.26467 202.012 4.26467C191.998 4.26467 184.998 10.915 184.998 20.4575C184.998 30 191.998 36.6013 202.012 36.6013C205.882 36.6013 209.308 35.8496 212.174 34.3954C212.355 34.3137 212.438 34.1013 212.405 33.9052L211.664 30.7843C211.631 30.6536 211.548 30.5555 211.433 30.4902C211.318 30.4411 211.186 30.4411 211.071 30.4902C207.216 32.3692 203.461 32.5817 202.028 32.5817C194.814 32.5817 189.576 27.4836 189.576 20.4575C189.576 13.4313 194.814 8.28427 202.028 8.28427V8.30061ZM291.002 23.0228C294.642 21.1111 296.635 17.8594 296.635 13.8235C296.635 7.79408 292.205 4.19931 284.776 4.19931H278.814C277.282 4.19931 276.047 5.4248 276.047 6.9444V36.5032C276.047 36.6013 276.129 36.683 276.228 36.683H280.395C280.494 36.683 280.576 36.6013 280.576 36.5032V10.2451C280.576 9.28101 281.367 8.49669 282.339 8.49669H284.776C289.602 8.49669 292.056 10.3431 292.056 14.0032C292.056 17.6634 289.965 19.8529 285.254 21.3398L284.776 21.4869L294.231 36.5849C294.231 36.5849 294.313 36.6666 294.379 36.6666H299.287C299.419 36.6666 299.518 36.5196 299.435 36.4052L290.986 23.0228H291.002Z" fill="currentColor"/>
+<path d="M233.323 17.2059C232.911 17.6144 232.351 17.8431 231.758 17.8431H226.076C225.911 17.8431 225.845 17.647 225.944 17.549L242.184 1.4379C242.447 1.17646 242.859 1.17646 243.123 1.4379L259.363 17.549C259.478 17.6634 259.396 17.8431 259.231 17.8431H253.549C252.956 17.8431 252.396 17.6144 251.984 17.2059L245.066 10.3431C243.732 9.0196 241.574 9.0196 240.24 10.3431L233.323 17.2059ZM233.323 22.7941C232.911 22.3856 232.351 22.1569 231.758 22.1569H226.076C225.911 22.1569 225.845 22.3529 225.944 22.451L242.184 38.5621C242.447 38.8235 242.859 38.8235 243.123 38.5621L259.363 22.451C259.478 22.3366 259.396 22.1569 259.231 22.1569H253.549C252.956 22.1569 252.396 22.3856 251.984 22.7941L245.066 29.6569C243.732 30.9804 241.574 30.9804 240.24 29.6569L233.323 22.7941Z" fill="url(#ccpGrad)"/>
+</svg><span>Guía de ruta Gobierno IA</span></div>
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button role="tab" data-view="guia" aria-selected="true">Guía de ruta</button>
+    <button role="tab" data-view="rutas" aria-selected="false">Rutas y cupo</button>
+    <button role="tab" data-view="marco" aria-selected="false">Marco</button>
+    <button role="tab" data-view="dim" aria-selected="false">Dimensiones</button>
+    <button role="tab" data-view="anx" aria-selected="false">Anexos</button>
+  </nav>
+</header>
+<main id="main">
+<section class="view on" id="v-guia" aria-label="Guía de ruta"></section>
+<section class="view" id="v-rutas" aria-label="Rutas y cupo"></section>
+<section class="view" id="v-marco" aria-label="Marco"></section>
+<section class="view" id="v-dim" aria-label="Dimensiones"></section>
+<section class="view" id="v-anx" aria-label="Anexos"></section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!--
+  BLOQUE DE DATOS (configuración). Fuente: PPT Comité Gobierno IA v35.
+  Para actualizar a una nueva versión de la PPT: edita data/config_gobierno_ia.json y vuelve a generar
+  este HTML con build_herramienta.py. Toda la lógica lee de este bloque.
+-->
+<script id="config" type="application/json">{
+ "meta": {
+  "version": "v35",
+  "documento": "PPT Comité Gobierno IA v35",
+  "archivo": "Inputs/PPT Comité Gobierno IA v35.pptx",
+  "fecha": "Noviembre 2026",
+  "estado": "Propuesta para validación (S1). Umbrales propios de IA preliminares; heredados por ratificar (S8). Criterios de triaje en revisión (S18).",
+  "actualizado": "2026-11-26b"
+ },
+ "reglas": {
+  "_doc": "Reglas de la herramienta que la PPT no fija.",
+  "carCuando": "limite",
+  "_carCuando_doc": "limite: decide el CAR cuando, con la iniciativa, la dimensión llega a su límite (lógica de S5, S6 y S7). Alternativa 'excede_apetito' (redacción de S3 y S6)."
+ },
+ "portada": {
+  "titulo": "Marco de apetito al riesgo de IA y rutas de atención y de autonomía",
+  "bajada": "Una propuesta que reutiliza lo que ya existe en el Grupo y mide lo propio de la IA: qué se vigila, cuánto tarda cada iniciativa y quién decide.",
+  "cifras": [
+   {
+    "n": "6",
+    "t": "dimensiones de apetito"
+   },
+   {
+    "n": "19",
+    "t": "métricas de las dimensiones"
+   },
+   {
+    "n": "2",
+    "t": "rutas de decisión"
+   },
+   {
+    "n": "1",
+    "t": "ciclo de vida de la iniciativa"
+   }
+  ],
+  "contenido": [
+   {
+    "t": "Cómo funciona",
+    "d": "Cinco pasos de punta a punta: registrar, clasificar, evaluar, decidir y monitorear."
+   },
+   {
+    "t": "Qué medimos",
+    "d": "Seis dimensiones de apetito y 19 métricas; solo una es monetaria."
+   },
+   {
+    "t": "Quién decide y qué falta",
+    "d": "Dos rutas (cuánto tarda y quién aprueba), datos que lo alimentan y hoja de ruta."
+   }
+  ],
+  "fuente": "S1"
+ },
+ "propuesta": {
+  "titulo": "Un RAF de IA que reutiliza lo que ya funciona y mide lo propio de la IA",
+  "queProponemos": [
+   "6 dimensiones de apetito que miden cuántas iniciativas materiales operan con brecha.",
+   "3 heredadas del RAF vigente con foco IA (Ciber, Operativo, Terceros) y 3 nuevas (Gobierno de riesgos IA, Legal / Ley IA, Modelo).",
+   "2 rutas sobre el ciclo de vida existente: atención (cuánto tarda) y autonomía (quién aprueba).",
+   "1 registro conectado: inventario, base de riesgos y bases de eventos unidos por el código de iniciativa."
+  ],
+  "principios": [
+   "Reutilizar antes que crear: ciclo de vida, taxonomías, triaje, evaluación RNF y gobierno de métricas de GGR.",
+   "Medir lo propio de la IA sin forzarlo a dinero: solo 1 de 19 métricas es monetaria.",
+   "Sin puntaje agregado: el apetito se lee por disciplina y manda el peor semáforo.",
+   "Cada especialidad conserva su metodología."
+  ],
+  "necesitamosDelForo": [
+   "Validar la estructura de apetito (6 dimensiones) y la lógica de las dos rutas.",
+   "Habilitar datos: vínculo inventario–GRC y etiqueta IA en incidentes y pérdidas.",
+   "Cerrar umbrales con los dueños de cada métrica: ratificar o reescalar los heredados y aprobar los nuevos.",
+   "Extender a las empresas: que cada una distinga el riesgo IA en su base de riesgos."
+  ],
+  "alcance": "Marco corporativo para las empresas del Grupo.",
+  "mejoraTriaje": {
+   "hoy": "Triaje N1–N5 del AI Risk Team (tomado al 100%) como base. La evaluación de riesgos sigue la lógica tradicional: aún no se distingue el riesgo IA con las 11 categorías.",
+   "aMejorar": "Etiquetar riesgos y controles con las 11 categorías IA. Sumar criterios al triaje: exposición del caso de uso, complejidad del modelo, autonomía y supervisión, e impacto en clientes. Asimismo, segmentar IA tradicional de IA no tradicional.",
+   "porQueImporta": "Es la base del marco: abre las rutas, la intensidad, tiempos y el escalamiento. Distinguir el riesgo IA permite aterrizar el apetito y alinear controles.",
+   "umbrales": "Los propuestos se revisarán, en conjunto entre los equipos, para llegar a un valor más afinado.",
+   "plazo": "Propuesta de nuevo triaje: ~2 semanas"
+  },
+  "fuente": "S2"
+ },
+ "pasos": [
+  {
+   "n": 1,
+   "id": "registrar",
+   "nombre": "Registrar",
+   "gate": null,
+   "etapa": "Ideación",
+   "que": "La iniciativa se registra en el inventario (Playbook u otra herramienta con los campos corporativos).",
+   "entregable": "Código único de iniciativa",
+   "responsable": "1.ª línea · Programa IA",
+   "fuente": "S3"
+  },
+  {
+   "n": 2,
+   "id": "clasificar",
+   "nombre": "Clasificar (triaje) / Pre-assessment",
+   "gate": "G1",
+   "etapa": "Ideación",
+   "que": "Primera clasificación de riesgo: nivel N1–N5 (materialidad e impacto) y categoría de la Ley IA.",
+   "entregable": "Ruta de atención: Ágil, Estándar o Reforzada",
+   "responsable": "2.ª línea de riesgos",
+   "notaResponsable": "El nivel lo asigna el AI Risk Team en Ideación (G1).",
+   "fuente": "S3"
+  },
+  {
+   "n": 3,
+   "id": "evaluar",
+   "nombre": "Evaluar / Assessment",
+   "gate": "G2",
+   "etapa": "Diseño y desarrollo",
+   "que": "Las especialidades evalúan en paralelo el riesgo, con su metodología y matriz de controles proporcionales al riesgo.",
+   "entregable": "Semáforo por disciplina frente al apetito. Aquí se fija quién aprobará.",
+   "responsable": "MRM · Legal · Ciber · RNF · Terceros · Cumplimiento",
+   "fuente": "S3"
+  },
+  {
+   "n": 4,
+   "id": "decidir",
+   "nombre": "Decidir",
+   "gate": "G3",
+   "etapa": "Piloto",
+   "que": "Se cruza el resultado de los controles por especialidad y el nivel de materialidad.",
+   "entregable": "Instancia que aprueba: Gerencia, Comité de Riesgo No Financiero o CAR",
+   "responsable": "Instancia según la ruta de autonomía",
+   "fuente": "S3"
+  },
+  {
+   "n": 5,
+   "id": "monitorear",
+   "nombre": "Monitorear",
+   "gate": null,
+   "etapa": "Despliegue y valor",
+   "que": "El tablero de apetito se actualiza mensualmente con evaluaciones, incidentes y pérdidas etiquetadas como IA.",
+   "entregable": "Reevaluación ante un rojo o un cambio material",
+   "responsable": "1.ª y 2.ª línea · AI Risk Officer",
+   "fuente": "S3"
+  }
+ ],
+ "reglasFlujo": [
+  {
+   "t": "La evaluación confirma o ajusta la clasificación inicial. Ya en producción, un rojo o un cambio material vuelve a pasar la iniciativa por la ruta.",
+   "fuente": "S3"
+  },
+  {
+   "t": "Fuera de las rutas: uso indebido según la Ley IA = STOP, sin excepción. Si una iniciativa llevaría al límite del apetito, decide el CAR.",
+   "fuente": "S3"
+  },
+  {
+   "t": "El reloj del SLA corre de la etapa G1 a la etapa G3.",
+   "fuente": "S3, S6"
+  },
+  {
+   "t": "El nivel N1–N5 fija los días (se asigna en G1); en las materiales (N1–N3), el color de la iniciativa fija quién decide (se fija en G2, decide en G3).",
+   "fuente": "S6"
+  }
+ ],
+ "filosofia": {
+  "declaracion": "Como Grupo, usamos la IA para mejorar la experiencia del cliente y la eficiencia, protegiendo a los clientes, sus datos y la continuidad del servicio. No permitimos los usos indebidos que defina la Ley IA; no toleramos IA material sin registro ni aprobación, datos personales sin base legal ni obligaciones legales de riesgo alto incumplidas; y solo aceptamos brechas dentro del cupo de cada dimensión, con la aprobación que corresponda a su ruta.",
+  "alcance": "El apetito está diseñado para las iniciativas materiales (N1–N3); las no materiales siguen el proceso vigente de RNF.",
+  "piramide": [
+   {
+    "nivel": "Dimensión",
+    "lema": "lo que ve Dirección",
+    "d": "Seis dimensiones de apetito. Cada una con apetito, ámbar y límite. Es el nivel que ve Dirección y el CAR."
+   },
+   {
+    "nivel": "Métrica",
+    "lema": "lo que mide cada disciplina",
+    "d": "Métricas heredadas y propuestas. Cada disciplina mide sus métricas. Una métrica en rojo suma a su dimensión."
+   },
+   {
+    "nivel": "Control",
+    "lema": "lo que se opera y se evalúa",
+    "d": "Set de controles por disciplina. Se evalúan en cada iniciativa. Algunos controles son además métricas que alimentan el apetito."
+   }
+  ],
+  "transversal": "RACI de controles: cada control tiene responsables definidos entre todos los stakeholders.",
+  "proporcionalidad": "A mayor materialidad, mayor set de controles: N1 más controles, N5 menos controles.",
+  "fuente": "S4"
+ },
+ "nivelesApetito": [
+  {
+   "id": "prohibido",
+   "nombre": "Prohibido",
+   "regla": "sin excepción y sin cupo",
+   "color": "stop",
+   "items": [
+    "Cualquier uso indebido que defina la Ley IA y su Reglamento (DS 115-2025-PCM), es decir, los que vulneran derechos fundamentales.",
+    "Ej.: manipulación o explotación de vulnerabilidades, inferencia de datos sensibles por biometría, identificación biométrica en tiempo real en espacios públicos, vigilancia masiva sin base legal, predicción de delitos por perfiles.",
+    "La iniciativa se detiene: no entra a las rutas ni usa cupo. El listado literal de usos indebidos lo valida Legal contra el Reglamento."
+   ],
+   "fuente": "S5"
+  },
+  {
+   "id": "sin_apetito",
+   "nombre": "Sin apetito",
+   "regla": "el primer caso ya es rojo y se mide en el RAF",
+   "color": "rojo",
+   "grupos": [
+    {
+     "dim": "Gobierno de riesgos IA",
+     "items": [
+      "IA material en uso sin registro, dueño ni aprobación",
+      "Cambios materiales sin reevaluación",
+      "Brechas críticas con plazo vencido"
+     ]
+    },
+    {
+     "dim": "Ciber / Privacidad de Datos",
+     "items": [
+      "Datos personales en IA sin base legal ni evaluación de privacidad",
+      "Incidentes significativos con vector IA †"
+     ]
+    },
+    {
+     "dim": "Legal / Ley IA",
+     "items": [
+      "Obligaciones de riesgo alto sin atención a requerimiento de la Ley"
+     ]
+    },
+    {
+     "dim": "Terceros",
+     "items": [
+      "Proveedores de IA con riesgos altos o críticos de ciberseguridad sin plan de acción vigente †"
+     ]
+    }
+   ],
+   "nota": "† Métrica heredada del RAF vigente; se ratifica con su dueño.",
+   "fuente": "S5"
+  },
+  {
+   "id": "con_condiciones",
+   "nombre": "Aceptado con condiciones",
+   "regla": "dentro del cupo de cada dimensión",
+   "color": "verde",
+   "items": [
+    "Iniciativas materiales (N1–N3) con brecha dentro del cupo de su dimensión, aprobadas según la ruta de autonomía.",
+    "Cuando una dimensión llega a su límite decide el CAR. Las iniciativas N4–N5 siguen el proceso vigente de RNF y no usan cupo."
+   ],
+   "fuente": "S5"
+  }
+ ],
+ "leyIA": {
+  "pregunta": "¿La iniciativa podría ser un uso indebido según la Ley IA (Ley 31814 y DS 115-2025-PCM)?",
+  "ejemplosIndebido": [
+   "Manipulación o explotación de vulnerabilidades",
+   "Inferencia de datos sensibles por biometría",
+   "Identificación biométrica en tiempo real en espacios públicos",
+   "Vigilancia masiva sin base legal",
+   "Predicción de delitos por perfiles"
+  ],
+  "clasificaciones": [
+   {
+    "id": "indebido",
+    "nombre": "Uso indebido",
+    "efecto": "STOP: la iniciativa se detiene, sin excepción. No entra a las rutas ni usa cupo.",
+    "fuente": "S5, S6"
+   },
+   {
+    "id": "alto",
+    "nombre": "Uso de riesgo alto",
+    "efecto": "Aplica la métrica LEG-02: obligaciones de riesgo alto sin evidencia (transparencia algorítmica, supervisión humana, registro y documentación).",
+    "fuente": "S9, S14"
+   },
+   {
+    "id": "aceptable",
+    "nombre": "Uso de riesgo aceptable",
+    "efecto": "Valor de la clasificación regulatoria (Ley IA Perú).",
+    "fuente": "S14"
+   }
+  ]
+ },
+ "niveles": [
+  {
+   "id": "N1",
+   "materialidad": "Material",
+   "material": true,
+   "ruta": "Reforzada",
+   "slaMin": 25,
+   "slaMax": 30,
+   "slaTexto": "25–30 d.h.",
+   "describe": "Afectación financiera directa material; capital, provisiones, solvencia; derechos; decisiones adversas; servicio crítico.",
+   "criterios": [
+    "Afectación financiera directa material",
+    "Impacto en capital, provisiones o solvencia",
+    "Afecta derechos de las personas",
+    "Toma o sustenta decisiones adversas",
+    "Soporta un servicio crítico"
+   ],
+   "ejemplo": "Agente que ejecuta pagos y transferencias a pedido del cliente",
+   "controles": "Más controles",
+   "fuente": "S6, S18"
+  },
+  {
+   "id": "N2",
+   "materialidad": "Material",
+   "material": true,
+   "ruta": "Estándar",
+   "slaMin": 20,
+   "slaMax": 25,
+   "slaTexto": "20–25 d.h.",
+   "describe": "Interacción directa con cliente; información financiera; decisión material controlada; datos sensibles.",
+   "criterios": [
+    "Interacción directa con el cliente",
+    "Usa o entrega información financiera",
+    "Decisión material controlada",
+    "Usa datos sensibles"
+   ],
+   "ejemplo": "Chatbot que atiende consultas de clientes",
+   "controles": "",
+   "fuente": "S6, S18"
+  },
+  {
+   "id": "N3",
+   "materialidad": "Material",
+   "material": true,
+   "ruta": "Estándar",
+   "slaMin": 15,
+   "slaMax": 20,
+   "slaTexto": "15–20 d.h.",
+   "describe": "Proceso interno con impacto indirecto sobre clientes o resultados.",
+   "criterios": [
+    "Proceso interno con impacto indirecto sobre clientes o resultados"
+   ],
+   "ejemplo": "Resumen automático de reclamos para los analistas",
+   "controles": "",
+   "fuente": "S6, S18"
+  },
+  {
+   "id": "N4",
+   "materialidad": "No material",
+   "material": false,
+   "ruta": "Ágil",
+   "slaMin": 10,
+   "slaMax": 15,
+   "slaTexto": "10–15 d.h.",
+   "describe": "Automatización interna sin decisión material ni impacto directo sobre clientes.",
+   "criterios": [
+    "Automatización interna sin decisión material ni impacto directo sobre clientes"
+   ],
+   "ejemplo": "Clasificador de tickets del soporte interno",
+   "controles": "",
+   "fuente": "S6, S18"
+  },
+  {
+   "id": "N5",
+   "materialidad": "No material",
+   "material": false,
+   "ruta": "Ágil",
+   "slaMin": null,
+   "slaMax": 10,
+   "slaTexto": "hasta 10 d.h.",
+   "describe": "Productividad personal y asistencia no vinculante.",
+   "criterios": [
+    "Productividad personal y asistencia no vinculante"
+   ],
+   "ejemplo": "Asistente de redacción de correos internos",
+   "controles": "Menos controles",
+   "fuente": "S6, S18"
+  }
+ ],
+ "notaNiveles": "Nivel asignado por el AI Risk Team en Ideación (G1); criterios de la clasificación actual, en revisión. Los días son plazos sugeridos (SLA), en días hábiles (d.h.). A mayor nivel de materialidad (N1), más controles por disciplina.",
+ "rutasAtencion": [
+  {
+   "id": "Ágil",
+   "niveles": [
+    "N5",
+    "N4"
+   ],
+   "materialidad": "No material",
+   "fuente": "S6"
+  },
+  {
+   "id": "Estándar",
+   "niveles": [
+    "N3",
+    "N2"
+   ],
+   "materialidad": "Material",
+   "fuente": "S6"
+  },
+  {
+   "id": "Reforzada",
+   "niveles": [
+    "N1"
+   ],
+   "materialidad": "Material",
+   "fuente": "S6"
+  }
+ ],
+ "autonomia": [
+  {
+   "id": "verde",
+   "condicion": "Todo verde",
+   "detalle": "cada métrica en verde",
+   "instancia": "Autonomías vigentes de RNF",
+   "nota": "sin instancias nuevas del RAF",
+   "orden": 1,
+   "fuente": "S6"
+  },
+  {
+   "id": "ambar",
+   "condicion": "Algún ámbar",
+   "detalle": "alguna métrica en ámbar, ninguna métrica en rojo",
+   "instancia": "Gerencia Owner + Gerencia de Riesgos + opinión AI Risk Team",
+   "nota": "el ámbar lleva fecha de cierre",
+   "orden": 2,
+   "fuente": "S6"
+  },
+  {
+   "id": "rojo_bajo",
+   "condicion": "Rojo en alguna disciplina",
+   "detalle": "su dimensión queda bajo el límite",
+   "instancia": "Comité de Riesgo No Financiero Corp",
+   "nota": "+ AI Risk Team y condiciones",
+   "orden": 3,
+   "fuente": "S6"
+  },
+  {
+   "id": "rojo_limite",
+   "condicion": "Rojo en alguna disciplina",
+   "detalle": "su dimensión llegaría al límite",
+   "instancia": "CAR",
+   "nota": "se excede el apetito · Directorio informado",
+   "orden": 4,
+   "fuente": "S6"
+  }
+ ],
+ "autonomiaNoMaterial": {
+  "instancia": "Autonomías vigentes de RNF",
+  "nota": "N4–N5 siguen el proceso de autonomías vigentes de RNF",
+  "fuente": "S6"
+ },
+ "reglaVariosRojos": {
+  "t": "Cada rojo se mide contra el cupo de su propia dimensión; la iniciativa va a la instancia del rojo que más cerca está del límite (manda el más exigente).",
+  "fuente": "S7"
+ },
+ "ejemplo": {
+  "titulo": "Iniciativa con impacto a clientes: si hay varios rojos, manda el más exigente",
+  "iniciativa": "Chatbot que atiende consultas de clientes · interacción directa con el cliente",
+  "triaje": "N2 · material · Estándar · 20–25 d.h.",
+  "disciplinas": [
+   {
+    "d": "MRM",
+    "controles": 15,
+    "resultado": "1 métrica en rojo"
+   },
+   {
+    "d": "Ciberseguridad",
+    "controles": 12,
+    "resultado": "1 métrica en rojo"
+   },
+   {
+    "d": "Legal",
+    "controles": 8,
+    "resultado": "Todo en verde"
+   },
+   {
+    "d": "Riesgo no Financiero",
+    "controles": 5,
+    "resultado": "Todo en verde"
+   }
+  ],
+  "apetito": [
+   {
+    "dim": "RAF-IA-06",
+    "nombre": "MRM",
+    "hoy": 1,
+    "con": 2,
+    "limite": 4,
+    "texto": "Usa 1 cupo: bajo el límite",
+    "instancia": "Comité RNF Corp"
+   },
+   {
+    "dim": "RAF-IA-03",
+    "nombre": "Ciberseguridad",
+    "hoy": 3,
+    "con": 4,
+    "limite": 4,
+    "texto": "Llega al límite",
+    "instancia": "CAR"
+   }
+  ],
+  "decide": "DECIDE EL CAR · se excede el apetito · Directorio informado",
+  "fuente": "S7"
+ },
+ "reglaGeneralDimensiones": [
+  "Una métrica en rojo suma 1 a su dimensión. Cada iniciativa cuenta una sola vez por dimensión, aunque tenga varios rojos.",
+  "Cuentan solo las iniciativas materiales (N1–N3) en producción; en Gobierno, los casos de IA en uso.",
+  "Umbrales en número de iniciativas (o casos) con brecha. Los umbrales propios de IA son preliminares; los heredados se ratifican con su dueño y podrían reescalarse."
+ ],
+ "ordenDimensiones": "De lo estructural a lo técnico: 01 Perímetro (qué IA existe) · 02 Obligaciones (lo que la norma exige) · 03 Clientes (protege sus datos) · 04 Operación (pérdidas y continuidad) · 05 Dependencias (proveedores externos) · 06 Desempeño (calidad técnica del modelo).",
+ "dimensiones": [
+  {
+   "id": "RAF-IA-01",
+   "nombre": "Gobierno de riesgos IA",
+   "subtitulo": "Casos de IA materiales fuera de gobierno o con brecha del marco",
+   "vigila": "IA fuera del inventario (Shadow IA), brechas críticas abiertas, riesgo residual alto o crítico y cambios sin reevaluación",
+   "origen": "Nuevo",
+   "apetito": "0",
+   "ambar": "1–2",
+   "limiteTxt": "≥3",
+   "apetitoMax": 0,
+   "limite": 3,
+   "unidad": "casos de IA materiales en uso",
+   "porQue": "Las demás dimensiones solo evalúan lo que está en el inventario. Esta vigila que el banco controle su universo de IA, cierre sus brechas críticas y no acepte riesgo residual alto o crítico sin una decisión.",
+   "sustento": "FSB (2026): documentar el uso de IA, evaluar su materialidad y riesgo al inicio y después, y definir roles y responsabilidades claros (prácticas 2, 3 y 5). NIST AI RMF: gobernar es una función transversal a mapear, medir y gestionar. PRA: ligar los gatillos de revalidación al apetito. McKinsey: el gobierno es una de las cinco dimensiones de madurez de IA responsable. Fuentes [5] [6] [4] [17].",
+   "fuente": "S8, S9",
+   "fuenteSustento": "S20",
+   "metricas": [
+    {
+     "id": "GOB-01",
+     "nombre": "IA en uso sin registro, dueño o aprobación (Shadow IA)",
+     "origen": "Propio IA",
+     "verde": "0",
+     "ambar": "—",
+     "rojo": "≥1",
+     "cuenta": "Caso material en uso que no figura en el inventario, no tiene dueño o no tiene decisión G3.",
+     "ejemplo": "Un área usa un chatbot con datos de clientes sin haberlo registrado → ROJO",
+     "numerador": "Casos de IA materiales detectados en uso sin registro en el inventario, sin propietario o sin decisión G3",
+     "denominador": "— (conteo)",
+     "como": "Evento; detección: cruce del registro único con fuentes independientes",
+     "fuente": "S9",
+     "fuenteAnexo": "S15"
+    },
+    {
+     "id": "GOB-02",
+     "nombre": "Efectividad del gobierno de riesgos IA (brechas críticas abiertas)",
+     "origen": "Propio IA",
+     "verde": "0 abiertas",
+     "ambar": "≥1 en plazo",
+     "rojo": "≥1 vencida",
+     "cuenta": "Iniciativa con ≥1 brecha crítica abierta: hallazgo crítico, gate o límite incumplido, o excepción vencida.",
+     "ejemplo": "Falla crítica de Ciber con plazo al 15/12 → ÁMBAR hasta esa fecha; si el 16/12 sigue abierta → ROJO",
+     "numerador": "Iniciativas con ≥1 brecha crítica abierta: hallazgo crítico de cualquier especialidad, gate o límite del RAF incumplido, o excepción vencida",
+     "denominador": "— (estado por iniciativa)",
+     "como": "Ámbar: brecha abierta dentro del plazo comprometido. Rojo: plazo vencido. Definición de «brecha crítica» por validar con el AI Risk Team",
+     "porConfirmar": "Definición de «brecha crítica»",
+     "fuente": "S9",
+     "fuenteAnexo": "S15"
+    },
+    {
+     "id": "GOB-03",
+     "nombre": "Riesgo residual alto o crítico",
+     "origen": "Propio IA",
+     "verde": "Bajo o medio",
+     "ambar": "Alto",
+     "rojo": "Crítico",
+     "cuenta": "Clasificación de riesgo residual de la iniciativa, tomada de la evaluación RNF existente; la consolida el AI Risk Officer.",
+     "ejemplo": "Asistente con residual bajo → VERDE · chatbot con residual alto aceptado por el Comité → ÁMBAR · agente de pagos con residual crítico → ROJO",
+     "numerador": "Iniciativas cuya clasificación de riesgo residual (evaluación RNF existente) es alta o crítica",
+     "denominador": "— (estado por iniciativa)",
+     "como": "Bajo o medio = verde; alto = ámbar; crítico = rojo. La consolida el AI Risk Officer; no se crea una matriz nueva",
+     "fuente": "S9",
+     "fuenteAnexo": "S15"
+    },
+    {
+     "id": "GOB-04",
+     "nombre": "Cambios materiales sin reevaluación",
+     "origen": "Propio IA",
+     "verde": "0",
+     "ambar": "—",
+     "rojo": "≥1",
+     "cuenta": "Cambio de modelo, prompt o datos que no volvió a pasar por 2.ª línea.",
+     "ejemplo": "El proveedor actualiza el modelo base y nadie lo reevalúa → ROJO",
+     "numerador": "Cambios materiales (modelo, prompt o datos) sin reevaluación de 2.ª línea",
+     "denominador": "— (conteo)",
+     "como": "Conteo de cambios",
+     "fuente": "S9",
+     "fuenteAnexo": "S15"
+    }
+   ]
+  },
+  {
+   "id": "RAF-IA-02",
+   "nombre": "Legal / Ley IA",
+   "subtitulo": "Iniciativas materiales con brecha legal o de la Ley IA",
+   "vigila": "Incumplimientos de la Ley IA confirmados y obligaciones de riesgo alto sin evidencia (transparencia, documentación o supervisión humana)",
+   "origen": "Nuevo",
+   "apetito": "0",
+   "ambar": "1",
+   "limiteTxt": "≥2",
+   "apetitoMax": 0,
+   "limite": 2,
+   "unidad": "iniciativas materiales en producción",
+   "porQue": "Métricas propuestas para salvaguardar el buen gobierno de riesgos IA y cumplimiento a la Ley IA del Perú.",
+   "sustento": "La Ley 31814 y su Reglamento (DS 115-2025-PCM) definen los usos de la IA según su nivel de riesgo, prohíben los usos indebidos que vulneran derechos fundamentales, limitan los de riesgo alto a condiciones estrictas y promueven la transparencia y la supervisión humana. Como referencia, el EU AI Act regula prácticas prohibidas (art. 5) y exige a los sistemas de alto riesgo gestión de riesgos, gobierno de datos, transparencia, supervisión humana, precisión, robustez y ciberseguridad (arts. 9 a 15). Fuentes [8] [9].",
+   "fuente": "S8, S9",
+   "fuenteSustento": "S20",
+   "metricas": [
+    {
+     "id": "LEG-01",
+     "nombre": "Incumplimiento legal confirmado",
+     "origen": "Propio IA",
+     "verde": "0",
+     "ambar": "—",
+     "rojo": "≥1",
+     "cuenta": "Legal confirma una obligación incumplida, una discriminación o un reclamo fundado en la Ley IA.",
+     "ejemplo": "Reclamo fundado por una decisión discriminatoria del sistema IA → ROJO",
+     "numerador": "Iniciativas con una obligación incumplida, una discriminación o un reclamo fundado en la Ley IA, confirmados por Legal",
+     "denominador": "— (conteo)",
+     "como": "Conteo de eventos; escala solo",
+     "fuente": "S9",
+     "fuenteAnexo": "S15"
+    },
+    {
+     "id": "LEG-02",
+     "nombre": "Obligaciones de riesgo alto sin evidencia (cumple o no cumple)",
+     "origen": "Propio IA",
+     "verde": "Cumple todas",
+     "ambar": "—",
+     "rojo": "Falta ≥1",
+     "cuenta": "Uso de riesgo alto sin evidencia de transparencia algorítmica, supervisión humana o de registro y documentación.",
+     "ejemplo": "Scoring de crédito sin transparencia algorítmica → ROJO",
+     "numerador": "Iniciativas de uso de riesgo alto sin evidencia vigente de transparencia algorítmica, supervisión humana efectiva o registro y documentación",
+     "denominador": "— (estado por iniciativa)",
+     "como": "Cumple todas = verde; falta alguna = rojo. Sin ámbar: son obligaciones exigibles",
+     "fuente": "S9",
+     "fuenteAnexo": "S15"
+    }
+   ]
+  },
+  {
+   "id": "RAF-IA-03",
+   "nombre": "Ciber / Privacidad de Datos",
+   "subtitulo": "Iniciativas materiales con brecha de ciber, datos o privacidad",
+   "vigila": "Vulnerabilidades, incidentes con vector IA, componentes obsoletos y datos personales sin base legal ni evaluación de privacidad",
+   "origen": "Heredado + 1 nuevo",
+   "apetito": "≤2",
+   "ambar": "3",
+   "limiteTxt": "≥4",
+   "apetitoMax": 2,
+   "limite": 4,
+   "unidad": "iniciativas materiales en producción",
+   "porQue": "Una falla de seguridad o de privacidad expone datos de clientes de forma difícil de revertir. Vigila la exposición antes del incidente.",
+   "sustento": "La Ley 29733 y su nuevo Reglamento (DS 016-2024-JUS, publicado el 30/11/2024 y vigente desde el 30/03/2025) refuerzan las medidas de seguridad y la transparencia en el tratamiento de datos personales. OWASP (2026) lista entre los riesgos de aplicaciones LLM la inyección de prompts, la divulgación de información sensible, la agencia excesiva y la cadena de suministro. NIST AI 600-1 incluye privacidad de datos y seguridad de la información entre los riesgos de la IA generativa. FSB, práctica 11: gestionar los riesgos cibernéticos y de TIC de la IA. Fuentes [10] [11] [7] [5].",
+   "fuente": "S8, S10",
+   "fuenteSustento": "S20",
+   "metricas": [
+    {
+     "id": "CYB-01",
+     "nombre": "Vulnerabilidades altas y críticas >30 d por activo IA",
+     "origen": "Heredado",
+     "verde": "<2%",
+     "ambar": "2%–<5%",
+     "rojo": "≥5%",
+     "cuenta": "Vulnerabilidades AC sin corregir (>30 d) ÷ activos que soportan IA.",
+     "ejemplo": "3 críticas sin parche en 50 activos del agente de pagos = 0,06 → ROJO",
+     "numerador": "Vulnerabilidades altas y críticas sin remediar (>30 días) en producción",
+     "denominador": "Total de activos en producción del mismo tipo (servidores, aplicaciones AC, activos críticos, aplicaciones AC con PaaS)",
+     "como": "Ratio por activo; solo activos que soportan IA",
+     "vigente": "Vigente 20",
+     "fuente": "S10",
+     "fuenteAnexo": "S16"
+    },
+    {
+     "id": "CYB-02",
+     "nombre": "Incidentes significativos con vector IA",
+     "origen": "Heredado",
+     "verde": "0",
+     "ambar": "—",
+     "rojo": "≥1",
+     "cuenta": "Incidente de impacto intermedio o mayor originado en la IA.",
+     "ejemplo": "Fuga de datos de clientes por inyección de prompts → ROJO y escala solo",
+     "numerador": "Incidentes con vector IA e impacto intermedio o mayor en al menos un ámbito (financiero, continuidad, reputacional, legal)",
+     "denominador": "— (conteo)",
+     "como": "Conteo de eventos; rojo si >0",
+     "vigente": "Vigente 21",
+     "fuente": "S10",
+     "fuenteAnexo": "S16"
+    },
+    {
+     "id": "CYB-03",
+     "nombre": "Componentes IA obsoletos o fuera de soporte",
+     "origen": "Heredado",
+     "verde": "<5%",
+     "ambar": "5–<10%",
+     "rojo": "≥10%",
+     "cuenta": "Instancias obsoletas ÷ instancias usadas por aplicaciones IA.",
+     "ejemplo": "3 de 40 instancias en versión descontinuada = 7,5% → ÁMBAR",
+     "numerador": "Instancias obsoletas usadas por aplicaciones IA",
+     "denominador": "Total de instancias usadas por aplicaciones IA",
+     "como": "% del portafolio IA (software; hardware análogo)",
+     "vigente": "Vigente 19",
+     "fuente": "S10",
+     "fuenteAnexo": "S16"
+    },
+    {
+     "id": "CYB-04",
+     "nombre": "Datos personales en IA sin base legal ni evaluación de privacidad",
+     "origen": "Propio IA",
+     "verde": "Con respaldo",
+     "ambar": "En trámite con plan",
+     "rojo": "Sin respaldo",
+     "cuenta": "Iniciativa en producción con datos personales sin respaldo documentado.",
+     "ejemplo": "Chatbot que usa el historial de clientes sin base legal → ROJO · con la evaluación en trámite y plan vigente → ÁMBAR",
+     "numerador": "Iniciativas en producción que tratan datos personales sin base legal documentada o sin evaluación de privacidad vigente",
+     "denominador": "— (estado por iniciativa)",
+     "como": "Verde: respaldo completo; ámbar: en trámite con plan vigente; rojo: en producción sin respaldo",
+     "fuente": "S10",
+     "fuenteAnexo": "S16"
+    }
+   ]
+  },
+  {
+   "id": "RAF-IA-04",
+   "nombre": "Operativo y Resiliencia",
+   "subtitulo": "Iniciativas materiales con brecha operativa",
+   "vigila": "Pérdidas y provisiones por eventos IA y disponibilidad de servicios IA críticos",
+   "origen": "Heredado",
+   "apetito": "≤2",
+   "ambar": "3",
+   "limiteTxt": "≥4",
+   "apetitoMax": 2,
+   "limite": 4,
+   "unidad": "iniciativas materiales en producción",
+   "porQue": "",
+   "sustento": "Basilea (2021) incorpora un principio específico sobre riesgo de TIC y principios de resiliencia operativa, además de la planificación de la continuidad del negocio, y vuelve sobre los indicadores clave de riesgo y las declaraciones de apetito y tolerancia. FSB (2026): evaluar el desempeño de los casos de uso (práctica 9) y gestionar los riesgos cibernéticos y de TIC (práctica 11). NIST: «seguro y resiliente» es una característica de una IA confiable. Fuentes [2] [5] [6].",
+   "fuente": "S8, S10",
+   "fuenteSustento": "S21",
+   "metricas": [
+    {
+     "id": "OPS-01",
+     "nombre": "Pérdidas operativas por eventos IA (realizadas y provisiones)",
+     "origen": "Heredado",
+     "verde": "<1,1%",
+     "ambar": "1,1–<1,3%",
+     "rojo": "≥1,3%",
+     "cuenta": "Pérdida realizada o provisionada de eventos con etiqueta IA (indicador vigente). Única métrica monetaria.",
+     "ejemplo": "Reembolsos por transferencias erróneas del agente + provisión por reclamos = 1,2% → ÁMBAR",
+     "numerador": "Pérdida operativa realizada más provisiones por eventos con etiqueta IA",
+     "denominador": "Base del indicador vigente en RnF (por confirmar)",
+     "como": "Límite por subsidiaria; BCP: amarillo 1,1% · rojo 1,3%",
+     "porConfirmar": "Denominador; umbrales de empresas distintas de BCP",
+     "vigente": "Vigente 16",
+     "fuente": "S10",
+     "fuenteAnexo": "S16"
+    },
+    {
+     "id": "OPS-02",
+     "nombre": "Disponibilidad de servicios IA críticos",
+     "origen": "Heredado",
+     "verde": ">99,5%",
+     "ambar": "99,0–99,5%",
+     "rojo": "≤99,0%",
+     "cuenta": "Tiempo disponible ÷ tiempo total del mes.",
+     "ejemplo": "El asistente cae 8 h en el mes = 98,9% → ROJO",
+     "numerador": "(#EndPoints × Σ horas disponibles) − (#EndPoints afectados × Σ horas indisponibles)",
+     "denominador": "#EndPoints × Σ horas disponibles. En el vigente el conjunto es “Big 7”; aquí, los servicios IA críticos",
+     "como": "% mensual; BCP: amarillo 99,5% · rojo 99,0%",
+     "porConfirmar": "El valor 99,0% figura en ámbar y en rojo",
+     "vigente": "Vigente 17",
+     "fuente": "S10",
+     "fuenteAnexo": "S16"
+    }
+   ]
+  },
+  {
+   "id": "RAF-IA-05",
+   "nombre": "Terceros",
+   "subtitulo": "Iniciativas materiales afectadas por brecha de terceros o concentración",
+   "vigila": "Proveedores IA de alto riesgo evaluados y con planes al día, y concentración en un mismo proveedor o modelo",
+   "origen": "Heredado + 1 nuevo",
+   "apetito": "≤2",
+   "ambar": "3–5",
+   "limiteTxt": "≥6",
+   "apetitoMax": 2,
+   "limite": 6,
+   "unidad": "iniciativas materiales en producción",
+   "porQue": "Varias iniciativas dependen del mismo proveedor y una falla externa las afecta a la vez. Muestra la dependencia antes de una caída. Concentración: usa la misma escala de la dimensión, para que un solo proveedor no pueda agotar por sí solo el apetito de Terceros.",
+   "sustento": "El toolkit del FSB (2023) cubre la identificación de servicios críticos, el monitoreo continuo de proveedores, el registro de relaciones con terceros, la continuidad, las estrategias de salida y la gestión del riesgo de concentración. El FSB (2025) incluye como caso de estudio las dependencias de terceros y la concentración de proveedores de IA generativa. BoE y FCA (2024): un tercio de los casos de IA son de terceros y los 3 principales proveedores concentran 73% de la nube, 44% de los modelos y 33% de los datos. Fuentes [12] [13] [14] [5].",
+   "fuente": "S8, S11",
+   "fuenteSustento": "S21",
+   "metricas": [
+    {
+     "id": "TER-01",
+     "nombre": "Proveedores IA de alto riesgo evaluados en 12 meses",
+     "origen": "Heredado",
+     "verde": "100%",
+     "ambar": "95–<100%",
+     "rojo": "<95%",
+     "cuenta": "Evaluados en 12 meses ÷ total de proveedores IA de alto riesgo.",
+     "ejemplo": "18 de 20 proveedores evaluados = 90% → ROJO",
+     "numerador": "Proveedores de servicios IA de alto riesgo evaluados en los últimos 12 meses",
+     "denominador": "Total de proveedores de servicios IA de alto riesgo",
+     "como": "% con frecuencia mensual",
+     "vigente": "Vigente 22",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    },
+    {
+     "id": "TER-02",
+     "nombre": "Proveedores IA con riesgos AC sin plan",
+     "origen": "Heredado",
+     "verde": "0",
+     "ambar": "—",
+     "rojo": "≥1",
+     "cuenta": "Proveedores con riesgos altos o críticos sin plan de acción o con plan vencido.",
+     "ejemplo": "El proveedor del modelo tiene un riesgo crítico y no presentó plan → ROJO",
+     "numerador": "Proveedores IA de alto riesgo con riesgos altos o críticos de ciberseguridad sin plan de acción o con plan vencido",
+     "denominador": "— (conteo)",
+     "como": "Conteo mensual; límite 0 (inferido del gráfico)",
+     "vigente": "Vigente 22",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    },
+    {
+     "id": "TER-03",
+     "nombre": "Concentración en un mismo proveedor o modelo",
+     "origen": "Propio IA",
+     "verde": "≤2",
+     "ambar": "3–5",
+     "rojo": "≥6",
+     "cuenta": "Iniciativas materiales en producción que dependen del mismo proveedor o modelo; cada una hereda su color.",
+     "ejemplo": "Un mismo modelo sostiene 4 iniciativas materiales → ÁMBAR · si sostiene 6, una sola caída agota el apetito de Terceros → ROJO",
+     "numerador": "Iniciativas materiales en producción que dependen del mismo proveedor o modelo (se toma el grupo más grande)",
+     "denominador": "— (conteo por proveedor o modelo)",
+     "como": "Cada iniciativa hereda el color de su proveedor: ≤2 verde, 3–5 ámbar, ≥6 rojo. Misma escala de la dimensión Terceros; propuesta, a calibrar con el inventario",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    }
+   ]
+  },
+  {
+   "id": "RAF-IA-06",
+   "nombre": "Riesgo de modelo",
+   "subtitulo": "Iniciativas materiales con brecha de riesgo de modelo",
+   "vigila": "Cuatro métricas técnicas del modelo, cada una con su umbral: alucinaciones, toxicidad, robustez y deterioro",
+   "origen": "Nuevo",
+   "apetito": "≤2",
+   "ambar": "3",
+   "limiteTxt": "≥4",
+   "apetitoMax": 2,
+   "limite": 4,
+   "unidad": "iniciativas materiales en producción",
+   "porQue": "",
+   "sustento": "La Resolución SBS 053-2023 fija el gobierno, el inventario y los lineamientos de desarrollo, validación, implementación, uso y seguimiento de modelos, e incluye la contratación de proveedores de modelos; su ámbito son los modelos usados en la gestión de riesgos. NIST AI 600-1 identifica la confabulación (alucinación) entre los riesgos de la IA generativa; autores de Wells Fargo señalan las alucinaciones y la toxicidad como los principales riesgos de modelo nuevos. La guía interagencial de EE. UU. de 2026 deja fuera de su alcance la IA generativa y agéntica. Fuentes [15] [7] [20] [16].",
+   "fuente": "S8, S11",
+   "fuenteSustento": "S21",
+   "metricas": [
+    {
+     "id": "MRM-01",
+     "nombre": "Alucinaciones financieras materiales",
+     "origen": "Propio IA",
+     "verde": "<0,25%",
+     "ambar": "0,25–<0,50%",
+     "rojo": "≥0,50%",
+     "cuenta": "Respuestas con error financiero material ÷ respuestas evaluadas.",
+     "ejemplo": "12 de 2.000 respuestas con error financiero material = 0,60% → ROJO",
+     "numerador": "Respuestas evaluadas con error financiero material",
+     "denominador": "Respuestas evaluadas (muestra)",
+     "como": "Ratio por iniciativa",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    },
+    {
+     "id": "MRM-02",
+     "nombre": "Respuestas tóxicas",
+     "origen": "Propio IA",
+     "verde": "<0,20%",
+     "ambar": "0,20–<0,50%",
+     "rojo": "≥0,50%",
+     "cuenta": "Respuestas tóxicas ÷ respuestas evaluadas.",
+     "ejemplo": "5 de 2.000 respuestas tóxicas = 0,25% → ÁMBAR",
+     "numerador": "Respuestas evaluadas calificadas como tóxicas",
+     "denominador": "Respuestas evaluadas (muestra)",
+     "como": "Ratio por iniciativa",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    },
+    {
+     "id": "MRM-03",
+     "nombre": "Fallas ante pruebas adversariales",
+     "origen": "Propio IA",
+     "verde": "<1,0%",
+     "ambar": "1,0–<2,0%",
+     "rojo": "≥2,0%",
+     "cuenta": "Pruebas adversariales fallidas ÷ pruebas ejecutadas.",
+     "ejemplo": "12 de 1.000 pruebas fallidas = 1,2% → ÁMBAR",
+     "numerador": "Pruebas adversariales fallidas",
+     "denominador": "Pruebas adversariales ejecutadas",
+     "como": "Ratio por iniciativa",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    },
+    {
+     "id": "MRM-04",
+     "nombre": "Deterioro del desempeño vs. validación",
+     "origen": "Propio IA",
+     "verde": "<10%",
+     "ambar": "10–<15%",
+     "rojo": "≥15%",
+     "cuenta": "(Métrica validada − métrica actual) ÷ métrica validada.",
+     "ejemplo": "El desempeño baja de 0,80 a 0,70 = 12,5% de deterioro → ÁMBAR",
+     "numerador": "Métrica validada − métrica actual",
+     "denominador": "Métrica validada",
+     "como": "Ratio por iniciativa",
+     "fuente": "S11",
+     "fuenteAnexo": "S17"
+    }
+   ]
+  }
+ ],
+ "controles": {
+  "texto": "Set de controles por disciplina. Se evalúan en cada iniciativa. Algunos controles son además métricas que alimentan el apetito.",
+  "proporcional": "A mayor materialidad, mayor set de controles: N1 más controles, N5 menos controles.",
+  "raci": "RACI de controles: cada control tiene responsables definidos entre todos los stakeholders.",
+  "matriz": "Las especialidades evalúan con su metodología y matriz de controles proporcionales al riesgo.",
+  "ejemploConteo": "Ejemplo ilustrativo: MRM 15 controles · Ciberseguridad 12 · Legal 8 · Riesgo no Financiero 5.",
+  "detalle": "[Por confirmar] Detalle de controles por disciplina.",
+  "fuente": "S4"
+ },
+ "especialidades": {
+  "evaluanG2": [
+   "MRM",
+   "Legal",
+   "Ciber",
+   "RNF",
+   "Terceros",
+   "Cumplimiento"
+  ],
+  "nota": "Evalúan en paralelo en G2. Qué especialidades intervienen según la ruta: [Por confirmar].",
+  "fuente": "S3"
+ },
+ "roles": [
+  {
+   "rol": "1.ª línea · Programa IA",
+   "hace": "Registra la iniciativa en el inventario y participa del monitoreo.",
+   "fuente": "S3"
+  },
+  {
+   "rol": "2.ª línea de riesgos / AI Risk Team",
+   "hace": "Clasifica la iniciativa (triaje N1–N5) en G1; opina en las rutas ámbar y roja.",
+   "fuente": "S3, S6, S18"
+  },
+  {
+   "rol": "AI Risk Officer",
+   "hace": "Consolida el riesgo residual; participa del monitoreo; define y aprueba métricas nuevas.",
+   "fuente": "S3, S12, S15"
+  },
+  {
+   "rol": "Especialidades (MRM, Legal, Ciber, RNF, Terceros, Cumplimiento)",
+   "hace": "Evalúan en paralelo en G2 con su metodología y matriz de controles; dan el semáforo por disciplina.",
+   "fuente": "S3"
+  },
+  {
+   "rol": "Legal",
+   "hace": "Valida el listado literal de usos indebidos; confirma incumplimientos de la Ley IA.",
+   "fuente": "S5, S15"
+  },
+  {
+   "rol": "Gerencia Owner + Gerencia de Riesgos",
+   "hace": "Aprueban cuando hay algún ámbar y ningún rojo; el ámbar lleva fecha de cierre.",
+   "fuente": "S6"
+  },
+  {
+   "rol": "Comité de Riesgo No Financiero Corp",
+   "hace": "Aprueba cuando hay un rojo y su dimensión queda bajo el límite.",
+   "fuente": "S6"
+  },
+  {
+   "rol": "CAR",
+   "hace": "Decide cuando una dimensión llega a su límite (se excede el apetito).",
+   "fuente": "S5, S6"
+  },
+  {
+   "rol": "Directorio",
+   "hace": "Informado cuando decide el CAR.",
+   "fuente": "S6"
+  },
+  {
+   "rol": "Dueños de métricas",
+   "hace": "Heredadas (Ciber, RNF, Terceros) ratifican umbral; nuevas (AI Risk Officer, Legal, MRM) definen y aprueban.",
+   "fuente": "S12"
+  }
+ ],
+ "queFalta": {
+  "titulo": "Qué falta para cerrar el RAF de IA: 3 pasos",
+  "pasos": [
+   {
+    "n": 1,
+    "t": "Simular el consumo del apetito con datos reales",
+    "d": "Conectar tres fuentes (Inventario / Playbook, Taxonomía / clasificaciones, Riesgos / base GRC) y calcular controles → métricas → dimensiones con datos reales. Alinear la llave inventario–GRC y sumar incidentes y pérdidas etiquetados IA.",
+    "resultado": "Iniciativas con brecha por cada dimensión, con su semáforo, sobre una muestra real"
+   },
+   {
+    "n": 2,
+    "t": "Simular casos icónicos por las dos rutas",
+    "d": "Depende del 1. Simular un par de casos reales, uno por ruta (G1 atención, G2 autonomía, G3 decide). Se compara: días e instancia que habría decidido vs. lo que ocurrió.",
+    "resultado": "Dos casos con rutas distintas (p. ej., Ágil y Estándar o Reforzada)"
+   },
+   {
+    "n": 3,
+    "t": "Cerrar números con los responsables y pilotear",
+    "d": "En paralelo. Heredados del RAF vigente ratifican umbral: Ciber, RNF, Terceros. Nuevos definen y aprueban: AI Risk Officer, Legal, MRM. Se cierra por cada métrica y dimensión: apetito, tolerancia y límite.",
+    "resultado": ""
+   }
+  ],
+  "plazos": [
+   "Diagnosticar lo que tenemos ~2 días",
+   "Poblar datos IA para el cálculo de apetito ~2 semanas"
+  ],
+  "fuente": "S12"
+ },
+ "anexos": {
+  "taxonomia": {
+   "fuente": "S14",
+   "grupos": [
+    {
+     "t": "Sistema IA",
+     "valores": [
+      "Chatbot/Voicebot",
+      "Knowledge Expert",
+      "Text Analysis",
+      "Image/Video Analysis",
+      "Speech Analysis",
+      "Content Generation",
+      "Coding"
+     ]
+    },
+    {
+     "t": "Tipo de IA",
+     "valores": [
+      "IA Descriptiva/Clasificadora",
+      "IA Predictiva",
+      "IA Generativa",
+      "Workflow con IA",
+      "Agente de IA",
+      "Modelo fundacional"
+     ]
+    },
+    {
+     "t": "Categoría de Riesgos IA",
+     "valores": [
+      "Amenaza de seguridad",
+      "Rendimiento y explicabilidad",
+      "Confianza entre agentes*",
+      "Equidad deteriorada (sesgos)",
+      "Infracción de propiedad intelectual",
+      "Privacidad y calidad de data",
+      "Resiliencia y observabilidad*",
+      "Riesgo de terceros",
+      "Riesgo estratégico",
+      "Seguridad de los datos*",
+      "Uso malicioso"
+     ]
+    },
+    {
+     "t": "Clasificación regulatoria (Ley IA Perú)",
+     "valores": [
+      "Uso indebido",
+      "Uso de riesgo alto",
+      "Uso de riesgo aceptable"
+     ]
+    },
+    {
+     "t": "Especialidades de 1.ª Línea",
+     "valores": [
+      "Áreas de Negocio",
+      "Tecnología",
+      "Ciberseguridad",
+      "Data"
+     ]
+    },
+    {
+     "t": "Especialidades de 2.ª Línea",
+     "valores": [
+      "Riesgos no Financieros",
+      "Riesgo de Modelo",
+      "Cyber Risk",
+      "Legal",
+      "Cumplimiento",
+      "Otras especialidades"
+     ]
+    },
+    {
+     "t": "Triaje N1–N5 (materialidad)",
+     "valores": [
+      "N1 (Material)",
+      "N2 (Material)",
+      "N3 (Material)",
+      "N4 (No Material)",
+      "N5 (No Material)"
+     ]
+    },
+    {
+     "t": "Tiering MRM",
+     "valores": [
+      "Tier 1",
+      "Tier 2",
+      "Tier 3",
+      "Tier 4"
+     ]
+    }
+   ],
+   "notas": [
+    "* Categoría agéntica: aplica sobre todo a soluciones con agentes. El alcance e impacto (clientes, regulador, volumen) se captura en el triaje, cuya calibración está en revisión.",
+    "Un solo lenguaje: toda iniciativa se registra con estos valores. Las áreas no crean categorías propias; si falta un valor, se propone su inclusión a quien mantiene la lista.",
+    "Se registra en el inventario: sistema y tipo de IA se informan al registrar (Política de Inventario). Categorías de riesgo, triaje y flujos de evaluación deben quedar en la Política de Riesgos IA.",
+    "Mantener el vínculo: el código de iniciativa debería vincular iniciativa con taxonomía. Hoy el registro conserva iniciativa, pero no lo vincula con la taxonomía (desde aprox. febrero 2026)."
+   ]
+  },
+  "sustentoMarco": {
+   "fuente": "S19",
+   "filas": [
+    {
+     "pieza": "Estructura: dimensión → métrica → control",
+     "dice": "Un marco de apetito se compone de una declaración de apetito, límites de riesgo y roles y responsabilidades (FSB). EBRD publica su declaración por tipo de riesgo, con un anexo de taxonomía de riesgos y de métricas y controles ligados al apetito. Basilea (2021) trata la articulación de apetito y tolerancia y el uso de indicadores clave de riesgo.",
+     "fuentes": "[1] [3] [2]"
+    },
+    {
+     "pieza": "Declaración escrita con tres niveles: prohibido, sin apetito y con condiciones",
+     "dice": "El FSB espera una declaración escrita que combine límites cuantitativos con declaraciones cualitativas para lo difícil de medir (consulta de 2013). Bank of Cyprus declara cero tolerancia a violaciones regulatorias y exige rectificación inmediata. Lo prohibido por norma viene de la Ley 31814 (usos indebidos) y, como referencia, del art. 5 del EU AI Act.",
+     "fuentes": "[1] [21] [8] [9]"
+    },
+    {
+     "pieza": "Apetito de IA ligado a la estrategia y al riesgo de modelo",
+     "dice": "FSB (oct-2026), práctica 1: alinear la adopción y el gobierno de la IA con el modelo de negocio, el apetito de riesgo y la estrategia. PRA: la junta fija un apetito de riesgo de modelo, conviene expresarlo antes de desplegar IA y ML, y los gatillos de revalidación pueden ligarse al apetito.",
+     "fuentes": "[5] [4]"
+    },
+    {
+     "pieza": "Materialidad N1–N5 y controles proporcionales",
+     "dice": "FSB, práctica 5: evaluar de forma sistemática la materialidad y el riesgo de cada caso de uso, al inicio y después. En el Reino Unido, las entidades califican la materialidad de sus casos de IA (62% baja, 16% alta). La Ley 31814 y el EU AI Act gradúan las obligaciones según el nivel de riesgo.",
+     "fuentes": "[5] [14] [8] [9]"
+    },
+    {
+     "pieza": "Gestión de riesgos de IA por dimensiones, con gobierno transversal",
+     "dice": "NIST AI RMF organiza la gestión en cuatro funciones (gobernar, mapear, medir y gestionar) y hace del gobierno una función transversal. McKinsey evalúa la madurez de IA responsable en cinco dimensiones: estrategia, gestión de riesgos, datos y tecnología, gobierno y, desde 2026, gobierno y controles de IA agéntica.",
+     "fuentes": "[6] [17]"
+    }
+   ],
+   "nota": "Lo que las fuentes no dan: umbrales numéricos de apetito de IA. Los umbrales de la propuesta son propios del Grupo: los heredados vienen del RAF vigente y los propios de IA son preliminares, a ratificar con cada dueño.",
+   "notaDimensiones": "Las fuentes respaldan qué vigilar, no cuánto. Contexto de mercado: según una encuesta de McKinsey (2025, vía AI Index 2026), la inexactitud (74%), la ciberseguridad (72%) y el cumplimiento regulatorio (63%) son los riesgos de IA que más organizaciones consideran relevantes [19]*. Menos de 30% de los bancos europeos encuestados había integrado la IA generativa y agéntica en su marco de riesgo de modelo [18]."
+  },
+  "fuentes": {
+   "fuente": "S22",
+   "lista": [
+    "[1] FSB · Principles for an Effective Risk Appetite Framework (nov-2013; consulta jul-2013)",
+    "[2] BCBS · Revisions to the Principles for the Sound Management of Operational Risk (mar-2021)",
+    "[3] EBRD · Risk Appetite Statement (jun-2024)",
+    "[4] PRA / Bank of England · SS1/23 y mesa sobre gestión de riesgo de modelo con IA y ML (oct-2025)",
+    "[5] FSB · Sound Practices for Responsible Adoption of AI, informe final (15-oct-2026)",
+    "[6] NIST · AI Risk Management Framework 1.0 (ene-2023)",
+    "[7] NIST · AI 600-1, Generative AI Profile (jul-2024)*",
+    "[8] PCM, Perú · Ley 31814 y Reglamento, DS 115-2025-PCM (set-2025)",
+    "[9] Unión Europea · Reglamento (UE) 2024/1689, AI Act: arts. 5 y 9 a 15",
+    "[10] MINJUSDH, Perú · Ley 29733 y Reglamento, DS 016-2024-JUS (nov-2024; vigente mar-2025)",
+    "[11] OWASP · Top 10 for LLM Applications 2026",
+    "[12] FSB · Enhancing Third-Party Risk Management and Oversight: toolkit (dic-2023)",
+    "[13] FSB · Monitoring Adoption of AI and Related Vulnerabilities (oct-2025)",
+    "[14] Bank of England y FCA · Artificial intelligence in UK financial services (nov-2024)",
+    "[15] SBS, Perú · Resolución 053-2023, Reglamento de Gestión de Riesgos de Modelo (ene-2023)",
+    "[16] OCC, Fed y FDIC · Model Risk Management: guía revisada, OCC Bulletin 2026-13 (abr-2026)",
+    "[17] McKinsey · State of AI trust in 2026: shifting to the agentic era (mar-2026)",
+    "[18] McKinsey · Evolving model risk management in the age of AI (jul-2026)",
+    "[19] McKinsey y Stanford HAI · AI Index 2026: riesgos de IA considerados relevantes vs. mitigados*",
+    "[20] Wells Fargo (autores) · Model Risk Management for Generative AI in Financial Institutions (arXiv, mar-2025)",
+    "[21] Bank of Cyprus · Risk Appetite Statement, riesgo de cumplimiento (mar-2022)"
+   ],
+   "nota": "* Consultada a través de un resumen secundario; conviene verificarla en la fuente original antes de citarla fuera del Grupo. Las fuentes de bancos no incluyen umbrales numéricos de apetito de IA."
+  }
+ },
+ "pendientes": [
+  {
+   "t": "Días por etapa (G1, G2, G3): la PPT solo fija el total de G1 a G3.",
+   "fuente": "S3, S6"
+  },
+  {
+   "t": "Días para Registrar, Monitorear y la reevaluación.",
+   "fuente": "S3"
+  },
+  {
+   "t": "Criterios de triaje: cualitativos y en revisión; nuevo triaje en ~2 semanas.",
+   "fuente": "S2, S18"
+  },
+  {
+   "t": "Efecto de «Uso de riesgo alto» (Ley IA) sobre el nivel o la ruta.",
+   "fuente": "S14"
+  },
+  {
+   "t": "Catálogo de controles por disciplina.",
+   "fuente": "S4"
+  },
+  {
+   "t": "Qué especialidades intervienen según la ruta (en especial N4–N5).",
+   "fuente": "S3"
+  },
+  {
+   "t": "CAR: «excede el apetito» (S3, S6) vs. «llega al límite» (S5, S7). La herramienta usa el límite por defecto (configurable).",
+   "fuente": "S3, S5, S6, S7"
+  },
+  {
+   "t": "Quién hace el triaje: «2.ª línea de riesgos» (S3) vs. «AI Risk Team» (S18).",
+   "fuente": "S3, S18"
+  },
+  {
+   "t": "Terminología: ámbar (S8–S11) vs. tolerancia (S12).",
+   "fuente": "S8, S12"
+  },
+  {
+   "t": "TER-01: el anexo dice «amarillo 100% · rojo 95%»; manda la slide principal.",
+   "fuente": "S11, S17"
+  },
+  {
+   "t": "OPS-02: el valor 99,0% figura en ámbar y en rojo.",
+   "fuente": "S10"
+  },
+  {
+   "t": "CYB-01, CYB-03 y TER-01 son ratios de cartera: falta cómo se atribuyen a una iniciativa.",
+   "fuente": "S10, S11"
+  },
+  {
+   "t": "Umbrales preliminares (propios IA) y por ratificar (heredados); OPS-01 denominador y umbral fuera de BCP; TER-02 límite inferido; definición de «brecha crítica».",
+   "fuente": "S8, S12, S15–S17"
+  }
+ ]
+}</script>
+<script>
+"use strict";
+/* ============ utilidades ============ */
+const CFG = JSON.parse(document.getElementById('config').textContent);
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const tx = s => esc(s).replace(/\[Por confirmar\]/g, '<span class="pc">Por confirmar</span>').replace(/\(por confirmar\)/gi, '<span class="pc">Por confirmar</span>');
+const PC = '<span class="pc">Por confirmar</span>';
+/* Las fuentes (slide) quedan en el bloque de datos y no se muestran en pantalla. */
+const src = s => '';
+const nivel = id => CFG.niveles.find(n => n.id === id);
+const A = id => CFG.autonomia.find(a => a.id === id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function show(v){
+  $$('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.view === v));
+  $$('.view').forEach(s => s.classList.toggle('on', s.id === 'v-'+v));
+  if(v === 'guia') requestAnimationFrame(() => drawEdges());
+  window.scrollTo(0,0);
+  try{ history.replaceState(null, '', '#'+v); }catch(e){}
+}
+$$('.tabs button').forEach(b => b.addEventListener('click', () => show(b.dataset.view)));
+
+/* ============ modelo del flujo (S3, S5, S6) ============ */
+const RUTA_NODO = {'Ágil':'ag', 'Estándar':'es', 'Reforzada':'re'};
+const INST_NODO = {verde:'rnf', ambar:'ger', rojo_bajo:'com', rojo_limite:'car'};
+const EDGES = [
+  ['reg','ley'], ['ley','stop','Sí'], ['ley','niv','No'],
+  ['niv','re'], ['niv','es'], ['niv','ag'],
+  ['re','eval'], ['es','eval'], ['ag','eval'],
+  ['eval','sem'], ['eval','rnf'],
+  ['sem','rnf'], ['sem','ger'], ['sem','com'], ['sem','car'],
+  ['rnf','mon'], ['ger','mon'], ['com','mon'], ['car','mon'],
+  ['mon','reev'], ['reev','niv','', 'loop']
+];
+const S = {ley:'no', nivel:'N2', semaforo:'', caso:''};
+
+/* Recorrido del escenario: lista de pasos con su caja y explicación */
+function recorrido(){
+  const P = CFG.pasos, out = [];
+  out.push({node:'reg', t:`<b>Registrar.</b> ${esc(P[0].responsable)} registra la iniciativa en el inventario (Playbook u otra herramienta con los campos corporativos). Resultado: <b>${esc(P[0].entregable.toLowerCase())}</b>.`, f:'S3'});
+  if(S.ley === 'indebido'){
+    out.push({node:'ley', t:`<b>Clasificar (G1) · Ley IA.</b> La iniciativa es un <b>uso indebido</b> según la Ley IA y su Reglamento (DS 115-2025-PCM).`, f:'S5'});
+    out.push({node:'stop', t:`<b>STOP, sin excepción.</b> La iniciativa se detiene: no entra a las rutas ni usa cupo. El listado literal de usos indebidos lo valida Legal contra el Reglamento.`, f:'S5, S6', stop:true});
+    return out;
+  }
+  const n = nivel(S.nivel);
+  out.push({node:'ley', t:`<b>Clasificar (G1) · Ley IA.</b> No es un uso indebido: la iniciativa entra a las rutas.`, f:'S5, S6'});
+  out.push({node:'niv', t:`<b>Clasificar (G1) · Triaje.</b> La 2.ª línea de riesgos / AI Risk Team asigna el nivel <b>${n.id}</b> (${esc(n.describe.toLowerCase().replace(/\.$/,''))}). Es <b>${n.material ? 'material: cuenta para el apetito' : 'no material: sigue el proceso vigente de RNF y no usa cupo'}</b>.`, f:'S3, S18'});
+  out.push({node:RUTA_NODO[n.ruta], t:`<b>Ruta de atención ${esc(n.ruta)}.</b> SLA sugerido: <b>${esc(n.slaTexto)}</b>, contados desde G1 hasta G3.`, f:'S6'});
+  out.push({node:'eval', t: n.material
+    ? `<b>Evaluar (G2).</b> Las especialidades evalúan en paralelo (${CFG.especialidades.evaluanG2.map(esc).join(' · ')}), cada una con su metodología y una matriz de controles proporcional al nivel ${n.id}${n.controles?` (${esc(n.controles.toLowerCase())})`:''}.`
+    : `<b>Evaluar (G2).</b> Evaluación con controles proporcionales al nivel ${n.id} (a menor materialidad, menos controles). Qué especialidades intervienen en N4–N5: ${PC}`, f:'S3, S4'});
+  if(!n.material){
+    out.push({node:'rnf', t:`<b>Decidir (G3).</b> ${esc(CFG.autonomiaNoMaterial.nota)}: <b>${esc(CFG.autonomiaNoMaterial.instancia)}</b>.`, f:'S6'});
+  } else {
+    const r = S.semaforo ? A(S.semaforo) : null;
+    out.push({node:'sem', t: r
+      ? `<b>Resultado de la evaluación: ${esc(r.condicion.toLowerCase())}</b> (${esc(r.detalle)}). Con este semáforo se fija en G2 quién aprobará.`
+      : `<b>Resultado de la evaluación.</b> Aún sin semáforo. Hay 4 caminos posibles: todo verde, algún ámbar, rojo bajo el límite o rojo que llega al límite. Elige uno arriba para verlo.`, f:'S6'});
+    out.push({node: r ? INST_NODO[r.id] : 'dec', t: r
+      ? `<b>Decidir (G3): ${esc(r.instancia)}.</b> ${esc(r.nota.charAt(0).toUpperCase()+r.nota.slice(1))}.${S.caso==='s7' ? ' En el ejemplo, MRM queda bajo el límite (Comité RNF) y Ciber llega al límite (CAR): manda el más exigente.' : ''}`
+      : `<b>Decidir (G3).</b> La instancia depende del semáforo: Autonomías vigentes de RNF, Gerencia, Comité de Riesgo No Financiero Corp o CAR.`, f: S.caso==='s7' ? 'S6, S7' : 'S6'});
+  }
+  out.push({node:'mon', t:`<b>Monitorear.</b> ${esc(CFG.pasos[4].que)}`, f:'S3'});
+  out.push({node:'reev', t:`<b>Reevaluación.</b> Ya en producción, un rojo o un cambio material vuelve a pasar la iniciativa por la ruta.`, f:'S3'});
+  return out;
+}
+function activos(){
+  const rec = recorrido(), seq = rec.map(r => r.node);
+  const on = new Set(seq.filter(x => x !== 'dec')), maybe = new Set(), eOn = new Set(), eMaybe = new Set();
+  const OPC = ['rnf','ger','com','car'];
+  if(seq.includes('dec')) OPC.forEach(x => maybe.add(x));
+  for(let i=0;i<seq.length-1;i++){
+    const a = seq[i], b = seq[i+1];
+    if(b === 'dec'){ OPC.forEach(x => eMaybe.add(a+'>'+x)); continue; }
+    if(a === 'dec'){ OPC.forEach(x => eMaybe.add(x+'>'+b)); continue; }
+    eOn.add(a+'>'+b);
+  }
+  if(seq.includes('reev')) eOn.add('reev>niv');
+  return {rec, on, maybe, eOn, eMaybe};
+}
+
+/* ============ GUÍA DE RUTA ============ */
+function nodeHTML(id){
+  const rutaN = r => CFG.niveles.filter(x => x.ruta === r).map(x => `${x.id} · ${esc(x.slaTexto)}`).join('<br>');
+  const M = {
+    reg:  `<b>Registrar</b><small>Inventario · código único</small>`,
+    ley:  `<b>¿Uso indebido según la Ley IA?</b><small>Ley 31814 · DS 115-2025-PCM</small>`,
+    stop: `<b>STOP</b><small>Prohibido · sin excepción ni cupo</small>`,
+    niv:  `<b>Triaje N1–N5</b><small>Materialidad e impacto</small>`,
+    re:   `<b>Reforzada</b><small>${rutaN('Reforzada')}</small>`,
+    es:   `<b>Estándar</b><small>${rutaN('Estándar')}</small>`,
+    ag:   `<b>Ágil</b><small>${rutaN('Ágil')}</small>`,
+    eval: `<b>Evaluación en paralelo</b><small>Controles proporcionales al nivel</small><div class="chipsm">${CFG.especialidades.evaluanG2.map(e => `<span>${esc(e)}</span>`).join('')}</div>`,
+    sem:  `<b>Semáforo por disciplina</b><small>frente al apetito · N1–N3</small>`,
+    rnf:  `<b>Autonomías vigentes de RNF</b><small>Todo verde · o N4–N5</small>`,
+    ger:  `<b>Gerencia Owner + Riesgos</b><small>+ AI Risk Team · algún ámbar</small>`,
+    com:  `<b>Comité de Riesgo No Financiero Corp</b><small>Rojo bajo el límite</small>`,
+    car:  `<b>CAR</b><small>Llega al límite · Directorio informado</small>`,
+    mon:  `<b>Tablero de apetito</b><small>Mensual · por disciplina</small>`,
+    reev: `<b>Reevaluación</b><small>Ante un rojo o un cambio material</small>`
+  };
+  const gate = {ley:'G1', niv:'G1', eval:'G2', sem:'G2', rnf:'G3', ger:'G3', com:'G3', car:'G3'}[id];
+  const kind = {stop:'k-stop', rnf:'k-rnf', ger:'k-ger', com:'k-com', car:'k-car', ag:'k-ag', es:'k-es', re:'k-re', ley:'dia', sem:'dia'}[id] || '';
+  return `<button class="node ${kind}" id="n-${id}" data-node="${id}" aria-controls="detail">${gate?`<span class="gt">${gate}</span>`:''}${M[id]}</button>`;
+}
+function renderGuia(){
+  const P = CFG.pasos;
+  const cols = [
+    {b:`1. ${P[0].nombre}`, s:P[0].etapa, nodes:['reg']},
+    {b:`2. Clasificar (triaje)`, s:`${P[1].etapa} · G1`, nodes:['stop','ley','niv']},
+    {b:'Ruta de atención', s:'cuánto tarda · se asigna en G1', nodes:['re','es','ag']},
+    {b:`3. Evaluar`, s:`${P[2].etapa} · G2`, nodes:['eval','sem']},
+    {b:`4. ${P[3].nombre}`, s:`${P[3].etapa} · G3`, nodes:['rnf','ger','com','car']},
+    {b:`5. ${P[4].nombre}`, s:P[4].etapa, nodes:['mon','reev']}
+  ];
+  const semLbl = {verde:'Todo verde', ambar:'Algún ámbar', rojo_bajo:'Rojo bajo el límite', rojo_limite:'Rojo que llega al límite'};
+  $('#v-guia').innerHTML = `
+  <div class="kicker">Guía de ruta</div>
+  <h1>¿Qué pasa con una iniciativa de IA, paso a paso?</h1>
+  <p class="lead">Elige un escenario y mira el camino que sigue la iniciativa: su ruta, cuánto tarda, quién evalúa y quién decide. Haz clic en cualquier caja para ver su detalle. ${src('S3, S6')}</p>
+  <div class="scen" role="group" aria-label="Escenario">
+    <div><span class="flabel">1 · ¿Uso indebido según la Ley IA? ${src('S5')}</span><div class="seg" id="segLey">
+      <button data-v="no">No</button><button data-v="indebido" class="stopb">Sí</button></div></div>
+    <div><span class="flabel">2 · Nivel del triaje ${src('S18')}</span><div class="seg" id="segNiv">
+      ${CFG.niveles.map(n => `<button data-v="${n.id}" title="${esc(n.materialidad)} · ${esc(n.ruta)} · ${esc(n.slaTexto)}">${n.id}</button>`).join('')}</div></div>
+    <div><span class="flabel">3 · Resultado de la evaluación en G2 (solo N1–N3) ${src('S6')}</span><div class="seg" id="segSem">
+      <button data-v="">Aún no</button>${CFG.autonomia.map(a => `<button data-v="${a.id}" title="${esc(a.detalle)}">${esc(semLbl[a.id] || a.condicion)}</button>`).join('')}</div></div>
+    <div><button class="btn pri" id="playTop">▶ Reproducir recorrido</button></div>
+  </div>
+  <div class="flowwrap" id="flow">
+    <svg class="flowsvg" id="svg" aria-hidden="true"></svg>
+    <div class="clock" id="clock"></div>
+    <div class="cols" id="cols">${cols.map(c => `<div class="colwrap"><div class="colh"><b>${esc(c.b)}</b><span>${esc(c.s)}</span></div><div class="col">${c.nodes.map(nodeHTML).join('')}</div></div>`).join('')}</div>
+  </div>
+  <div class="player" aria-label="Recorrido">
+    <div class="pbtns"><button id="pPrev" aria-label="Paso anterior">‹</button><button class="play" id="pPlay">▶ Reproducir</button><button id="pNext" aria-label="Paso siguiente">›</button></div>
+    <div class="ptxt" id="pTxt" aria-live="polite"></div>
+    <div class="pbar2" id="pBar"></div>
+  </div>
+  <div class="story">
+    <div><h2>El recorrido de este escenario</h2><ol class="steps" id="steps"></ol>
+      <div class="card small">${esc(CFG.reglasFlujo[1].t)} ${src('S3')}<br><b>Alcance:</b> ${esc(CFG.filosofia.alcance)} ${src('S4')}</div></div>
+    <aside class="detail" id="detail" aria-live="polite"></aside>
+  </div>`;
+  $$('#segLey button').forEach(b => b.onclick = () => { stop(); S.ley = b.dataset.v; S.caso=''; update(); });
+  $$('#segNiv button').forEach(b => b.onclick = () => { stop(); S.nivel = b.dataset.v; S.ley='no'; S.caso=''; update(); });
+  $$('#segSem button').forEach(b => b.onclick = () => { stop(); S.semaforo = b.dataset.v; S.caso=''; update(); });
+  $$('.node').forEach(b => b.onclick = () => { stop(); detail(b.dataset.node); });
+  $('#pPlay').onclick = () => playing ? stop() : play();
+  $('#playTop').onclick = () => play();
+  $('#pPrev').onclick = () => { stop(); goto(Math.max(0, pos-1)); };
+  $('#pNext').onclick = () => { stop(); goto(Math.min(REC.length-1, pos+1)); };
+  update();
+}
+let REC = [], pos = 0, playing = null;
+function update(){
+  const act = activos(); REC = act.rec;
+  const mat = nivel(S.nivel)?.material && S.ley !== 'indebido';
+  $$('#segLey button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === S.ley));
+  $$('#segNiv button').forEach(b => b.setAttribute('aria-pressed', S.ley !== 'indebido' && b.dataset.v === S.nivel));
+  $$('#segSem button').forEach(b => { b.setAttribute('aria-pressed', !!mat && b.dataset.v === S.semaforo); b.disabled = !mat; });
+  $('#flow').classList.add('dim');
+  $$('.node').forEach(n => { n.classList.toggle('on', act.on.has(n.dataset.node)); n.classList.toggle('maybe', act.maybe.has(n.dataset.node)); });
+  $('#steps').innerHTML = REC.map((r,i) => `<li data-i="${i}" class="${r.stop?'stop':''}"><span class="n">${i+1}</span><span>${r.t} ${src(r.f)}</span></li>`).join('');
+  $$('#steps li').forEach(li => li.onclick = () => { stop(); goto(+li.dataset.i); });
+  $('#pBar').innerHTML = REC.map(() => '<i></i>').join('');
+  drawEdges(act); goto(0, true);
+}
+function goto(i, silent){
+  pos = i; const r = REC[i];
+  $$('.node').forEach(n => n.classList.toggle('cur', !silent && (n.dataset.node === r.node || (r.node === 'dec' && n.classList.contains('maybe')))));
+  $$('#steps li').forEach((li,k) => li.classList.toggle('cur', !silent && k === i));
+  $$('#pBar i').forEach((x,k) => x.classList.toggle('on', !silent && k <= i));
+  $('#pTxt').innerHTML = silent ? `<b>${REC.length} pasos.</b> Pulsa «Reproducir» para recorrerlos, o haz clic en un paso.` : `<b>Paso ${i+1} de ${REC.length}.</b> ${r.t}`;
+  detail(silent ? (S.ley === 'indebido' ? 'stop' : RUTA_NODO[nivel(S.nivel).ruta]) : (r.node === 'dec' ? 'sem' : r.node));
+}
+function play(){
+  stop(); goto(0); $('#pPlay').textContent = '❚❚ Pausa';
+  if(innerWidth > 900) $('#flow').scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'start'});
+  playing = setInterval(() => { if(pos >= REC.length-1){ stop(); return; } goto(pos+1); }, reduce ? 3200 : 2400);
+}
+function stop(){ if(playing){ clearInterval(playing); playing = null; } const b = $('#pPlay'); if(b) b.textContent = '▶ Reproducir'; }
+
+/* Detalle de cada caja (desde el bloque de datos) */
+function detail(id){
+  $$('.node').forEach(n => n.classList.toggle('sel', n.dataset.node === id));
+  const P = CFG.pasos;
+  const step = s => `<div class="lb">Etapa</div>${esc(s.etapa)}${s.gate?` · gate ${s.gate}`:''}<div class="lb">Qué pasa</div>${esc(s.que)}<div class="lb">Resultado</div><b>${esc(s.entregable)}</b><div class="lb">Quién</div>${esc(s.responsable)}${s.notaResponsable?`<br><span class="muted">${esc(s.notaResponsable)}</span>`:''}`;
+  const ruta = r => `<div class="lb">Niveles</div>${CFG.niveles.filter(n => n.ruta === r).map(n => `<p style="margin:4px 0"><span class="lvl ${n.material?'':'nm'}">${n.id}</span> <b>${esc(n.slaTexto)}</b> · ${esc(n.describe)}<br><span class="muted">Ej.: ${esc(n.ejemplo)}</span></p>`).join('')}<div class="lb">Reloj</div>El SLA corre de la etapa G1 a la etapa G3, en días hábiles; son plazos sugeridos. Días por etapa: ${PC}`;
+  const rolDe = txt => CFG.roles.find(x => txt.includes(x.rol.split(' + ')[0].split(' (')[0]));
+  const inst = aid => { const a = A(aid), rol = rolDe(a.instancia); return `<div class="lb">Cuándo decide</div>${esc(a.condicion)}: ${esc(a.detalle)}.<div class="lb">Condición</div>${esc(a.nota)}${rol?`<div class="lb">Rol</div>${esc(rol.hace)} ${src(rol.fuente)}`:''}`; };
+  const D = {
+    reg:  {t:P[0].nombre, b:step(P[0]), f:P[0].fuente},
+    ley:  {t:'¿Uso indebido según la Ley IA?', b:`${esc(CFG.leyIA.pregunta)}<div class="lb">Ejemplos de uso indebido</div><ul class="clean">${CFG.leyIA.ejemplosIndebido.map(e=>`<li>${esc(e)}</li>`).join('')}</ul><div class="lb">Clasificación regulatoria</div>${CFG.leyIA.clasificaciones.map(c => `<p style="margin:4px 0"><b>${esc(c.nombre)}:</b> ${tx(c.efecto)} ${src(c.fuente)}</p>`).join('')}`, f:'S3, S5'},
+    stop: {t:'STOP · Prohibido', b:`<ul class="clean">${CFG.nivelesApetito[0].items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`, f:'S5, S6'},
+    niv:  {t:P[1].nombre, b:step(P[1]) + `<div class="lb">Niveles</div>${CFG.niveles.map(n => `<p style="margin:3px 0"><span class="lvl ${n.material?'':'nm'}">${n.id}</span> ${esc(n.materialidad)} · ${esc(n.ruta)} · ${esc(n.slaTexto)}</p>`).join('')}<p class="small muted">${esc(CFG.notaNiveles)}</p><p class="small"><b>Mejora en curso:</b> ${esc(CFG.propuesta.mejoraTriaje.aMejorar)} ${src('S2')}</p>`, f:'S3, S18'},
+    re:   {t:'Ruta Reforzada', b:ruta('Reforzada'), f:'S6, S18'},
+    es:   {t:'Ruta Estándar', b:ruta('Estándar'), f:'S6, S18'},
+    ag:   {t:'Ruta Ágil', b:ruta('Ágil') + `<div class="lb">Apetito</div>N4–N5 siguen el proceso vigente de RNF: no cuentan para el apetito ni usan cupo ${src('S5')}`, f:'S6, S18'},
+    eval: {t:P[2].nombre, b:step(P[2]) + `<div class="lb">Controles</div>${esc(CFG.controles.texto)} ${esc(CFG.controles.proporcional)} ${esc(CFG.controles.raci)}<br><span class="muted">${esc(CFG.controles.ejemploConteo)}</span><br>${PC} catálogo de controles por disciplina · especialidades según la ruta.<p><button class="btn sm" data-go="dim">Ver las 19 métricas que se evalúan ›</button></p>`, f:'S3, S4'},
+    sem:  {t:'Semáforo por disciplina frente al apetito', b:`Una métrica en rojo suma 1 a su dimensión; sin puntaje agregado, manda el peor semáforo ${src('S2, S8')}.<div class="lb">Cuatro resultados posibles</div>${CFG.autonomia.map(a => `<p style="margin:4px 0"><b>${esc(a.condicion)}</b> (${esc(a.detalle)}) → ${esc(a.instancia)}</p>`).join('')}<div class="lb">Varios rojos</div>${esc(CFG.reglaVariosRojos.t)} ${src('S7')}<p><button class="btn sm" data-go="rutas">Simular el cupo por dimensión ›</button></p>`, f:'S6'},
+    rnf:  {t:'Autonomías vigentes de RNF', b:inst('verde') + `<div class="lb">N4–N5</div>${esc(CFG.autonomiaNoMaterial.nota)}`, f:'S6'},
+    ger:  {t:A('ambar').instancia, b:inst('ambar'), f:'S6'},
+    com:  {t:A('rojo_bajo').instancia, b:inst('rojo_bajo'), f:'S6'},
+    car:  {t:'CAR', b:inst('rojo_limite') + `<div class="lb">Regla</div>Si una iniciativa llevaría al límite del apetito, decide el CAR ${src('S3, S5')}.`, f:'S6, S7'},
+    mon:  {t:P[4].nombre, b:step(P[4]), f:P[4].fuente},
+    reev: {t:'Reevaluación', b:`${esc(CFG.reglasFlujo[0].t)}<div class="lb">Disparadores</div><ul class="clean"><li>Un rojo en el tablero de apetito</li><li>Un cambio material: modelo, prompt o datos (ver métrica GOB-04)</li></ul>`, f:'S3, S9'}
+  };
+  const d = D[id]; if(!d) return;
+  $('#detail').innerHTML = `<div class="kicker">Detalle de la caja ${src(d.f)}</div><h3>${esc(d.t)}</h3>${d.b}`;
+  $$('[data-go]', $('#detail')).forEach(b => b.onclick = () => show(b.dataset.go));
+}
+
+/* Conexiones entre cajas (SVG) */
+function drawEdges(act){
+  act = act && act.eOn ? act : activos();
+  const wrap = $('#flow'), svg = $('#svg'); if(!wrap || !svg || !wrap.offsetParent) return;
+  placeClock();
+  if(innerWidth <= 900){ svg.innerHTML = ''; return; }
+  const W = wrap.getBoundingClientRect();
+  const R = id => { const r = $('#n-'+id).getBoundingClientRect(); return {l:r.left-W.left, r:r.right-W.left, t:r.top-W.top, b:r.bottom-W.top, cx:(r.left+r.right)/2-W.left, cy:(r.top+r.bottom)/2-W.top}; };
+  let h = '';
+  EDGES.forEach(([a,b,label,kind]) => {
+    const A1 = R(a), B1 = R(b); let d, lx, ly;
+    if(kind === 'loop'){
+      const yy = wrap.clientHeight - 14;
+      d = `M${A1.cx},${A1.b} L${A1.cx},${yy} L${B1.cx},${yy} L${B1.cx},${B1.b+2}`; lx = (A1.cx+B1.cx)/2; ly = yy - 5; label = 'Un rojo o un cambio material vuelve a pasar la iniciativa por la ruta';
+    } else if(Math.abs(A1.cx - B1.cx) < 30){
+      if(B1.t >= A1.b){ d = `M${A1.cx},${A1.b} L${B1.cx},${B1.t-2}`; ly = (A1.b + B1.t)/2 + 4; } else { d = `M${A1.cx},${A1.t} L${B1.cx},${B1.b+2}`; ly = (A1.t + B1.b)/2 + 4; } lx = A1.cx + 14;
+    } else {
+      const x1 = A1.r, y1 = A1.cy, x2 = B1.l, y2 = B1.cy, mx = (x1+x2)/2;
+      d = `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2-3},${y2}`; lx = x2 - 16; ly = y2 - 6;
+    }
+    const key = a+'>'+b, on = act.eOn.has(key), mb = act.eMaybe.has(key);
+    h += `<path class="edge ${on?'on':''} ${mb?'maybe':''} ${kind==='loop'?'loop':''}" d="${d}" marker-end="url(#ar${on||mb?'On':''})"/>`;
+    if(label) h += `<text class="elabel ${on||mb?'on':''}" x="${lx}" y="${ly}" text-anchor="${kind==='loop'?'middle':'start'}">${esc(label)}</text>`;
+  });
+  svg.innerHTML = `<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#C9CFD8"/></marker><marker id="arOn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#CC3366"/></marker></defs>` + h;
+}
+function placeClock(){
+  const c = $('#clock'), wrap = $('#flow'); if(!c || !wrap) return;
+  const n = nivel(S.nivel);
+  if(S.ley === 'indebido'){ c.className = 'clock off'; c.textContent = 'Sin reloj: la iniciativa se detiene (STOP)'; }
+  else { c.className = 'clock'; c.innerHTML = `⏱ Reloj del SLA, de G1 a G3 · ruta ${esc(n.ruta)} · ${esc(n.slaTexto)}`; }
+  if(innerWidth <= 900){ c.style.left = ''; c.style.width = ''; return; }
+  const W = wrap.getBoundingClientRect(), a = $('#n-ley').getBoundingClientRect(), b = $('#n-car').getBoundingClientRect();
+  c.style.left = (a.left - W.left) + 'px'; c.style.width = (b.right - a.left) + 'px';
+}
+addEventListener('resize', () => { clearTimeout(drawEdges.h); drawEdges.h = setTimeout(() => drawEdges(), 120); });
+
+/* ============ RUTAS Y CUPO ============ */
+const CUPO = {dim:'RAF-IA-03', hoy:3, roja:true};
+let RLVL = 'N2';
+function renderRutas(){
+  $('#v-rutas').innerHTML = `
+  <div class="kicker">Dos rutas sobre el mismo ciclo de vida</div><h1>Rutas: cuánto tarda y quién decide</h1>
+  <p class="lead">${esc(CFG.reglasFlujo[3].t)} ${src('S6')}</p>
+  <div class="grid g2">
+    <div class="card"><div class="kicker">Ruta de atención · cuánto tarda ${src('S6')}</div>
+      <p class="small muted" style="margin-top:0">Toca un nivel para ver su ruta y su plazo frente a los demás.</p>
+      <div class="seg" id="rLvl">${CFG.niveles.map(n => `<button data-v="${n.id}">${n.id}</button>`).join('')}</div>
+      <div id="rLvlOut"></div></div>
+    <div class="card"><div class="kicker">Ruta de autonomía · quién aprueba ${src('S6')}</div>
+      <p class="small muted" style="margin-top:0">Solo materiales (N1–N3). Se fija en G2 y decide la instancia en G3.</p>
+      <div class="tblwrap"><table class="tbl"><tbody>
+      ${CFG.autonomia.map(a => `<tr><td><span class="st ${a.id==='verde'?'verde':a.id==='ambar'?'ambar':'rojo'}"><i>${a.id==='verde'?'✓':'!'}</i>${esc(a.condicion)}</span><br><span class="small muted">${esc(a.detalle)}</span></td><td><b>${esc(a.instancia)}</b><br><span class="small muted">${esc(a.nota)}</span></td></tr>`).join('')}
+      <tr><td><span class="st na"><i>·</i>N4–N5</span></td><td>${esc(CFG.autonomiaNoMaterial.nota)}</td></tr>
+      <tr><td><span class="st stop"><i>✕</i>Ley IA: uso indebido</span></td><td><b>STOP</b>, sin excepción · fuera de las dos rutas ${src('S6')}</td></tr></tbody></table></div></div>
+  </div>
+  <div class="card"><div class="kicker">Simulador de cupo por dimensión ${src('S6, S7, S8')}</div>
+    <h2>¿Cuántos rojos faltan para que decida el CAR?</h2>
+    <p class="small" style="margin-top:0">${esc(CFG.reglaGeneralDimensiones[0])} ${esc(CFG.reglaVariosRojos.t)}</p>
+    <div class="grid g3">
+      <label class="f">Dimensión<select id="cDim">${CFG.dimensiones.map(d => `<option value="${d.id}" ${CUPO.dim===d.id?'selected':''}>${esc(d.id)} · ${esc(d.nombre)}</option>`).join('')}</select></label>
+      <label class="f">Iniciativas que hoy ya están en rojo: <span id="cHoyV"></span><input type="range" id="cHoy" min="0" max="8" step="1" value="${CUPO.hoy}"></label>
+      <div><span class="flabel">¿La nueva iniciativa queda en rojo en esta dimensión?</span><div class="seg" id="cRoja"><button data-v="1" aria-pressed="true">Sí</button><button data-v="0" aria-pressed="false">No</button></div></div>
+    </div>
+    <div class="cupo" id="cBoxes" aria-hidden="true"></div>
+    <div id="cOut" aria-live="polite" style="margin-top:22px"></div>
+    <p class="small muted">Cuadros: gris = rojos previos · magenta = la nueva iniciativa · borde verde, ámbar y rojo = apetito, ámbar y límite de la dimensión. <button class="btn sm" id="cS7">Ver un ejemplo</button></p>
+    <p class="small muted">Decide el CAR cuando, con la iniciativa, la dimensión <b>llega a su límite</b>.</p>
+  </div>`;
+  const lvl = () => { const n = nivel(RLVL); $$('#rLvl button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === RLVL));
+    $('#rLvlOut').innerHTML = `<div class="result" style="margin-top:12px"><div class="big"><span class="lvl ${n.material?'':'nm'}">${n.id}</span> <span class="route ${n.ruta}">${esc(n.ruta)}</span> ${esc(n.slaTexto)}</div><p class="small" style="margin:0">${esc(n.describe)} <span class="muted">Ej.: ${esc(n.ejemplo)}</span> ${src(n.fuente)}</p><p class="small" style="margin:6px 0 0">${n.material?'Material: cuenta para el apetito; quién aprueba depende del semáforo.':'No material: sigue las autonomías vigentes de RNF y no usa cupo.'}</p></div>
+    ${CFG.niveles.map(x => `<div class="row small" style="gap:8px;margin-top:4px"><span class="lvl ${x.material?'':'nm'}">${x.id}</span><span style="width:150px">${esc(x.ruta)} · ${esc(x.slaTexto)}</span><div class="bar" style="flex:1"><i style="left:${(x.slaMin||0)/30*100}%;width:${(x.slaMax-(x.slaMin||0))/30*100}%;background:${x.id===n.id?'var(--magenta-d)':'#B9C2CF'}"></i></div></div>`).join('')}
+    <p class="small muted">Escala de 0 a 30 días hábiles, de G1 a G3.</p>`; };
+  $$('#rLvl button').forEach(b => b.onclick = () => { RLVL = b.dataset.v; lvl(); });
+  lvl();
+  $('#cDim').onchange = e => { CUPO.dim = e.target.value; cupo(); };
+  $('#cHoy').oninput = e => { CUPO.hoy = +e.target.value; cupo(); };
+  $$('#cRoja button').forEach(b => b.onclick = () => { CUPO.roja = b.dataset.v === '1'; $$('#cRoja button').forEach(x => x.setAttribute('aria-pressed', x === b)); cupo(); });
+  $('#cS7').onclick = () => { const e = CFG.ejemplo; $('#cBoxes').innerHTML = ''; $('#cOut').innerHTML = `<div class="result" style="border-left-color:var(--bad)"><div class="kicker">Ejemplo ${src('S7')}</div><p style="margin:0"><b>${esc(e.iniciativa)}</b> · ${esc(e.triaje)}</p>${e.disciplinas.map(d => `<span class="chip">${esc(d.d)} · ${d.controles} controles · ${esc(d.resultado)}</span> `).join('')}${e.apetito.map(a => `<p style="margin:6px 0">${esc(a.nombre)} · ${esc(a.dim)}: hoy ${a.hoy} + esta = ${a.con} · el límite se alcanza en ${a.limite} → ${esc(a.texto)} → <b>${esc(a.instancia)}</b></p>`).join('')}<div class="big">${esc(e.decide)}</div></div>`; };
+  cupo();
+}
+function cupo(){
+  const d = CFG.dimensiones.find(x => x.id === CUPO.dim);
+  const lim = d.limite, con = CUPO.hoy + (CUPO.roja ? 1 : 0), n = Math.max(lim, con);
+  $('#cHoyV').textContent = CUPO.hoy;
+  let boxes = '';
+  for(let i=1;i<=n;i++){
+    const z = i <= d.apetitoMax ? 'z-v' : i < lim ? 'z-a' : 'z-r';
+    const k = i <= CUPO.hoy ? 'prev' : (CUPO.roja && i === CUPO.hoy+1) ? 'new' : '';
+    boxes += `<i class="${z} ${k} ${i===lim?'lim':''}">${i}</i>`;
+  }
+  $('#cBoxes').innerHTML = boxes;
+  let inst, color, msg;
+  if(!CUPO.roja){ inst = 'Esta dimensión no define la instancia'; color = 'var(--ok)'; msg = 'La iniciativa no suma a esta dimensión. Quién aprueba depende de las demás: todo verde → Autonomías vigentes de RNF; algún ámbar → Gerencia Owner + Gerencia de Riesgos.'; }
+  else if(con >= lim){ inst = A('rojo_limite').instancia; color = 'var(--bad)'; msg = `Hoy ${CUPO.hoy} + la nueva = ${con}. El límite de ${esc(d.nombre)} es ${esc(d.limiteTxt)}: la dimensión llega al límite: ${esc(A('rojo_limite').nota)}.`; }
+  else { inst = A('rojo_bajo').instancia; color = 'var(--magenta-d)'; msg = `Hoy ${CUPO.hoy} + la nueva = ${con}. Queda bajo el límite (${esc(d.limiteTxt)}): faltan ${lim - con} rojo(s) para llegar (${esc(A('rojo_bajo').nota)}).`; }
+  $('#cOut').innerHTML = `<div class="result" style="border-left-color:${color}"><div class="kicker">${esc(d.id)} · Apetito ${esc(d.apetito)} · Ámbar ${esc(d.ambar)} · Límite ${esc(d.limiteTxt)} ${src(d.fuente)}</div><div class="big">${esc(inst)}</div><p style="margin:0">${msg}</p></div>`;
+}
+
+/* ============ MARCO Y FLUJO ============ */
+function renderMarco(){
+  const F = CFG.filosofia;
+  $('#v-marco').innerHTML = `
+  <div class="kicker">Consultar el marco</div><h1>${esc(CFG.portada.titulo)}</h1>
+  <p class="lead">${esc(CFG.portada.bajada)} ${src('S1')}</p>
+  <div class="grid g5" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px">${CFG.portada.cifras.map(c => `<div class="card" style="margin:0"><b style="font-size:30px;color:var(--ink)">${esc(c.n)}</b><div class="small muted">${esc(c.t)}</div></div>`).join('')}</div>
+  <h2>${esc(CFG.propuesta.titulo)} ${src('S2')}</h2>
+  <div class="grid g3">
+    <div class="card"><div class="kicker">Qué proponemos</div><ul class="clean small">${CFG.propuesta.queProponemos.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="card"><div class="kicker">Principios de diseño</div><ul class="clean small">${CFG.propuesta.principios.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="card"><div class="kicker">Qué necesitamos del foro</div><ul class="clean small">${CFG.propuesta.necesitamosDelForo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  </div>
+  <details class="card"><summary>Ver detalle: oportunidad de mejora del triaje N1–N5 y evaluación de riesgos IA ${src('S2')}</summary><div class="dd"><b>Hoy.</b> ${esc(CFG.propuesta.mejoraTriaje.hoy)}<br><b>A mejorar.</b> ${esc(CFG.propuesta.mejoraTriaje.aMejorar)}<br><b>Por qué importa.</b> ${esc(CFG.propuesta.mejoraTriaje.porQueImporta)}<br><b>Umbrales y límites.</b> ${esc(CFG.propuesta.mejoraTriaje.umbrales)}<br>${esc(CFG.propuesta.mejoraTriaje.plazo)} · Alcance: ${esc(CFG.propuesta.alcance)}</div></details>
+  <h2>Filosofía del marco ${src('S4')}</h2>
+  <p class="lead">${esc(F.declaracion)} ${src(F.fuente)}</p>
+  <div class="card" style="border-left:4px solid var(--magenta)"><b>Alcance:</b> ${esc(F.alcance)} ${src('S4')}</div>
+  <h2>Declaración de apetito: tres niveles ${src('S5')}</h2>
+  <div class="grid g3">${CFG.nivelesApetito.map(n => `<div class="card" style="border-top:4px solid ${n.color==='stop'?'#3A0F0F':n.color==='rojo'?'var(--bad)':'var(--ok)'}">
+    <span class="st ${n.color}"><i>${n.color==='verde'?'✓':'✕'}</i>${esc(n.nombre)}</span><p class="small muted" style="margin:6px 0">${esc(n.regla)}</p>
+    ${n.items ? `<ul class="clean small">${n.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    ${n.grupos ? n.grupos.map(g => `<div class="small" style="margin-top:6px"><b>${esc(g.dim)}</b><ul class="clean">${g.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('') + `<p class="small muted">${esc(n.nota)}</p>` : ''}
+    ${src(n.fuente)}</div>`).join('')}</div>
+  <div class="grid g2">
+    <div class="card"><h2>Pirámide del marco ${src('S4')}</h2>
+      <div class="pyr">${F.piramide.map((x,i) => `<div style="width:${45+i*27}%;background:${['#7A2A63','#1E6FB8','#14808C'][i]}">${esc(x.nivel)}${i===0?' · 6 dimensiones':''}<small>${esc(x.lema)}</small></div>`).join('')}</div>
+      <ul class="clean small" style="margin-top:10px">${F.piramide.map(x => `<li><b>${esc(x.nivel)}:</b> ${esc(x.d)}</li>`).join('')}</ul>
+      <p class="small"><b>Transversal:</b> ${esc(F.transversal)}<br><b>Proporcionalidad:</b> ${esc(F.proporcionalidad)}</p></div>
+    <div class="card"><h2>Regla general de las dimensiones ${src('S8')}</h2><ul class="clean small">${CFG.reglaGeneralDimensiones.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <p class="small muted">${esc(CFG.ordenDimensiones)}</p>
+      <div class="grid g2 small" style="margin-top:8px">${CFG.dimensiones.map(d => `<div style="border:1px solid var(--line-soft);border-radius:8px;padding:8px"><b>${esc(d.id)}</b> ${esc(d.nombre)} <span class="tagx ${d.origen==='Nuevo'?'nuevo':'heredado'}">${esc(d.origen)}</span><div class="thr"><span class="v">${esc(d.apetito)}</span><span class="a">${esc(d.ambar)}</span><span class="r">${esc(d.limiteTxt)}</span></div></div>`).join('')}</div>
+      <p class="small"><button class="btn sm" data-go="dim">Abrir el explorador de dimensiones ›</button></p></div>
+  </div>
+  <h2>Cómo funciona: cinco pasos, del registro al monitoreo ${src('S3')}</h2>
+  <p class="small muted">El triaje fija cuánto tarda la evaluación; el resultado frente al apetito fija quién aprueba.</p>
+  <div class="flow">${CFG.pasos.map(s => `<div class="fs"><header><span>${s.n}. ${esc(s.nombre)}</span>${s.gate?`<span class="gt">${s.gate}</span>`:''}</header>
+    <div class="lb">Etapa</div><div>${esc(s.etapa)}</div><div class="lb">Qué pasa</div><div>${esc(s.que)}</div>
+    <div class="lb">Resultado</div><div><b>${esc(s.entregable)}</b></div><div class="lb">Quién</div><div>${esc(s.responsable)}${s.notaResponsable?`<br><span class="muted">${esc(s.notaResponsable)}</span>`:''}</div></div>`).join('')}</div>
+  <div class="card small" style="margin-top:12px">${CFG.reglasFlujo.map(r => esc(r.t) + ' ' + src(r.fuente)).join('<br>')}</div>
+  <h2>Dos rutas: cuánto tarda y quién decide ${src('S6')}</h2>
+  <div class="grid g2">
+    <div class="card"><div class="kicker">Ruta de atención · cuánto tarda · se asigna en G1</div>
+      <table class="tbl"><thead><tr><th>Nivel</th><th>Materialidad</th><th>Días hábiles (G1→G3)</th><th>Ruta</th></tr></thead><tbody>
+      ${CFG.niveles.map(n => `<tr><td><span class="lvl ${n.material?'':'nm'}">${n.id}</span></td><td>${esc(n.materialidad)}</td><td>${esc(n.slaTexto)}</td><td><span class="route ${n.ruta}">${esc(n.ruta)}</span></td></tr>`).join('')}</tbody></table>
+      <details><summary>Ver detalle: qué describe cada nivel ${src('S18')}</summary><div class="dd">${CFG.niveles.map(n => `<p style="margin:4px 0"><b>${n.id}</b> · ${esc(n.describe)} <span class="muted">Ej.: ${esc(n.ejemplo)}</span></p>`).join('')}<p class="muted">${esc(CFG.notaNiveles)}</p></div></details></div>
+    <div class="card"><div class="kicker">Ruta de autonomía · solo materiales (N1–N3) · se fija en G2, decide en G3</div>
+      <table class="tbl"><thead><tr><th>Resultado de la evaluación</th><th>Quién decide</th></tr></thead><tbody>
+      ${CFG.autonomia.map(a => `<tr><td><span class="st ${a.id==='verde'?'verde':a.id==='ambar'?'ambar':'rojo'}"><i>${a.id==='verde'?'✓':'!'}</i>${esc(a.condicion)}</span><br><span class="small muted">${esc(a.detalle)}</span></td><td><b>${esc(a.instancia)}</b><br><span class="small muted">${esc(a.nota)}</span></td></tr>`).join('')}
+      <tr><td><span class="st na"><i>·</i>N4–N5</span></td><td>${esc(CFG.autonomiaNoMaterial.nota)}</td></tr>
+      <tr><td><span class="st stop"><i>✕</i>Ley IA: uso indebido</span></td><td><b>STOP</b>, sin excepción · fuera de las dos rutas</td></tr></tbody></table></div>
+  </div>
+  <h2>Roles y responsabilidades</h2>
+  <div class="card"><div class="tblwrap"><table class="tbl"><tbody>${CFG.roles.map(r => `<tr><td style="width:32%"><b>${esc(r.rol)}</b></td><td>${esc(r.hace)} ${src(r.fuente)}</td></tr>`).join('')}</tbody></table></div></div>
+  <h2>${esc(CFG.queFalta.titulo)} ${src(CFG.queFalta.fuente)}</h2>
+  <div class="grid g3">${CFG.queFalta.pasos.map(s => `<div class="card small"><div class="kicker">Paso ${s.n}</div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>${s.resultado?`<p><b>Resultado:</b> ${esc(s.resultado)}</p>`:''}</div>`).join('')}</div>
+  <p class="small muted">Plazo estimado: ${CFG.queFalta.plazos.map(esc).join(' · ')} ${src('S12')}</p>`;
+  $$('[data-go]', $('#v-marco')).forEach(b => b.onclick = () => show(b.dataset.go));
+}
+
+/* ============ DIMENSIONES ============ */
+const dimState = {q:'', dim:'', origen:'', ambar:''};
+function renderDimShell(){
+  $('#v-dim').innerHTML = `<div class="kicker">Consultar el marco</div><h1>Explorador de dimensiones</h1>
+  <p class="lead">6 dimensiones → 19 métricas → umbrales → controles. ${esc(CFG.reglaGeneralDimensiones[0])} ${src('S8')}</p>
+  <div class="filters" role="search">
+    <label class="f">Buscar <input type="text" id="fq" placeholder="Ej.: alucinación, proveedor, datos personales" value="${esc(dimState.q)}"></label>
+    <label class="f">Dimensión <select id="fd"><option value="">Todas</option>${CFG.dimensiones.map(d => `<option value="${d.id}" ${dimState.dim===d.id?'selected':''}>${esc(d.id)} · ${esc(d.nombre)}</option>`).join('')}</select></label>
+    <label class="f">Origen <select id="fo"><option value="">Todos</option><option value="Propio IA" ${dimState.origen==='Propio IA'?'selected':''}>Propio IA</option><option value="Heredado" ${dimState.origen==='Heredado'?'selected':''}>Heredado</option></select></label>
+    <label class="f">Tipo de umbral <select id="fa"><option value="">Todos</option><option value="con" ${dimState.ambar==='con'?'selected':''}>Con zona ámbar</option><option value="sin" ${dimState.ambar==='sin'?'selected':''}>Sin ámbar (el primer caso es rojo)</option></select></label>
+  </div>
+  <p class="small muted" id="dimCount" aria-live="polite"></p><div id="dimList"></div>`;
+  const upd = () => { dimState.q = $('#fq').value; dimState.dim = $('#fd').value; dimState.origen = $('#fo').value; dimState.ambar = $('#fa').value; renderDimList(); };
+  $('#fq').addEventListener('input', upd); ['#fd','#fo','#fa'].forEach(s => $(s).addEventListener('change', upd));
+  renderDimList();
+}
+function renderDimList(){
+  const q = dimState.q.trim().toLowerCase();
+  const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const qn = norm(q);
+  const hl = s => { const e = esc(s); if(!qn) return e; const i = norm(s).indexOf(qn); return i < 0 ? e : esc(s.slice(0,i)) + '<mark>' + esc(s.slice(i, i+q.length)) + '</mark>' + esc(s.slice(i+q.length)); };
+  let total = 0;
+  const html = CFG.dimensiones.filter(d => !dimState.dim || d.id === dimState.dim).map(d => {
+    const ms = d.metricas.filter(m => (!dimState.origen || m.origen === dimState.origen) && (!dimState.ambar || (dimState.ambar==='sin') === (m.ambar === '—'))
+      && (!qn || norm([m.id, m.nombre, m.cuenta, m.ejemplo, m.numerador, m.como, d.nombre].join(' ')).includes(qn)));
+    if(!ms.length) return ''; total += ms.length;
+    return `<article class="dimcard">
+      <div class="dimhead"><div><span class="small muted">${esc(d.id)}</span> <span class="tagx ${d.origen==='Nuevo'?'nuevo':'heredado'}">${esc(d.origen)}</span> ${src(d.fuente)}<h2 style="margin:2px 0">${hl(d.nombre)}</h2>
+        <p class="small" style="margin:0">${esc(d.subtitulo)}. <span class="muted">Vigila: ${esc(d.vigila)}.</span></p>
+        <p class="small muted" style="margin:4px 0 0">Unidad de conteo: ${esc(d.unidad)} ${src('S15–S17')}</p></div>
+        <div><div class="small" style="font-weight:600;color:var(--ink)">Umbral de la dimensión (n.º de iniciativas con brecha)</div>
+          <div class="thr"><span class="v">Apetito ${esc(d.apetito)}</span><span class="a">Ámbar ${esc(d.ambar)}</span><span class="r">Límite ${esc(d.limiteTxt)}</span></div>
+          <p class="small muted" style="margin:6px 0 0">${d.metricas.length} métricas</p></div></div>
+      <div class="mrow small muted" style="font-weight:600;padding-top:6px;padding-bottom:6px"><span>Código</span><span>Métrica</span><span>Verde</span><span>Ámbar</span><span>Rojo</span></div>
+      ${ms.map(m => `<div class="mrow"><span class="code">${hl(m.id)}</span>
+        <div class="mname"><b style="color:var(--ink)">${hl(m.nombre)}</b> ${src(m.fuente)} <span class="tagx ${m.origen==='Propio IA'?'nuevo':'heredado'}">${esc(m.origen)}</span>${m.porConfirmar?` <span class="pc" title="${esc(m.porConfirmar)}">Por confirmar</span>`:''}
+          <div class="small">${hl(m.cuenta)}</div><div class="small muted">Ej.: ${hl(m.ejemplo)}</div>
+          <details><summary>Ver detalle: cómo se mide ${src(m.fuenteAnexo)}</summary><div class="dd">
+            <b>Numerador:</b> ${tx(m.numerador)}<br><b>Denominador:</b> ${tx(m.denominador)}<br><b>Cómo se cuenta:</b> ${tx(m.como)}${m.vigente?`<br><b>Indicador vigente:</b> ${esc(m.vigente)}`:''}${m.porConfirmar?`<br>${PC} ${esc(m.porConfirmar)}`:''}</div></details></div>
+        <span class="cell v">${esc(m.verde)}</span><span class="cell a">${esc(m.ambar)}</span><span class="cell r">${esc(m.rojo)}</span></div>`).join('')}
+      <div style="padding:10px 18px;border-top:1px solid var(--line-soft)" class="small">
+        <b>Controles:</b> ${esc(CFG.controles.texto)} Proporcionales al nivel N1–N5, con RACI ${src(CFG.controles.fuente)} · ${PC} detalle de controles
+        ${d.porQue?`<details><summary>Por qué importa</summary><div class="dd">${esc(d.porQue)} ${src(d.fuente)}</div></details>`:''}
+        <details><summary>Ver detalle: sustento ${src(d.fuenteSustento)}</summary><div class="dd">${esc(d.sustento)}</div></details></div>
+    </article>`; }).join('');
+  $('#dimList').innerHTML = html || '<p class="muted">Sin resultados. Prueba con otra palabra o quita filtros.</p>';
+  $('#dimCount').textContent = `${total} de 19 métricas`;
+}
+
+/* ============ ANEXOS ============ */
+function renderAnexos(){
+  const A = CFG.anexos;
+  $('#v-anx').innerHTML = `<div class="kicker">Documento de apoyo</div><h1>Anexos</h1>
+  <p class="lead">Detalle complementario del marco: taxonomía, niveles, medición de métricas, sustento y fuentes.</p>
+  <details class="big card"><summary>Taxonomía IA: un solo lenguaje para registrar y clasificar ${src(A.taxonomia.fuente)}</summary>
+    <div class="grid g3" style="margin-top:10px">${A.taxonomia.grupos.map(g => `<div><b class="small" style="color:var(--ink)">${esc(g.t)} <span class="muted">· ${g.valores.length} valores</span></b><div class="chips" style="margin-top:4px">${g.valores.map(v => `<span class="chip">${esc(v)}</span>`).join('')}</div></div>`).join('')}</div>
+    <ul class="clean small" style="margin-top:10px">${A.taxonomia.notas.map(n => `<li>${esc(n)}</li>`).join('')}</ul></details>
+  <details class="big card"><summary>Niveles N1 a N5: qué describe cada uno y cuánto tarda ${src('S18')}</summary>
+    <div class="tblwrap"><table class="tbl" style="margin-top:8px"><thead><tr><th>Nivel</th><th>Qué describe</th><th>Ejemplo</th><th>Ruta y días</th><th>Cuenta para el apetito</th></tr></thead><tbody>
+    ${CFG.niveles.map(n => `<tr><td><span class="lvl ${n.material?'':'nm'}">${n.id}</span></td><td>${esc(n.describe)}</td><td class="small">${esc(n.ejemplo)}</td><td>${esc(n.ruta)} · ${esc(n.slaTexto)}</td><td>${n.material?'Sí / material':'No / no material'}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small muted">${esc(CFG.notaNiveles)}</p></details>
+  <details class="big card"><summary>Cómo se mide cada métrica ${src('S15–S17')}</summary><p class="small">El numerador, denominador y forma de conteo de cada métrica está en el <button class="btn sm" data-go="dim">explorador de dimensiones</button>, en «Ver detalle» de cada métrica.</p></details>
+  <details class="big card"><summary>Sustento del marco: de dónde sale cada pieza ${src(A.sustentoMarco.fuente)}</summary>
+    <div class="tblwrap"><table class="tbl" style="margin-top:8px"><thead><tr><th>Pieza del marco</th><th>Qué dicen las fuentes</th><th>Fuentes</th></tr></thead><tbody>${A.sustentoMarco.filas.map(f => `<tr><td><b>${esc(f.pieza)}</b></td><td class="small">${esc(f.dice)}</td><td class="small">${esc(f.fuentes)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small">${esc(A.sustentoMarco.nota)}</p><p class="small muted">${esc(A.sustentoMarco.notaDimensiones)}</p>
+    <p class="small">El sustento por dimensión ${src('S20–S21')} está en cada dimensión del explorador.</p></details>
+  <details class="big card"><summary>Fuentes consultadas ${src(A.fuentes.fuente)}</summary><ul class="clean small" style="margin-top:8px">${A.fuentes.lista.map(x => `<li>${esc(x)}</li>`).join('')}</ul><p class="small muted">${esc(A.fuentes.nota)}</p></details>
+`;
+  $$('[data-go]', $('#v-anx')).forEach(b => b.onclick = () => show(b.dataset.go));
+}
+
+
+
+/* ============ arranque ============ */
+renderGuia(); renderRutas(); renderMarco(); renderDimShell(); renderAnexos();
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if(b && !b.onclick) show(b.dataset.go); });
+const fromHash = () => { const h = location.hash.slice(1); if(['guia','rutas','marco','dim','anx'].includes(h)) show(h); };
+fromHash(); addEventListener('hashchange', fromHash);
+if(document.fonts) document.fonts.ready.then(() => drawEdges());
+</script>
+</body>
+</html>
