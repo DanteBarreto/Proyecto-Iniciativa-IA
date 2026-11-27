@@ -16,6 +16,7 @@ Indicadores de apetito de riesgo de las iniciativas de IA de Credicorp, para la 
 | `06_Reporte_HTML/` | Prototipos del reporte HTML (híbrido de diapositivas + anexo, y dashboard de una página) con **datos de ejemplo**. |
 | `07_Analisis_Reporte_Iniciativas/` | Análisis de la base "Reporte iniciativas IA" (BCP), hallazgos y reporte HTML/Excel de iniciativas, riesgos y checklist de los indicadores RAF IA v18 (slides 5 y 6), viabilidad de las 19 métricas de la PPT v35 con la base oficial y 2 slides (formato v35) con la información que falta por métrica. |
 | `08_Herramienta_Gobierno_IA/` | Guía de ruta interactiva (HTML) del marco de apetito al riesgo de IA y las rutas de atención y autonomía, basada en la PPT Comité Gobierno IA v35, con su archivo de datos, README e informe. |
+| `09_Esquema_Controles_Apetito/` | Esquema Excel con las métricas de apetito como controles de la evaluación por dimensión, semáforo por control, tablón general y hoja de la ruta del apetito. Ejemplo con 2 iniciativas y detalle de lo que falta. |
 
 Cada entregable tiene un `.md` con la conclusión y un `.xlsx` con el detalle.
 Los archivos de `Inputs/` y `Grabaciones/` no se editan; los análisis se guardan en carpetas numeradas.
