@@ -58,3 +58,8 @@ Prueba automatizada en Chromium. Resultado: todas OK y 0 errores.
 - Cabecera sin «PPT v35» ni «Propuesta para validación».
 - Sin menciones visibles a la PPT, la versión ni las slides (las fuentes quedan en el JSON).
 - Sin los casos de la PPT en la Guía, sin el ejemplo en Marco y sin la lista de puntos no definidos en Anexos.
+
+## 6. Ajustes del 27/11 (feedback a Dante)
+- **Ejemplo en la Guía:** botón «Ver el ejemplo: chatbot de clientes» con las 4 partes del caso (iniciativa N2, evaluación por disciplina, rojo por dimensión con sus cupos, decisión del CAR). El recorrido animado resalta cada parte.
+- **Ruta del apetito en el flujo:** nueva caja entre el semáforo y la decisión. Se enciende cuando hay una métrica en rojo y lleva al Comité RNF (bajo el límite) o al CAR (llega al límite).
+- **Pruebas:** N2 con los 5 resultados de evaluación, N4, STOP y el ejemplo dan el camino esperado; 0 errores, sin desplazamiento horizontal a 390 px y sin menciones visibles a la PPT ni a las láminas.

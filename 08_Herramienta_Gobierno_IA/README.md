@@ -13,13 +13,14 @@ Guía interactiva para entender qué pasa con una iniciativa de IA según la **P
 | `herramienta.src.html` + `logo.svg.html` | El código de la guía, sin datos. |
 | `build_herramienta.py` | Une el código y el JSON y genera el HTML. |
 | `informe_herramienta_gobierno_ia.md` | Enfoque, pruebas y pendientes. |
-| `documentos/` | Fase 1 (extracción estructurada de la PPT) y Fase 2 (evaluación de formatos). La Fase 2 describe un diseño de registro que luego se reemplazó por la guía de ruta. |
 
 ## Cómo se usa
 
 1. **Guía de ruta**, la pantalla principal. Es el flujo de 5 pasos (S3) con los gates G1, G2 y G3 conectados.
    - Elige el escenario: si es un uso indebido según la Ley IA, el nivel del triaje (N1–N5) y el resultado de la evaluación. El flujo ilumina el camino: ruta de atención, reloj del SLA, especialidades, semáforo, instancia que decide, monitoreo y vuelta a la ruta.
    - **Reproducir** recorre el camino paso a paso con una explicación.
+   - **Ver el ejemplo: chatbot de clientes** muestra el caso N2 con un rojo en MRM y otro en Ciberseguridad: se activa la ruta del apetito, cada rojo se mide contra el cupo de su dimensión y decide el CAR.
+   - Si alguna métrica sale en rojo, la caja **Ruta del apetito** se enciende entre el semáforo y la instancia que decide.
    - Haz clic en cualquier caja para ver qué pasa, el resultado y quién lo hace.
 2. **Rutas y cupo:** la ruta de atención por nivel, la ruta de autonomía y el simulador de cupo por dimensión (cuántos rojos faltan para llegar al límite y que decida el CAR), con un ejemplo.
 3. **Marco:** la declaración, los 3 niveles de apetito, la pirámide, las dos rutas, los roles y lo que falta.
