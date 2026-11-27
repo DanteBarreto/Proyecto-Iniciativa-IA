@@ -282,6 +282,25 @@ label.chip input{accent-color:var(--magenta-d)}
 .cupo i.z-v{border-color:#7CC4A2}.cupo i.z-a{border-color:#E5B14E}.cupo i.z-r{border-color:#D97070}
 .cupo i.prev{background:var(--slate);color:#fff}
 .cupo i.new{background:var(--magenta-d);color:#fff;animation:pop .5s}
+.cupo.sm{gap:4px;margin:8px 0 18px}.cupo.sm i{width:30px;height:30px;font-size:12px;border-radius:6px}
+.node.k-apt{border-color:#E39A9A;background:#FFF8F8;border-style:dashed;text-align:center}
+.dim .node.k-apt.on{background:var(--bad-bg);border-color:var(--bad);border-style:solid;box-shadow:0 0 0 3px rgba(214,58,58,.18)}
+.node .act{display:none;margin-top:4px;font-size:10.5px;font-weight:700;color:#fff;background:var(--bad);border-radius:999px;padding:1px 8px}
+.node.k-apt.on .act{display:inline-block}
+.ejemplo{background:var(--white);border:1px solid var(--line-soft);border-left:6px solid var(--bad);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.ejemplo .eh{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.ejemplo h2{margin:2px 0 4px;font-size:18px}
+.ejgrid{display:grid;grid-template-columns:1fr 1.2fr 1.5fr 1fr;gap:10px;margin-top:10px}
+.ejc{border:1.5px solid var(--line-soft);border-radius:10px;padding:10px 12px;font-size:13px;transition:border-color .3s,box-shadow .3s}
+.ejc.cur{border-color:var(--magenta-d);box-shadow:0 0 0 3px rgba(233,60,172,.2)}
+.ejc .nn{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-weight:700;font-size:12px;align-items:center;justify-content:center;margin-right:6px}
+.ejc .tt{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ejc p{margin:6px 0}
+.ejc .disc{display:flex;justify-content:space-between;gap:6px;border-top:1px solid var(--line-soft);padding:4px 0}
+.ejc .rojo{color:#A82626;font-weight:700}.ejc .verde{color:#14704B;font-weight:700}
+.ejc .dec{font-size:18px;font-weight:800;color:var(--bad);margin:6px 0 2px}
+.btn.ex{border-color:var(--bad);color:#A82626}
+.cupo.sm i.lim::after{bottom:-15px;font-size:9px}
 .cupo i.lim::after{content:"límite";position:absolute;bottom:-17px;font-size:10px;color:var(--bad);font-weight:700}
 @keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
 input[type=range]{width:100%;accent-color:var(--magenta-d)}
@@ -296,6 +315,7 @@ input[type=range]{width:100%;accent-color:var(--magenta-d)}
   .flowsvg{display:none}
   .clock{position:static;margin-bottom:8px;width:auto!important}
   .story{grid-template-columns:1fr}
+  .ejgrid{grid-template-columns:1fr}
   .detail{position:static}
   .player{grid-template-columns:1fr}
 }
@@ -1582,7 +1602,8 @@ const EDGES = [
   ['niv','re'], ['niv','es'], ['niv','ag'],
   ['re','eval'], ['es','eval'], ['ag','eval'],
   ['eval','sem'], ['eval','rnf'],
-  ['sem','rnf'], ['sem','ger'], ['sem','com'], ['sem','car'],
+  ['sem','rnf'], ['sem','ger'], ['sem','apt','Rojo'],
+  ['apt','com'], ['apt','car'],
   ['rnf','mon'], ['ger','mon'], ['com','mon'], ['car','mon'],
   ['mon','reev'], ['reev','niv','', 'loop']
 ];
@@ -1590,7 +1611,20 @@ const S = {ley:'no', nivel:'N2', semaforo:'', caso:''};
 
 /* Recorrido del escenario: lista de pasos con su caja y explicación */
 function recorrido(){
-  const P = CFG.pasos, out = [];
+  const P = CFG.pasos, out = [], EJ = S.caso === 's7' ? CFG.ejemplo : null;
+  if(EJ){
+    out.push({node:'reg', t:`<b>Registrar.</b> ${esc(P[0].responsable)} registra la iniciativa: <b>${esc(EJ.iniciativa.split(' · ')[0])}</b>.`, f:'S7'});
+    out.push({node:'ley', t:`<b>Clasificar (G1) · Ley IA.</b> No es un uso indebido: la iniciativa entra a las rutas.`, f:'S5, S6'});
+    out.push({node:'niv', t:`<b>Clasificar (G1) · Triaje.</b> ${esc((EJ.iniciativa.split(' · ')[1] || '').replace(/^./, c => c.toUpperCase()))}: nivel <b>N2 · material</b>, cuenta para el apetito.`, f:'S7'});
+    out.push({node:'es', t:`<b>Ruta de atención Estándar.</b> SLA sugerido: <b>20–25 d.h.</b>, contados desde G1 hasta G3.`, f:'S7'});
+    out.push({node:'eval', t:`<b>Evaluar (G2).</b> Evalúan las disciplinas: ${EJ.disciplinas.map(d => `${esc(d.d)} (${d.controles} controles): <b>${esc(d.resultado.toLowerCase())}</b>`).join(' · ')}.`, f:'S7'});
+    out.push({node:'sem', t:`<b>Resultado de la evaluación: rojo en dos disciplinas.</b> MRM y Ciberseguridad tienen una métrica en rojo, así que se activa la ruta del apetito.`, f:'S6, S7'});
+    out.push({node:'apt', t:`<b>Ruta del apetito: rojo por dimensión.</b> ${esc(CFG.reglaVariosRojos.t)} ${EJ.apetito.map(a => `${esc(a.nombre)} · ${esc(a.dim)}: hoy ${a.hoy} + esta iniciativa = ${a.con}; el límite se alcanza en ${a.limite} → <b>${esc(a.texto.toLowerCase())}</b>`).join(' · ')}.`, f:'S7'});
+    out.push({node:'car', t:`<b>Decidir (G3): CAR.</b> Por disciplina: ${EJ.apetito.map(a => `${esc(a.nombre)} → ${esc(a.instancia)}`).join(' / ')}. Manda el más exigente: decide el CAR, se excede el apetito y se informa al Directorio.`, f:'S7'});
+    out.push({node:'mon', t:`<b>Monitorear.</b> ${esc(CFG.pasos[4].que)}`, f:'S3'});
+    out.push({node:'reev', t:`<b>Reevaluación.</b> Ya en producción, un rojo o un cambio material vuelve a pasar la iniciativa por la ruta.`, f:'S3'});
+    return out;
+  }
   out.push({node:'reg', t:`<b>Registrar.</b> ${esc(P[0].responsable)} registra la iniciativa en el inventario (Playbook u otra herramienta con los campos corporativos). Resultado: <b>${esc(P[0].entregable.toLowerCase())}</b>.`, f:'S3'});
   if(S.ley === 'indebido'){
     out.push({node:'ley', t:`<b>Clasificar (G1) · Ley IA.</b> La iniciativa es un <b>uso indebido</b> según la Ley IA y su Reglamento (DS 115-2025-PCM).`, f:'S5'});
@@ -1610,10 +1644,11 @@ function recorrido(){
     const r = S.semaforo ? A(S.semaforo) : null;
     out.push({node:'sem', t: r
       ? `<b>Resultado de la evaluación: ${esc(r.condicion.toLowerCase())}</b> (${esc(r.detalle)}). Con este semáforo se fija en G2 quién aprobará.`
-      : `<b>Resultado de la evaluación.</b> Aún sin semáforo. Hay 4 caminos posibles: todo verde, algún ámbar, rojo bajo el límite o rojo que llega al límite. Elige uno arriba para verlo.`, f:'S6'});
+      : `<b>Resultado de la evaluación.</b> Aún sin semáforo. Hay 4 caminos posibles: todo verde, algún ámbar, rojo bajo el límite o rojo que llega al límite. Si alguna métrica sale en rojo, se activa la ruta del apetito. Elige uno arriba para verlo.`, f:'S6'});
+    if(r && r.id.startsWith('rojo')) out.push({node:'apt', t:`<b>Se activa la ruta del apetito.</b> Hay una métrica en rojo: suma 1 a su dimensión y se mide contra el cupo de esa dimensión. ${r.id === 'rojo_bajo' ? 'Con la iniciativa, la dimensión <b>queda bajo el límite</b>.' : 'Con la iniciativa, la dimensión <b>llega a su límite</b>: se excede el apetito.'} Si hay varios rojos, manda el más exigente.`, f:'S6, S7'});
     out.push({node: r ? INST_NODO[r.id] : 'dec', t: r
-      ? `<b>Decidir (G3): ${esc(r.instancia)}.</b> ${esc(r.nota.charAt(0).toUpperCase()+r.nota.slice(1))}.${S.caso==='s7' ? ' En el ejemplo, MRM queda bajo el límite (Comité RNF) y Ciber llega al límite (CAR): manda el más exigente.' : ''}`
-      : `<b>Decidir (G3).</b> La instancia depende del semáforo: Autonomías vigentes de RNF, Gerencia, Comité de Riesgo No Financiero Corp o CAR.`, f: S.caso==='s7' ? 'S6, S7' : 'S6'});
+      ? `<b>Decidir (G3): ${esc(r.instancia)}.</b> ${esc(r.nota.charAt(0).toUpperCase()+r.nota.slice(1))}.`
+      : `<b>Decidir (G3).</b> La instancia depende del semáforo: Autonomías vigentes de RNF, Gerencia, Comité de Riesgo No Financiero Corp o CAR.`, f:'S6'});
   }
   out.push({node:'mon', t:`<b>Monitorear.</b> ${esc(CFG.pasos[4].que)}`, f:'S3'});
   out.push({node:'reev', t:`<b>Reevaluación.</b> Ya en producción, un rojo o un cambio material vuelve a pasar la iniciativa por la ruta.`, f:'S3'});
@@ -1623,10 +1658,10 @@ function activos(){
   const rec = recorrido(), seq = rec.map(r => r.node);
   const on = new Set(seq.filter(x => x !== 'dec')), maybe = new Set(), eOn = new Set(), eMaybe = new Set();
   const OPC = ['rnf','ger','com','car'];
-  if(seq.includes('dec')) OPC.forEach(x => maybe.add(x));
+  if(seq.includes('dec')){ OPC.concat('apt').forEach(x => maybe.add(x)); ['sem>rnf','sem>ger','sem>apt','apt>com','apt>car'].forEach(e => eMaybe.add(e)); }
   for(let i=0;i<seq.length-1;i++){
     const a = seq[i], b = seq[i+1];
-    if(b === 'dec'){ OPC.forEach(x => eMaybe.add(a+'>'+x)); continue; }
+    if(b === 'dec') continue;
     if(a === 'dec'){ OPC.forEach(x => eMaybe.add(x+'>'+b)); continue; }
     eOn.add(a+'>'+b);
   }
@@ -1647,6 +1682,7 @@ function nodeHTML(id){
     ag:   `<b>Ágil</b><small>${rutaN('Ágil')}</small>`,
     eval: `<b>Evaluación en paralelo</b><small>Controles proporcionales al nivel</small><div class="chipsm">${CFG.especialidades.evaluanG2.map(e => `<span>${esc(e)}</span>`).join('')}</div>`,
     sem:  `<b>Semáforo por disciplina</b><small>frente al apetito · N1–N3</small>`,
+    apt:  `<b>Ruta del apetito</b><small>Rojo por dimensión · cupo de cada dimensión</small><span class="act">Activada: hay un rojo</span>`,
     rnf:  `<b>Autonomías vigentes de RNF</b><small>Todo verde · o N4–N5</small>`,
     ger:  `<b>Gerencia Owner + Riesgos</b><small>+ AI Risk Team · algún ámbar</small>`,
     com:  `<b>Comité de Riesgo No Financiero Corp</b><small>Rojo bajo el límite</small>`,
@@ -1654,8 +1690,8 @@ function nodeHTML(id){
     mon:  `<b>Tablero de apetito</b><small>Mensual · por disciplina</small>`,
     reev: `<b>Reevaluación</b><small>Ante un rojo o un cambio material</small>`
   };
-  const gate = {ley:'G1', niv:'G1', eval:'G2', sem:'G2', rnf:'G3', ger:'G3', com:'G3', car:'G3'}[id];
-  const kind = {stop:'k-stop', rnf:'k-rnf', ger:'k-ger', com:'k-com', car:'k-car', ag:'k-ag', es:'k-es', re:'k-re', ley:'dia', sem:'dia'}[id] || '';
+  const gate = {ley:'G1', niv:'G1', eval:'G2', sem:'G2', apt:'G2', rnf:'G3', ger:'G3', com:'G3', car:'G3'}[id];
+  const kind = {stop:'k-stop', rnf:'k-rnf', ger:'k-ger', com:'k-com', car:'k-car', ag:'k-ag', es:'k-es', re:'k-re', ley:'dia', sem:'dia', apt:'k-apt'}[id] || '';
   return `<button class="node ${kind}" id="n-${id}" data-node="${id}" aria-controls="detail">${gate?`<span class="gt">${gate}</span>`:''}${M[id]}</button>`;
 }
 function renderGuia(){
@@ -1664,7 +1700,7 @@ function renderGuia(){
     {b:`1. ${P[0].nombre}`, s:P[0].etapa, nodes:['reg']},
     {b:`2. Clasificar (triaje)`, s:`${P[1].etapa} · G1`, nodes:['stop','ley','niv']},
     {b:'Ruta de atención', s:'cuánto tarda · se asigna en G1', nodes:['re','es','ag']},
-    {b:`3. Evaluar`, s:`${P[2].etapa} · G2`, nodes:['eval','sem']},
+    {b:`3. Evaluar`, s:`${P[2].etapa} · G2`, nodes:['eval','sem','apt']},
     {b:`4. ${P[3].nombre}`, s:`${P[3].etapa} · G3`, nodes:['rnf','ger','com','car']},
     {b:`5. ${P[4].nombre}`, s:P[4].etapa, nodes:['mon','reev']}
   ];
@@ -1680,8 +1716,9 @@ function renderGuia(){
       ${CFG.niveles.map(n => `<button data-v="${n.id}" title="${esc(n.materialidad)} · ${esc(n.ruta)} · ${esc(n.slaTexto)}">${n.id}</button>`).join('')}</div></div>
     <div><span class="flabel">3 · Resultado de la evaluación en G2 (solo N1–N3) ${src('S6')}</span><div class="seg" id="segSem">
       <button data-v="">Aún no</button>${CFG.autonomia.map(a => `<button data-v="${a.id}" title="${esc(a.detalle)}">${esc(semLbl[a.id] || a.condicion)}</button>`).join('')}</div></div>
-    <div><button class="btn pri" id="playTop">▶ Reproducir recorrido</button></div>
+    <div style="display:flex;flex-direction:column;gap:6px"><button class="btn pri" id="playTop">▶ Reproducir recorrido</button><button class="btn ex" id="ejBtn">Ver el ejemplo: chatbot de clientes</button></div>
   </div>
+  <div id="ejemplo"></div>
   <div class="flowwrap" id="flow">
     <svg class="flowsvg" id="svg" aria-hidden="true"></svg>
     <div class="clock" id="clock"></div>
@@ -1697,6 +1734,7 @@ function renderGuia(){
       <div class="card small">${esc(CFG.reglasFlujo[1].t)} ${src('S3')}<br><b>Alcance:</b> ${esc(CFG.filosofia.alcance)} ${src('S4')}</div></div>
     <aside class="detail" id="detail" aria-live="polite"></aside>
   </div>`;
+  $('#ejBtn').onclick = () => { stop(); Object.assign(S, {ley:'no', nivel:'N2', semaforo:'rojo_limite', caso:'s7'}); update(); play(); };
   $$('#segLey button').forEach(b => b.onclick = () => { stop(); S.ley = b.dataset.v; S.caso=''; update(); });
   $$('#segNiv button').forEach(b => b.onclick = () => { stop(); S.nivel = b.dataset.v; S.ley='no'; S.caso=''; update(); });
   $$('#segSem button').forEach(b => b.onclick = () => { stop(); S.semaforo = b.dataset.v; S.caso=''; update(); });
@@ -1714,6 +1752,7 @@ function update(){
   $$('#segLey button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === S.ley));
   $$('#segNiv button').forEach(b => b.setAttribute('aria-pressed', S.ley !== 'indebido' && b.dataset.v === S.nivel));
   $$('#segSem button').forEach(b => { b.setAttribute('aria-pressed', !!mat && b.dataset.v === S.semaforo); b.disabled = !mat; });
+  renderEjemplo();
   $('#flow').classList.add('dim');
   $$('.node').forEach(n => { n.classList.toggle('on', act.on.has(n.dataset.node)); n.classList.toggle('maybe', act.maybe.has(n.dataset.node)); });
   $('#steps').innerHTML = REC.map((r,i) => `<li data-i="${i}" class="${r.stop?'stop':''}"><span class="n">${i+1}</span><span>${r.t} ${src(r.f)}</span></li>`).join('');
@@ -1726,8 +1765,36 @@ function goto(i, silent){
   $$('.node').forEach(n => n.classList.toggle('cur', !silent && (n.dataset.node === r.node || (r.node === 'dec' && n.classList.contains('maybe')))));
   $$('#steps li').forEach((li,k) => li.classList.toggle('cur', !silent && k === i));
   $$('#pBar i').forEach((x,k) => x.classList.toggle('on', !silent && k <= i));
+  const EJC = {reg:1, ley:1, niv:1, es:1, eval:2, sem:2, apt:3, car:4};
+  $$('.ejc').forEach(c => c.classList.toggle('cur', !silent && +c.dataset.k === EJC[r.node]));
   $('#pTxt').innerHTML = silent ? `<b>${REC.length} pasos.</b> Pulsa «Reproducir» para recorrerlos, o haz clic en un paso.` : `<b>Paso ${i+1} de ${REC.length}.</b> ${r.t}`;
   detail(silent ? (S.ley === 'indebido' ? 'stop' : RUTA_NODO[nivel(S.nivel).ruta]) : (r.node === 'dec' ? 'sem' : r.node));
+}
+function boxesHTML(d, hoy, roja){
+  const lim = d.limite, n = Math.max(lim, hoy + (roja ? 1 : 0));
+  let b = '';
+  for(let i=1;i<=n;i++){
+    const z = i <= d.apetitoMax ? 'z-v' : i < lim ? 'z-a' : 'z-r';
+    const k = i <= hoy ? 'prev' : (roja && i === hoy+1) ? 'new' : '';
+    b += `<i class="${z} ${k} ${i===lim?'lim':''}">${i}</i>`;
+  }
+  return b;
+}
+function renderEjemplo(){
+  const box = $('#ejemplo'); if(!box) return;
+  if(S.caso !== 's7'){ box.innerHTML = ''; return; }
+  const E = CFG.ejemplo, [ini, ctx] = E.iniciativa.split(' · '), [niv, mat, ruta, sla] = E.triaje.split(' · ');
+  box.innerHTML = `<div class="ejemplo" aria-label="Ejemplo">
+    <div class="eh"><div><div class="kicker">Ejemplo · iniciativa con impacto a clientes</div><h2>Si hay varios rojos, manda el más exigente</h2>
+      <p class="small" style="margin:0">${esc(CFG.reglaVariosRojos.t)}</p></div>
+      <button class="btn sm" id="ejOut">Salir del ejemplo ✕</button></div>
+    <div class="ejgrid">
+      <div class="ejc" data-k="1"><span class="nn">1</span><span class="tt">Iniciativa</span><p><b>${esc(ini)}</b><br><span class="muted">${esc(ctx)}</span></p><p>Triaje: <span class="lvl">${esc(niv)}</span> ${esc(mat)}<br><span class="route Estándar">${esc(ruta)}</span> ${esc(sla)}</p></div>
+      <div class="ejc" data-k="2"><span class="nn">2</span><span class="tt">Evalúan las disciplinas</span>${E.disciplinas.map(d => `<div class="disc"><span><b>${esc(d.d)}</b><br><span class="muted small">${d.controles} controles</span></span><span class="${/rojo/i.test(d.resultado)?'rojo':'verde'}">${esc(d.resultado)}</span></div>`).join('')}</div>
+      <div class="ejc" data-k="3"><span class="nn">3</span><span class="tt">Apetito: rojo por dimensión</span>${E.apetito.map(a => { const d = CFG.dimensiones.find(x => x.id === a.dim); return `<p style="margin-bottom:0"><b>${esc(a.nombre)} · ${esc(a.dim)}</b> · <span class="${a.con>=a.limite?'rojo':''}">${esc(a.texto)}</span><br><span class="small muted">hoy ${a.hoy} + esta iniciativa = ${a.con} · el límite se alcanza en ${a.limite}</span></p><div class="cupo sm" aria-hidden="true">${boxesHTML(d, a.hoy, true)}</div>`; }).join('')}<p class="small muted" style="margin:0">Cuadros: gris = rojos previos · magenta = esta iniciativa · el cuadro con «límite» es el límite.</p></div>
+      <div class="ejc" data-k="4"><span class="nn">4</span><span class="tt">Decide (G3)</span><p>Por disciplina:<br>${E.apetito.map(a => `${esc(a.nombre)} → <b>${esc(a.instancia)}</b>`).join('<br>')}</p><div class="dec">Decide el CAR</div><p class="small" style="margin:0">Se excede el apetito · Directorio informado</p></div>
+    </div></div>`;
+  $('#ejOut').onclick = () => { stop(); S.caso = ''; update(); };
 }
 function play(){
   stop(); goto(0); $('#pPlay').textContent = '❚❚ Pausa';
@@ -1753,7 +1820,8 @@ function detail(id){
     es:   {t:'Ruta Estándar', b:ruta('Estándar'), f:'S6, S18'},
     ag:   {t:'Ruta Ágil', b:ruta('Ágil') + `<div class="lb">Apetito</div>N4–N5 siguen el proceso vigente de RNF: no cuentan para el apetito ni usan cupo ${src('S5')}`, f:'S6, S18'},
     eval: {t:P[2].nombre, b:step(P[2]) + `<div class="lb">Controles</div>${esc(CFG.controles.texto)} ${esc(CFG.controles.proporcional)} ${esc(CFG.controles.raci)}<br><span class="muted">${esc(CFG.controles.ejemploConteo)}</span><br>${PC} catálogo de controles por disciplina · especialidades según la ruta.<p><button class="btn sm" data-go="dim">Ver las 19 métricas que se evalúan ›</button></p>`, f:'S3, S4'},
-    sem:  {t:'Semáforo por disciplina frente al apetito', b:`Una métrica en rojo suma 1 a su dimensión; sin puntaje agregado, manda el peor semáforo ${src('S2, S8')}.<div class="lb">Cuatro resultados posibles</div>${CFG.autonomia.map(a => `<p style="margin:4px 0"><b>${esc(a.condicion)}</b> (${esc(a.detalle)}) → ${esc(a.instancia)}</p>`).join('')}<div class="lb">Varios rojos</div>${esc(CFG.reglaVariosRojos.t)} ${src('S7')}<p><button class="btn sm" data-go="rutas">Simular el cupo por dimensión ›</button></p>`, f:'S6'},
+    sem:  {t:'Semáforo por disciplina frente al apetito', b:`Una métrica en rojo suma 1 a su dimensión; sin puntaje agregado, manda el peor semáforo ${src('S2, S8')}.<div class="lb">Cuatro resultados posibles</div>${CFG.autonomia.map(a => `<p style="margin:4px 0"><b>${esc(a.condicion)}</b> (${esc(a.detalle)}) → ${esc(a.instancia)}</p>`).join('')}<div class="lb">Si hay un rojo</div>Se activa la ruta del apetito: el rojo se mide contra el cupo de su dimensión.`, f:'S6'},
+    apt:  {t:'Ruta del apetito: rojo por dimensión', b:`Se activa cuando alguna métrica de apetito sale en rojo (solo N1–N3).<div class="lb">Cómo se mide</div><ul class="clean"><li>${esc(CFG.reglaGeneralDimensiones[0])}</li><li>${esc(CFG.reglaGeneralDimensiones[1])}</li></ul><div class="lb">Quién decide</div><p style="margin:4px 0"><b>Queda bajo el límite</b> → ${esc(A('rojo_bajo').instancia)} (${esc(A('rojo_bajo').nota)})</p><p style="margin:4px 0"><b>Llega al límite</b> → ${esc(A('rojo_limite').instancia)} (${esc(A('rojo_limite').nota)})</p><div class="lb">Varios rojos</div>${esc(CFG.reglaVariosRojos.t)}<p><button class="btn sm" id="dEj">Ver el ejemplo ›</button> <button class="btn sm" data-go="rutas">Simular el cupo por dimensión ›</button></p>`, f:'S5, S6, S7'},
     rnf:  {t:'Autonomías vigentes de RNF', b:inst('verde') + `<div class="lb">N4–N5</div>${esc(CFG.autonomiaNoMaterial.nota)}`, f:'S6'},
     ger:  {t:A('ambar').instancia, b:inst('ambar'), f:'S6'},
     com:  {t:A('rojo_bajo').instancia, b:inst('rojo_bajo'), f:'S6'},
@@ -1764,6 +1832,7 @@ function detail(id){
   const d = D[id]; if(!d) return;
   $('#detail').innerHTML = `<div class="kicker">Detalle de la caja ${src(d.f)}</div><h3>${esc(d.t)}</h3>${d.b}`;
   $$('[data-go]', $('#detail')).forEach(b => b.onclick = () => show(b.dataset.go));
+  const dEj = $('#dEj'); if(dEj) dEj.onclick = () => $('#ejBtn').click();
 }
 
 /* Conexiones entre cajas (SVG) */
@@ -1776,19 +1845,19 @@ function drawEdges(act){
   const R = id => { const r = $('#n-'+id).getBoundingClientRect(); return {l:r.left-W.left, r:r.right-W.left, t:r.top-W.top, b:r.bottom-W.top, cx:(r.left+r.right)/2-W.left, cy:(r.top+r.bottom)/2-W.top}; };
   let h = '';
   EDGES.forEach(([a,b,label,kind]) => {
-    const A1 = R(a), B1 = R(b); let d, lx, ly;
+    const A1 = R(a), B1 = R(b); let d, lx, ly, anchor = 'start';
     if(kind === 'loop'){
       const yy = wrap.clientHeight - 14;
       d = `M${A1.cx},${A1.b} L${A1.cx},${yy} L${B1.cx},${yy} L${B1.cx},${B1.b+2}`; lx = (A1.cx+B1.cx)/2; ly = yy - 5; label = 'Un rojo o un cambio material vuelve a pasar la iniciativa por la ruta';
     } else if(Math.abs(A1.cx - B1.cx) < 30){
-      if(B1.t >= A1.b){ d = `M${A1.cx},${A1.b} L${B1.cx},${B1.t-2}`; ly = (A1.b + B1.t)/2 + 4; } else { d = `M${A1.cx},${A1.t} L${B1.cx},${B1.b+2}`; ly = (A1.t + B1.b)/2 + 4; } lx = A1.cx + 14;
+      if(B1.t >= A1.b){ d = `M${A1.cx},${A1.b} L${B1.cx},${B1.t-2}`; ly = (A1.b + B1.t)/2 + 4; } else { d = `M${A1.cx},${A1.t} L${B1.cx},${B1.b+2}`; ly = (A1.t + B1.b)/2 + 4; } lx = A1.cx - 8; anchor = 'end';
     } else {
       const x1 = A1.r, y1 = A1.cy, x2 = B1.l, y2 = B1.cy, mx = (x1+x2)/2;
       d = `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2-3},${y2}`; lx = x2 - 16; ly = y2 - 6;
     }
     const key = a+'>'+b, on = act.eOn.has(key), mb = act.eMaybe.has(key);
     h += `<path class="edge ${on?'on':''} ${mb?'maybe':''} ${kind==='loop'?'loop':''}" d="${d}" marker-end="url(#ar${on||mb?'On':''})"/>`;
-    if(label) h += `<text class="elabel ${on||mb?'on':''}" x="${lx}" y="${ly}" text-anchor="${kind==='loop'?'middle':'start'}">${esc(label)}</text>`;
+    if(label) h += `<text class="elabel ${on||mb?'on':''}" x="${lx}" y="${ly}" text-anchor="${kind==='loop'?'middle':anchor}">${esc(label)}</text>`;
   });
   svg.innerHTML = `<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#C9CFD8"/></marker><marker id="arOn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#CC3366"/></marker></defs>` + h;
 }
@@ -1849,15 +1918,9 @@ function renderRutas(){
 }
 function cupo(){
   const d = CFG.dimensiones.find(x => x.id === CUPO.dim);
-  const lim = d.limite, con = CUPO.hoy + (CUPO.roja ? 1 : 0), n = Math.max(lim, con);
+  const lim = d.limite, con = CUPO.hoy + (CUPO.roja ? 1 : 0);
   $('#cHoyV').textContent = CUPO.hoy;
-  let boxes = '';
-  for(let i=1;i<=n;i++){
-    const z = i <= d.apetitoMax ? 'z-v' : i < lim ? 'z-a' : 'z-r';
-    const k = i <= CUPO.hoy ? 'prev' : (CUPO.roja && i === CUPO.hoy+1) ? 'new' : '';
-    boxes += `<i class="${z} ${k} ${i===lim?'lim':''}">${i}</i>`;
-  }
-  $('#cBoxes').innerHTML = boxes;
+  $('#cBoxes').innerHTML = boxesHTML(d, CUPO.hoy, CUPO.roja);
   let inst, color, msg;
   if(!CUPO.roja){ inst = 'Esta dimensión no define la instancia'; color = 'var(--ok)'; msg = 'La iniciativa no suma a esta dimensión. Quién aprueba depende de las demás: todo verde → Autonomías vigentes de RNF; algún ámbar → Gerencia Owner + Gerencia de Riesgos.'; }
   else if(con >= lim){ inst = A('rojo_limite').instancia; color = 'var(--bad)'; msg = `Hoy ${CUPO.hoy} + la nueva = ${con}. El límite de ${esc(d.nombre)} es ${esc(d.limiteTxt)}: la dimensión llega al límite: ${esc(A('rojo_limite').nota)}.`; }
